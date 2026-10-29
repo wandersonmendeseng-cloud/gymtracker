@@ -19,6 +19,42 @@ jobs:
       - run: |
           npx cap add android
           npx cap sync android
+      - name: Criar icone do app
+        run: |
+          pip install pillow
+          python3 - <<'PY'
+          from PIL import Image, ImageDraw
+          RES = 'android/app/src/main/res'
+          DENS = {'mdpi':1, 'hdpi':1.5, 'xhdpi':2, 'xxhdpi':3, 'xxxhdpi':4}
+          def halteres(S):
+              im = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+              d = ImageDraw.Draw(im)
+              u = S / 108.0
+              def rr(x0, y0, x1, y1, r, c):
+                  d.rounded_rectangle([x0*u, y0*u, x1*u, y1*u], radius=r*u, fill=c)
+              rr(30, 51, 78, 57, 2, (226, 232, 240, 255))
+              rr(23, 38, 31, 70, 3, (52, 211, 153, 255))
+              rr(31, 43, 36, 65, 2, (59, 130, 246, 255))
+              rr(77, 38, 85, 70, 3, (52, 211, 153, 255))
+              rr(72, 43, 77, 65, 2, (59, 130, 246, 255))
+              return im
+          for nome, f in DENS.items():
+              pasta = f'{RES}/mipmap-{nome}'
+              fg = halteres(int(108 * f))
+              fg.save(f'{pasta}/ic_launcher_foreground.png')
+              S = int(48 * f)
+              base = Image.new('RGBA', (S, S), (11, 17, 32, 255))
+              g = fg.resize((int(S * 1.5), int(S * 1.5)))
+              base.paste(g, ((S - g.width) // 2, (S - g.height) // 2), g)
+              base.save(f'{pasta}/ic_launcher.png')
+              mask = Image.new('L', (S, S), 0)
+              ImageDraw.Draw(mask).ellipse([0, 0, S - 1, S - 1], fill=255)
+              redondo = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+              redondo.paste(base, (0, 0), mask)
+              redondo.save(f'{pasta}/ic_launcher_round.png')
+          open(f'{RES}/values/ic_launcher_background.xml', 'w').write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#0B1120</color>\n</resources>\n')
+          print('icones ok')
+          PY
       - working-directory: android
         run: ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
