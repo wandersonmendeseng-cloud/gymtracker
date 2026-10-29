@@ -3,99 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#090d16">
-<title>GymTracker 3.0</title>
+<meta name="theme-color" content="#0b1120">
+<title>GymTracker &amp; Saúde 4.0</title>
 <style>
-:root{--bg:#090d16;--card:#131c2e;--line:#1e293b;--mut:#94a3b8;--txt:#f8fafc;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--rose:#f43f5e}
+:root{--bg:#0b1120;--card:#151f32;--line:#1e293b;--mut:#94a3b8;--txt:#f8fafc;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--rose:#f43f5e}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Roboto,sans-serif}
-body{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:110px;user-select:none;-webkit-user-select:none}
+body{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:96px;user-select:none;-webkit-user-select:none}
 button{font:inherit;color:inherit;border:0;cursor:pointer}
 button:active{transform:scale(.96)}
-input,textarea,select{font:inherit;color:var(--txt);background:#060a12;border:1px solid #334155;border-radius:12px;padding:10px;width:100%;outline:none;user-select:text;-webkit-user-select:text}
+input,textarea,select{font:inherit;font-size:13px;color:var(--txt);background:#060a12;border:1px solid #334155;border-radius:12px;padding:10px;width:100%;outline:none;user-select:text;-webkit-user-select:text}
 input:focus,textarea:focus,select:focus{border-color:var(--blue)}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-header{position:sticky;top:0;z-index:30;background:rgba(15,23,42,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-h1{margin:0;font-size:18px;font-weight:800;background:linear-gradient(90deg,#60a5fa,#34d399);-webkit-background-clip:text;background-clip:text;color:transparent}
-#dia-sugerido{margin:2px 0 0;font-size:11px;color:var(--mut)}
-.timer{background:rgba(15,23,42,.9);border:1px solid var(--line);border-radius:12px;padding:6px 10px;text-align:right}
-.timer .row{display:flex;gap:8px;align-items:center;justify-content:flex-end}
-.timer small{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-weight:600}
-#timer-display{font-size:17px;font-weight:700;color:var(--green)}
+.hidden{display:none!important}
+header{position:sticky;top:0;z-index:30;background:rgba(15,23,42,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header h1{margin:0;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+header h1:before{content:"";width:10px;height:10px;border-radius:99px;background:#34d399;display:inline-block}
+#header-subtitle{margin:2px 0 0;font-size:11px;font-weight:500;color:#60a5fa}
+.timer{display:flex;align-items:center;gap:8px;background:#0f172a;border:1px solid var(--line);border-radius:16px;padding:6px 10px}
+.timer small{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-weight:700}
+#timer-display{display:block;font-size:15px;font-weight:800;color:var(--green);text-align:right}
 #timer-display.fim{color:var(--rose)}
-.tbtns{display:flex;gap:4px;margin-top:4px;justify-content:flex-end}
-.tbtns button{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:#1e293b;border:1px solid #334155;color:#cbd5e1}
-.tbtns .x{background:rgba(76,5,25,.6);border-color:#9f1239;color:#fda4af}
+.tb{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.tb button{font-size:10px;font-weight:700;padding:3px 7px;border-radius:7px;background:#1e293b;border:1px solid #334155;color:#e2e8f0}
+.tb .x{background:rgba(76,5,25,.7);border-color:#9f1239;color:#fda4af}
+.help{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:99px;background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.4);font-size:11px;font-weight:800;padding:0;vertical-align:middle}
 main{padding:14px 14px 0}
-.tabs{display:flex;gap:6px;margin-bottom:14px}
-.tab{flex:1;padding:9px 4px;border-radius:12px;font-weight:700;font-size:12px;background:#131c2e;color:var(--mut);border:1px solid var(--line)}
-.tab span{display:block;font-size:10px;font-weight:400;opacity:.8}
-.tab.on{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(37,99,235,.3)}
-.novo{padding:8px 13px;border-radius:12px;background:#059669;color:#fff;font-weight:700;font-size:10px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.novo b{font-size:18px;line-height:1}
-.legenda{display:flex;justify-content:space-between;align-items:center;background:rgba(15,23,42,.7);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:14px;font-size:11px;color:var(--mut);gap:6px;flex-wrap:wrap}
-.tag{display:inline-block;padding:1px 6px;border-radius:5px;font-weight:700;border:1px solid}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 6px 24px -4px rgba(0,0,0,.4);padding:14px;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.t-sm{font-size:11px;color:var(--mut)}
+.link{background:none;color:#60a5fa;font-size:11px;font-weight:600}
+.link.r{color:#fb7185}
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.abtn{text-align:left;padding:11px 12px;border-radius:16px;font-weight:800;font-size:13px;background:#0f172a;color:var(--mut);border:1px solid var(--line)}
+.abtn small{display:block;font-size:11px;font-weight:500;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abtn.on{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(37,99,235,.3)}
+.hoje{font-size:9px;background:#34d399;color:#022c22;padding:1px 6px;border-radius:99px;font-weight:800;float:right}
+.acoes{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.b{padding:9px 12px;border-radius:12px;font-weight:700;font-size:12px;background:#1e293b;color:#cbd5e1}
+.b.g{background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.35)}
+.b.p{background:var(--blue);color:#fff}
+.b.d{background:#e11d48;color:#fff}
+.b.full{width:100%;background:#059669;color:#fff;padding:12px}
+.tag{display:inline-block;padding:1px 6px;border-radius:5px;font-weight:700;border:1px solid;font-size:11px}
 .tW{background:rgba(245,158,11,.18);color:#fbbf24;border-color:rgba(245,158,11,.35)}
 .tT{background:rgba(59,130,246,.18);color:#60a5fa;border-color:rgba(59,130,246,.35)}
 .tF{background:rgba(244,63,94,.18);color:#fb7185;border-color:rgba(244,63,94,.35)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 20px -2px rgba(0,0,0,.35);padding:14px;margin-bottom:14px}
-.ex-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
 .ex-nome{font-weight:700;font-size:14px}
-.ex-meta{font-size:11px;color:var(--mut);margin-top:2px}
-.ex-meta b{color:#34d399}
 .mini{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:4px 8px;font-size:11px;color:#cbd5e1}
-.mini.r{color:#fda4af}
 .ajuste{margin-top:8px;font-size:11px;color:#fbbf24;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:6px 9px}
 .guia{margin-top:8px;font-size:11.5px;line-height:1.45;color:#cbd5e1;background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-.ultima{margin-top:8px;font-size:11px;color:var(--mut)}
-.ultima b{color:#e2e8f0}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.ultima{margin-top:8px;font-size:11px;color:var(--mut)}.ultima b{color:#e2e8f0}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .chip{font-size:11px;padding:3px 7px;border-radius:8px;border:1px solid}
 .reg{display:grid;grid-template-columns:48px 1fr 1fr 78px;gap:6px;margin-top:10px;align-items:center}
 .reg input{text-align:center;padding:9px 4px}
-.tipo{height:100%;min-height:40px;border-radius:12px;font-weight:800;font-size:15px;border:1px solid}
+.tipo{min-height:40px;border-radius:12px;font-weight:800;font-size:15px;border:1px solid}
 .ok{background:var(--green);color:#fff;border-radius:12px;font-weight:700;font-size:12px;min-height:40px}
 .prog{height:5px;background:#0f172a;border-radius:9px;margin-top:10px;overflow:hidden}
 .prog i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#10b981)}
-section.an{margin-top:30px}
-section.an h2{margin:0;font-size:14px}
-section.an p{margin:2px 0 10px;font-size:11px;color:var(--mut)}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#0f172a;padding:4px;border-radius:12px;border:1px solid var(--line);margin:10px 0}
-.seg button{padding:7px;border-radius:9px;font-size:12px;font-weight:700;background:transparent;color:var(--mut)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#0f172a;padding:4px;border-radius:12px;border:1px solid var(--line);margin:8px 0 12px}
+.seg button{padding:8px;border-radius:9px;font-size:12px;font-weight:700;background:transparent;color:var(--mut)}
 .seg button.on{background:var(--blue);color:#fff}
-.chartbox{background:rgba(2,6,15,.6);border:1px solid var(--line);border-radius:12px;padding:6px}
+.chartbox{background:rgba(2,6,15,.7);border:1px solid var(--line);border-radius:14px;padding:6px}
 canvas{width:100%;height:200px;display:block}
-.hist{max-height:190px;overflow-y:auto;margin-top:8px}
-.hrow{display:flex;justify-content:space-between;font-size:11.5px;padding:6px 9px;background:#0f172a;border:1px solid var(--line);border-radius:9px;margin-bottom:5px}
-.hh{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
-.hh h3{margin:0;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#cbd5e1}
-.link{background:none;color:#fb7185;font-size:11px;text-decoration:underline}
-.vazio{text-align:center;color:var(--mut);font-size:12px;padding:22px 8px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
-.modal.on{display:flex}
-.box{background:#0f172a;border:1px solid #334155;border-radius:18px;padding:18px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto}
-.box h3{margin:0 0 12px;font-size:16px}
-.box label{display:block;font-size:11px;font-weight:600;color:#cbd5e1;margin:10px 0 4px}
+.hrow{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;padding:7px 10px;background:#0f172a;border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+.vazio{text-align:center;color:var(--mut);font-size:12px;padding:20px 8px}
+label.l{display:block;font-size:10px;font-weight:700;color:var(--mut);margin:0 0 4px;text-transform:uppercase}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ind{background:#0f172a;border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}
+.ind small{display:block;font-size:10px;font-weight:700;color:var(--mut);text-transform:uppercase}
+.ind b{display:block;font-size:16px;margin-top:3px}
+.ind span{display:block;font-size:10px;font-weight:700;margin-top:3px;color:#cbd5e1}
+details{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+summary{font-size:12.5px;font-weight:700;cursor:pointer}
+details p{font-size:12px;line-height:1.5;color:#cbd5e1;margin:8px 0 0}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;z-index:40;background:rgba(15,23,42,.97);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+nav button{background:none;color:var(--mut);padding:6px 2px;border-radius:12px;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button span{font-size:19px;line-height:1}
+nav button.on{color:#fff;background:rgba(59,130,246,.2)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
+.modal.on{display:flex}
+.box{background:#0f172a;border:1px solid #334155;border-radius:18px;padding:18px;width:100%;max-width:380px;max-height:88vh;overflow-y:auto}
+.box h3{margin:0 0 10px;font-size:16px}
+.box label{display:block;font-size:11px;font-weight:600;color:#cbd5e1;margin:10px 0 4px}
+.box p.ap{font-size:13px;line-height:1.55;color:#cbd5e1;margin:0;white-space:pre-line}
 .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-.btn{padding:10px 16px;border-radius:12px;font-weight:700;font-size:12px;background:#1e293b;color:#cbd5e1}
-.btn.p{background:var(--blue);color:#fff}
-.btn.d{background:#e11d48;color:#fff}
-#toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:60;display:none;color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:99px;box-shadow:0 8px 24px rgba(0,0,0,.4);max-width:90%;text-align:center}
+#toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:70;display:none;color:#fff;font-size:12px;font-weight:700;padding:10px 16px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.4);width:max-content;max-width:90%;text-align:center}
 </style>
 </head>
 <body>
-
 <div id="toast"></div>
 
 <header>
   <div>
-    <h1>GymTracker 3.0</h1>
-    <p id="dia-sugerido"></p>
+    <h1 id="header-title">Meu Treino (A / B)</h1>
+    <p id="header-subtitle"></p>
   </div>
   <div class="timer">
-    <div class="row"><small>Descanso</small><span id="timer-display" class="mono">01:30</span></div>
-    <div class="tbtns">
+    <div>
+      <small>Descanso <button class="help" onclick="abrirAjuda('timer')">?</button></small>
+      <span id="timer-display" class="mono">01:30</span>
+    </div>
+    <div class="tb">
       <button onclick="iniciarTimer(60)">60s</button>
       <button onclick="iniciarTimer(90)">90s</button>
       <button onclick="iniciarTimer(120)">120s</button>
@@ -104,427 +115,543 @@ canvas{width:100%;height:200px;display:block}
   </div>
 </header>
 
-<main>
-  <div class="tabs">
-    <button class="tab" id="tab-A" onclick="selecionarTreino('A')">Treino A<span>Push</span></button>
-    <button class="tab" id="tab-B" onclick="selecionarTreino('B')">Treino B<span>Pull</span></button>
-    <button class="tab" id="tab-C" onclick="selecionarTreino('C')">Treino C<span>Legs</span></button>
-    <button class="novo" onclick="abrirModalExercicio()"><b>+</b>Novo</button>
+<!-- ========== ABA TREINO ========== -->
+<main id="screen-treino">
+  <div class="card">
+    <div class="row">
+      <b style="font-size:12px;color:#cbd5e1">Escolha a ficha de hoje <button class="help" onclick="abrirAjuda('divisao_ab')">?</button></b>
+      <button class="link" onclick="abrirModalNomeTreino()">✏️ Renomear A/B</button>
+    </div>
+    <div class="ab">
+      <button class="abtn" id="tab-A" onclick="selecionarTreino('A')"><span id="badge-hoje-A" class="hoje hidden">HOJE</span>TREINO A<small id="sub-tab-A"></small></button>
+      <button class="abtn" id="tab-B" onclick="selecionarTreino('B')"><span id="badge-hoje-B" class="hoje hidden">HOJE</span>TREINO B<small id="sub-tab-B"></small></button>
+    </div>
+    <div class="acoes">
+      <button class="b g" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar Treino <span id="lbl-btn-concluir">A</span></button>
+      <button class="b p" onclick="abrirModalExercicio()">+ Exercício</button>
+    </div>
   </div>
-
-  <div class="legenda">
-    <b style="color:#cbd5e1">Tipo de série (toque para trocar):</b>
-    <span><span class="tag tW">W</span> Aquec.</span>
-    <span><span class="tag tT">T</span> Trabalho</span>
-    <span><span class="tag tF">F</span> Falha</span>
+  <div style="font-size:11px;color:var(--mut);margin:-4px 2px 12px">
+    Tipo de série (toque na letra): <span class="tag tW">W</span> aquecimento · <span class="tag tT">T</span> trabalho · <span class="tag tF">F</span> falha
+    <button class="help" onclick="abrirAjuda('series')">?</button>
   </div>
-
-  <div id="titulo-treino" style="font-size:12px;font-weight:700;color:#cbd5e1;margin-bottom:10px"></div>
   <div id="lista-exercicios"></div>
-
-  <section class="card an">
-    <h2>📈 Evolução &amp; Força (Epley)</h2>
-    <p>Considera apenas séries de Trabalho e Falha</p>
-    <select id="select-grafico" onchange="atualizarGrafico()"></select>
-    <div class="seg">
-      <button id="btn-metric-carga" class="on" onclick="mudarMetricaGrafico('carga')">Carga Bruta (kg)</button>
-      <button id="btn-metric-rm" onclick="mudarMetricaGrafico('1rm')">1RM Estimado (kg)</button>
-    </div>
-    <div class="chartbox"><canvas id="graficoProgressao"></canvas></div>
-    <div class="hh">
-      <h3>Histórico recente</h3>
-      <button class="link" onclick="limparUltimoRegistroExercicio()">Desfazer última série</button>
-    </div>
-    <div id="tabela-historico-exercicio" class="hist"></div>
-  </section>
-
-  <section class="card" style="margin-top:14px">
-    <h2 style="margin:0 0 8px;font-size:14px">💾 Backup</h2>
-    <div style="display:flex;gap:8px">
-      <button class="btn" style="flex:1" onclick="exportarDados()">Exportar</button>
-      <button class="btn" style="flex:1" onclick="document.getElementById('arq-import').click()">Importar</button>
-      <input type="file" id="arq-import" accept="application/json" style="display:none" onchange="importarDados(event)">
-    </div>
-  </section>
 </main>
 
-<!-- Modal exercício -->
-<div id="modal-ex" class="modal">
-  <div class="box">
-    <h3 id="modal-titulo">Novo Exercício</h3>
-    <input type="hidden" id="edit-id">
-    <label>Nome do exercício *</label>
-    <input type="text" id="ex-nome" placeholder="Ex: Supino Inclinado no Smith">
-    <div class="g3">
-      <div><label>Nº séries</label><input type="number" inputmode="numeric" id="ex-num-series" placeholder="4" min="1" max="15" class="mono" style="text-align:center"></div>
-      <div><label>Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" min="1" max="50" class="mono" style="text-align:center"></div>
-      <div><label>Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" min="1" max="50" class="mono" style="text-align:center"></div>
+<!-- ========== ABA EVOLUÇÃO ========== -->
+<main id="screen-evolucao" class="hidden">
+  <div class="card">
+    <b style="font-size:15px">Gráfico de Evolução <button class="help" onclick="abrirAjuda('grafico_evolucao')">?</button></b>
+    <p class="t-sm" style="margin:3px 0 10px">Veja se as suas cargas estão subindo ao longo das semanas</p>
+    <label class="l">Selecione o exercício</label>
+    <select id="select-grafico" onchange="atualizarGrafico()"></select>
+    <div class="row" style="margin-top:10px"><span class="t-sm" style="font-weight:700">O que mostrar?</span><button class="link" onclick="abrirAjuda('1rm')">O que é 1RM? ?</button></div>
+    <div class="seg">
+      <button id="btn-metric-carga" class="on" onclick="mudarMetricaGrafico('carga')">🏋️ Peso usado (kg)</button>
+      <button id="btn-metric-rm" onclick="mudarMetricaGrafico('1rm')">⚡ Força 1RM</button>
     </div>
-    <label style="color:#fbbf24">⚙️ Ajuste do aparelho</label>
-    <input type="text" id="ex-ajuste" placeholder="Ex: Banco furo 4, pegada pronada">
-    <label>📘 Guia de execução / notas</label>
-    <textarea id="ex-explicacao" rows="3" placeholder="Ex: Escápulas retraídas, descida em 2 segundos."></textarea>
-    <div class="acts">
-      <button class="btn" onclick="fecharModal()">Cancelar</button>
-      <button class="btn p" onclick="salvarExercicioFicha()">Salvar</button>
+    <div class="chartbox"><canvas id="graficoProgressao"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <div><b style="font-size:14px">Histórico de séries</b><div class="t-sm">Do exercício selecionado acima</div></div>
+      <button class="b" style="color:#fda4af" onclick="limparUltimoRegistroExercicio()">🗑️ Apagar última</button>
+    </div>
+    <div id="tabela-historico-exercicio" style="max-height:300px;overflow-y:auto"></div>
+  </div>
+</main>
+
+<!-- ========== ABA SAÚDE ========== -->
+<main id="screen-saude" class="hidden">
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <div><b style="font-size:15px">Resumo corporal</b><div class="t-sm">Calculado com suas últimas medidas</div></div>
+      <button class="b" onclick="abrirAjuda('imc_rca')">Entender ?</button>
+    </div>
+    <div class="g3">
+      <div class="ind"><small>Peso atual</small><b id="saude-peso-atual" class="mono">-- kg</b><span id="saude-peso-diff" style="color:var(--mut)">Sem histórico</span></div>
+      <div class="ind"><small>IMC</small><b id="saude-imc-valor" class="mono" style="color:#60a5fa">--</b><span id="saude-imc-status">Informe a altura</span></div>
+      <div class="ind"><small>Cintura/Alt.</small><b id="saude-rca-valor" class="mono" style="color:#34d399">--</b><span id="saude-rca-status">Meça a cintura</span></div>
     </div>
   </div>
-</div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📏 Registrar peso e medidas</b><button class="link" onclick="abrirAjuda('como_medir')">Como medir? ?</button></div>
+    <div class="g3" style="margin-bottom:10px">
+      <div><label class="l">Altura (cm)</label><input type="number" inputmode="decimal" id="med-altura" placeholder="175" class="mono"></div>
+      <div><label class="l" style="color:#34d399">Peso (kg) *</label><input type="number" inputmode="decimal" step="0.1" id="med-peso" placeholder="78.5" class="mono"></div>
+      <div><label class="l" style="color:#fbbf24">Cintura (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-cintura" placeholder="82" class="mono"></div>
+    </div>
+    <details>
+      <summary>💪 Braço, peito, quadril, coxa, panturrilha (opcional)</summary>
+      <div class="g2" style="margin-top:10px">
+        <div><label class="l">Braço (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-braco" class="mono"></div>
+        <div><label class="l">Peito (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-peito" class="mono"></div>
+        <div><label class="l">Quadril (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-quadril" class="mono"></div>
+        <div><label class="l">Coxa (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-coxa" class="mono"></div>
+        <div style="grid-column:span 2"><label class="l">Panturrilha (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-panturrilha" class="mono"></div>
+      </div>
+    </details>
+    <button class="b full" onclick="salvarMedidasCorporais()">💾 Salvar peso e medidas de hoje</button>
+  </div>
+
+  <div class="card">
+    <b style="font-size:14px">📉 Curva de peso &amp; cintura</b>
+    <div class="t-sm" style="margin:3px 0 8px"><span style="color:#34d399">● peso (kg, eixo esquerdo)</span> &nbsp; <span style="color:#fbbf24">● cintura (cm, eixo direito)</span></div>
+    <div class="chartbox"><canvas id="graficoSaude"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📋 Histórico de avaliações</b><button class="link r" onclick="apagarUltimaMedida()">Apagar última</button></div>
+    <div id="lista-historico-saude"></div>
+  </div>
+</main>
+
+<!-- ========== ABA AJUDA ========== -->
+<main id="screen-ajuda" class="hidden">
+  <div class="card">
+    <b style="font-size:15px">Guia rápido da academia</b>
+    <p class="t-sm" style="margin:3px 0 10px">Toque em um assunto para ler a explicação.</p>
+    <div id="lista-ajuda"></div>
+  </div>
+  <div class="card">
+    <b style="font-size:14px">💾 Backup dos dados</b>
+    <p class="t-sm" style="margin:3px 0 10px">Seus dados ficam só neste aparelho. Exporte de vez em quando para não perder.</p>
+    <div style="display:flex;gap:8px">
+      <button class="b" style="flex:1" onclick="exportarDados()">Exportar</button>
+      <button class="b" style="flex:1" onclick="document.getElementById('arq-import').click()">Importar</button>
+      <input type="file" id="arq-import" accept="application/json" style="display:none" onchange="importarDados(event)">
+    </div>
+  </div>
+</main>
+
+<nav>
+  <button id="nav-treino" class="on" onclick="mudarAba('treino')"><span>🏋️</span>Treino</button>
+  <button id="nav-evolucao" onclick="mudarAba('evolucao')"><span>📈</span>Evolução</button>
+  <button id="nav-saude" onclick="mudarAba('saude')"><span>❤️</span>Saúde</button>
+  <button id="nav-ajuda" onclick="mudarAba('ajuda')"><span>❓</span>Ajuda</button>
+</nav>
+
+<!-- Modal exercício -->
+<div id="modal-ex" class="modal"><div class="box">
+  <h3 id="modal-titulo">Novo exercício</h3>
+  <input type="hidden" id="edit-id">
+  <label>Nome do exercício *</label><input type="text" id="ex-nome" placeholder="Ex: Supino inclinado no Smith">
+  <div class="g3">
+    <div><label>Nº séries</label><input type="number" inputmode="numeric" id="ex-num-series" placeholder="4" class="mono" style="text-align:center"></div>
+    <div><label>Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" class="mono" style="text-align:center"></div>
+    <div><label>Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" class="mono" style="text-align:center"></div>
+  </div>
+  <label style="color:#fbbf24">⚙️ Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
+  <label>📘 Guia de execução / notas</label><textarea id="ex-explicacao" rows="3" placeholder="Ex: escápulas retraídas, descida em 2 segundos."></textarea>
+  <div class="acts"><button class="b" onclick="fecharModal('modal-ex')">Cancelar</button><button class="b p" onclick="salvarExercicioFicha()">Salvar</button></div>
+</div></div>
 
 <!-- Modal confirmação -->
-<div id="modal-confirm" class="modal">
-  <div class="box" style="max-width:300px;text-align:center">
-    <h3>Remover exercício?</h3>
-    <p style="font-size:12px;color:var(--mut);margin:0 0 14px">Ele sai desta ficha, mas o histórico salvo permanece.</p>
-    <div class="acts" style="justify-content:center">
-      <button class="btn" onclick="fecharConfirm()">Cancelar</button>
-      <button class="btn d" id="btn-confirm-yes">Sim, remover</button>
-    </div>
-  </div>
-</div>
+<div id="modal-confirm" class="modal"><div class="box" style="max-width:300px;text-align:center">
+  <h3>Remover exercício?</h3>
+  <p class="t-sm" style="margin:0 0 14px">Ele sai desta ficha, mas o histórico salvo permanece.</p>
+  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-confirm')">Cancelar</button><button class="b d" id="btn-confirm-yes">Sim, remover</button></div>
+</div></div>
+
+<!-- Modal renomear -->
+<div id="modal-nome" class="modal"><div class="box">
+  <h3>Renomear fichas</h3>
+  <label>Treino A</label><input type="text" id="nome-A" maxlength="30">
+  <label>Treino B</label><input type="text" id="nome-B" maxlength="30">
+  <div class="acts"><button class="b" onclick="fecharModal('modal-nome')">Cancelar</button><button class="b p" onclick="salvarNomesTreino()">Salvar</button></div>
+</div></div>
+
+<!-- Modal ajuda -->
+<div id="modal-ajuda" class="modal" onclick="if(event.target===this)fecharModal('modal-ajuda')"><div class="box">
+  <h3 id="ajuda-titulo"></h3>
+  <p class="ap" id="ajuda-texto"></p>
+  <div class="acts"><button class="b p" onclick="fecharModal('modal-ajuda')">Entendi</button></div>
+</div></div>
 
 <script>
-// ============================ DADOS ============================
-const fichaPadrao = {
-  A:{titulo:"Treino A — Empurrar (Peito, Ombro e Tríceps)",exercicios:[
-    {id:"supino_reto",nome:"Supino Reto com Barra",numSeries:4,repsMin:8,repsMax:10,ajuste:"Suporte da barra na altura 6 • Pés firmes no solo",explicacao:"Retraia e deprima as escápulas no banco. Desça a barra até a linha inferior do peitoral com os cotovelos a cerca de 45° do tronco."},
-    {id:"desenv_halter",nome:"Desenvolvimento com Halteres",numSeries:3,repsMin:10,repsMax:12,ajuste:"Banco inclinado a 75° (furo 7)",explicacao:"Suba os halteres no plano escapular mantendo o core firme, sem hiperestender a lombar."},
-    {id:"triceps_corda",nome:"Tríceps Pulley na Corda",numSeries:4,repsMin:12,repsMax:15,ajuste:"Polia no pino mais alto • 1 passo atrás",explicacao:"Cotovelos fixos ao lado das costelas. Estenda por completo e abra a corda no final."}]},
-  B:{titulo:"Treino B — Puxar (Costas, Posterior e Bíceps)",exercicios:[
-    {id:"puxada_frente",nome:"Puxada Alta Aberta (Pulldown)",numSeries:4,repsMin:8,repsMax:12,ajuste:"Trava dos joelhos no furo 3 • Pegada pronada aberta",explicacao:"Inicie deprimindo as escápulas. Puxe a barra até a parte alta do peito, cotovelos em direção ao quadril."},
-    {id:"remada_baixa",nome:"Remada Baixa no Triângulo",numSeries:4,repsMin:8,repsMax:10,ajuste:"Pés na plataforma intermediária • Triângulo fechado",explicacao:"Alongue os dorsais sem curvar a lombar e puxe até o abdômen, juntando as escápulas."},
-    {id:"rosca_direta",nome:"Rosca Direta na Barra W",numSeries:3,repsMin:10,repsMax:12,ajuste:"Pegada supinada na angulação interna da barra W",explicacao:"Sem roubar com o quadril. Controle a descida contando 2 segundos."}]},
-  C:{titulo:"Treino C — Pernas Completo (Lower Body)",exercicios:[
-    {id:"agachamento",nome:"Agachamento Livre / Hack",numSeries:4,repsMin:6,repsMax:10,ajuste:"Barra na linha do trapézio médio • Pés na largura do quadril",explicacao:"Trave o abdômen, alinhe joelhos com a ponta dos pés e desça quebrando a paralela com coluna neutra."},
-    {id:"leg_press",nome:"Leg Press 45°",numSeries:4,repsMin:10,repsMax:12,ajuste:"Encosto no nível 2 • Pés no centro da plataforma",explicacao:"Desça até máxima flexão sem descolar o quadril do banco. Não tranque os joelhos no topo."},
-    {id:"mesa_flexora",nome:"Mesa Flexora",numSeries:4,repsMin:12,repsMax:15,ajuste:"Rolo no tornozelo furo 4 • Apoio alinhado ao joelho",explicacao:"Mantenha o quadril contra o estofado durante toda a subida para isolar os posteriores."}]}
+// ============================ AJUDA ============================
+const AJUDA = {
+  timer:{t:'⏱ Descanso entre séries',x:'É o tempo de pausa entre uma série e a próxima. Descansar o suficiente deixa você repetir a carga com qualidade.\n\nReferência comum: 60 s para exercícios leves ou isolados, 90 s para o padrão e 120 s ou mais para exercícios pesados.\n\nO cronômetro dispara sozinho quando você salva uma série e avisa com som e vibração no fim.'},
+  divisao_ab:{t:'📆 Divisão A / B',x:'Você alterna duas fichas: a A (por padrão, parte superior) e a B (parte inferior e core).\n\nO app sugere para hoje a ficha oposta à última que você finalizou. Toque em "Finalizar Treino" ao terminar para ele registrar.\n\nVocê pode renomear as fichas e trocar os exercícios como quiser.'},
+  series:{t:'🔤 Tipos de série (W / T / F)',x:'W (Warm-up / Aquecimento): séries leves para preparar o corpo. Não entram no gráfico.\n\nT (Trabalho): as séries principais, com a carga planejada.\n\nF (Falha): séries levadas até não conseguir mais repetições com boa execução.\n\nSó T e F entram no gráfico de evolução e no cálculo do 1RM.'},
+  grafico_evolucao:{t:'📈 Gráfico de evolução',x:'Mostra, por dia, a melhor série válida (Trabalho ou Falha) do exercício escolhido.\n\nSe a linha sobe ao longo das semanas, você está ficando mais forte. Oscilações pequenas são normais.'},
+  '1rm':{t:'⚡ O que é 1RM?',x:'1RM é a carga máxima que você levantaria em 1 repetição.\n\nO app estima esse valor pela fórmula de Epley: carga × (1 + repetições ÷ 30).\n\nExemplo: 60 kg × 10 reps ≈ 80 kg de 1RM estimado.\n\nÉ uma estimativa, serve para comparar a sua força entre treinos mesmo quando você muda carga e repetições. Costuma ser mais confiável com séries de até uns 10 reps.'},
+  imc_rca:{t:'📊 IMC e Cintura/Altura',x:'IMC = peso (kg) ÷ altura (m)².\nAbaixo de 18,5: abaixo do peso\n18,5 a 24,9: normal\n25 a 29,9: sobrepeso\n30 ou mais: obesidade\n\nO IMC não separa músculo de gordura, então pessoas musculosas podem aparecer com valor alto.\n\nRelação cintura/altura = cintura ÷ altura (ambas em cm). Abaixo de 0,5 costuma ser considerado saudável; de 0,5 a 0,59 pede atenção; 0,6 ou mais indica risco aumentado.\n\nSão indicadores de triagem, não diagnóstico. Para avaliação de saúde, converse com um profissional.'},
+  como_medir:{t:'📏 Como medir',x:'Meça sempre no mesmo horário, de preferência em jejum e de manhã, com fita métrica flexível.\n\nPeso: após ir ao banheiro, com pouca roupa.\nCintura: na altura do umbigo, no fim de uma expiração normal, sem apertar a fita.\nQuadril: na parte mais larga do bumbum.\nBraço: no meio do bíceps, relaxado.\nPeito: na linha dos mamilos, braços relaxados.\nCoxa: no meio da coxa.\nPanturrilha: na parte mais larga.\n\nMedir sempre no mesmo lugar é mais importante do que o valor em si.'},
+  progressao:{t:'🎯 Progressão de carga',x:'Cada exercício tem uma faixa de repetições (ex.: 8–12). Quando você completar o número máximo da faixa com boa execução nas séries de trabalho, é hora de subir um pouco a carga e voltar ao mínimo da faixa.\n\nO app avisa "meta batida" quando isso acontece.'}
 };
 
-function lerLS(chave, padrao){ try{ const v = JSON.parse(localStorage.getItem(chave)); return v ?? padrao; }catch(e){ return padrao; } }
-function salvarLS(chave, valor){ try{ localStorage.setItem(chave, JSON.stringify(valor)); }catch(e){ mostrarToast('Não foi possível salvar os dados', 'background:#e11d48'); } }
+// ============================ DADOS ============================
+const fichaPadrao = {
+  A:{exercicios:[
+    {id:"supino_reto",nome:"Supino Reto com Barra",numSeries:4,repsMin:8,repsMax:10,ajuste:"Suporte da barra na altura 6 • Pés firmes no solo",explicacao:"Retraia e deprima as escápulas no banco. Desça a barra até a linha inferior do peitoral, cotovelos a cerca de 45° do tronco."},
+    {id:"puxada_frente",nome:"Puxada Alta Aberta (Pulldown)",numSeries:4,repsMin:8,repsMax:12,ajuste:"Trava dos joelhos no furo 3 • Pegada pronada aberta",explicacao:"Inicie deprimindo as escápulas. Puxe a barra até a parte alta do peito, cotovelos em direção ao quadril."},
+    {id:"desenv_halter",nome:"Desenvolvimento com Halteres",numSeries:3,repsMin:10,repsMax:12,ajuste:"Banco inclinado a 75° (furo 7)",explicacao:"Suba os halteres no plano escapular, core firme, sem hiperestender a lombar."},
+    {id:"remada_baixa",nome:"Remada Baixa no Triângulo",numSeries:3,repsMin:8,repsMax:10,ajuste:"Pés na plataforma intermediária • Triângulo fechado",explicacao:"Alongue os dorsais sem curvar a lombar e puxe até o abdômen, juntando as escápulas."},
+    {id:"rosca_direta",nome:"Rosca Direta na Barra W",numSeries:3,repsMin:10,repsMax:12,ajuste:"Pegada supinada na angulação interna da barra W",explicacao:"Sem roubar com o quadril. Controle a descida contando 2 segundos."},
+    {id:"triceps_corda",nome:"Tríceps Pulley na Corda",numSeries:3,repsMin:12,repsMax:15,ajuste:"Polia no pino mais alto • 1 passo atrás",explicacao:"Cotovelos fixos ao lado das costelas. Estenda por completo e abra a corda no final."}]},
+  B:{exercicios:[
+    {id:"agachamento",nome:"Agachamento Livre / Hack",numSeries:4,repsMin:6,repsMax:10,ajuste:"Barra na linha do trapézio médio • Pés na largura do quadril",explicacao:"Trave o abdômen, alinhe joelhos com a ponta dos pés e desça quebrando a paralela com coluna neutra."},
+    {id:"leg_press",nome:"Leg Press 45°",numSeries:4,repsMin:10,repsMax:12,ajuste:"Encosto no nível 2 • Pés no centro da plataforma",explicacao:"Desça até máxima flexão sem descolar o quadril do banco. Não tranque os joelhos no topo."},
+    {id:"mesa_flexora",nome:"Mesa Flexora",numSeries:4,repsMin:12,repsMax:15,ajuste:"Rolo no tornozelo furo 4 • Apoio alinhado ao joelho",explicacao:"Mantenha o quadril contra o estofado durante toda a subida para isolar os posteriores."},
+    {id:"panturrilha",nome:"Panturrilha em Pé",numSeries:4,repsMin:12,repsMax:20,ajuste:"Ombros sob os apoios • Ponta dos pés na borda",explicacao:"Desça alongando bem e suba o máximo possível, com pausa de 1 segundo no topo."},
+    {id:"prancha",nome:"Prancha Abdominal (reps = segundos ÷ 10)",numSeries:3,repsMin:3,repsMax:6,ajuste:"Antebraços no chão • Corpo em linha reta",explicacao:"Contraia abdômen e glúteos, sem deixar o quadril cair. Anote 1 rep a cada 10 segundos sustentados."}]}
+};
+const nomesPadrao = {A:'Superiores', B:'Inferiores & Core'};
 
-let fichaTreino = lerLS('gym_ficha_v3', null) || JSON.parse(JSON.stringify(fichaPadrao));
-let historico   = lerLS('gym_hist_v3', []);   // {exId, ts, peso, reps, tipo}
-let treinoAtual = 'A';
-let timerInterval = null, timerRestante = 90, ultimoTimer = 90;
-let metricaGrafico = 'carga';
-let tipoSelecionado = {};     // exId -> W/T/F
-let abertos = {};             // exId -> guia visível
-let idParaRemover = null;
+function lerLS(k, p){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? p; }catch(e){ return p; } }
+function salvarLS(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ toast('Não foi possível salvar os dados', 'bad'); } }
+
+let ficha    = lerLS('gym_ficha_v4', null) || JSON.parse(JSON.stringify(fichaPadrao));
+let historico= lerLS('gym_hist_v3', []);          // {exId, nome, ts, peso, reps, tipo}
+let saude    = lerLS('gym_saude_v4', []);         // {ts, peso, cintura, braco, peito, quadril, coxa, panturrilha}
+let cfg      = lerLS('gym_cfg_v4', {nomes:{...nomesPadrao}, altura:null, ultimo:null});
+if(!cfg.nomes) cfg.nomes = {...nomesPadrao};
+
+let treinoAtual = 'A', abaAtual = 'treino', metricaGrafico = 'carga';
+let timerInterval = null, ultimoTimer = 90;
+let tipoSel = {}, abertos = {}, idRemover = null;
 
 // ============================ UTILS ============================
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmt = n => (Math.round(n*10)/10).toString().replace('.', ',');
-const epley = (peso, reps) => reps <= 1 ? peso : peso * (1 + reps/30);
+const fmt = (n, d=1) => { const f = Math.pow(10,d); return (Math.round(n*f)/f).toString().replace('.', ','); };
+const epley = (p, r) => r <= 1 ? p : p * (1 + r/30);
 const mesmoDia = (a,b) => new Date(a).toDateString() === new Date(b).toDateString();
 const dataCurta = ts => new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
-const ehValida = h => h.tipo === 'T' || h.tipo === 'F';
+const dataLonga = ts => new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+const valida = h => h.tipo === 'T' || h.tipo === 'F';
+const num = id => { const v = parseFloat(String($(id).value).replace(',', '.')); return isNaN(v) ? null : v; };
 
 let toastT = null;
-function mostrarToast(msg, estilo='background:#2563eb'){
-  const t = $('toast'); t.style.cssText = estilo; t.textContent = msg; t.style.display = 'block';
-  clearTimeout(toastT); toastT = setTimeout(()=>t.style.display='none', 2200);
+function toast(msg, tipo='ok'){
+  const t = $('toast');
+  t.style.background = tipo === 'bad' ? '#e11d48' : (tipo === 'neutro' ? '#475569' : '#059669');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastT); toastT = setTimeout(()=>t.style.display='none', 2400);
+}
+function abrirModal(id){ $(id).classList.add('on'); }
+function fecharModal(id){ $(id).classList.remove('on'); }
+function abrirAjuda(k){ const a = AJUDA[k]; if(!a) return; $('ajuda-titulo').textContent = a.t; $('ajuda-texto').textContent = a.x; abrirModal('modal-ajuda'); }
+
+function todosEx(){ const m = {}; ['A','B'].forEach(l => ficha[l].exercicios.forEach(e => m[e.id] = e)); return Object.values(m); }
+function nomeEx(id){
+  const e = todosEx().find(x => x.id === id);
+  if(e) return e.nome;
+  const h = [...historico].reverse().find(x => x.exId === id);
+  return h?.nome || id;
 }
 
-function todosExercicios(){
-  const mapa = {};
-  Object.values(fichaTreino).forEach(t => t.exercicios.forEach(e => mapa[e.id] = e));
-  return Object.values(mapa);
+// ============================ ABAS ============================
+const TITULOS = {treino:'Meu Treino (A / B)', evolucao:'Evolução', saude:'Saúde & Corpo', ajuda:'Guia & Ajuda'};
+function mudarAba(a){
+  abaAtual = a;
+  ['treino','evolucao','saude','ajuda'].forEach(n => {
+    $('screen-'+n).classList.toggle('hidden', n !== a);
+    $('nav-'+n).classList.toggle('on', n === a);
+  });
+  $('header-title').textContent = TITULOS[a];
+  atualizarSubtitulo();
+  window.scrollTo(0,0);
+  if(a === 'evolucao') atualizarGrafico();
+  if(a === 'saude') renderizarSaude();
 }
-function nomePorId(id){
-  const e = todosExercicios().find(x => x.id === id);
-  return e ? e.nome : (historico.find(h=>h.exId===id)?.nome || id);
+function atualizarSubtitulo(){
+  const s = $('header-subtitle');
+  if(abaAtual === 'treino'){
+    const l = sugerido();
+    s.textContent = 'Sugestão de hoje: Treino ' + l + (cfg.ultimo ? ' (último: ' + cfg.ultimo.letra + ' em ' + dataCurta(cfg.ultimo.ts) + ')' : '');
+  } else if(abaAtual === 'evolucao') s.textContent = 'Acompanhe suas cargas';
+  else if(abaAtual === 'saude') s.textContent = 'Peso, IMC e medidas';
+  else s.textContent = 'Dúvidas e backup';
 }
 
 // ============================ TIMER ============================
-function fmtTimer(s){ return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }
+const fmtT = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
 function bipe(){
   try{
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [0,0.25,0.5].forEach(d => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.frequency.value = 880; o.connect(g); g.connect(ctx.destination);
-      g.gain.setValueAtTime(0.2, ctx.currentTime + d); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + d + 0.2);
-      o.start(ctx.currentTime + d); o.stop(ctx.currentTime + d + 0.22);
-    });
+    [0,.25,.5].forEach(d => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 880; o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(.2, ctx.currentTime+d); g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+d+.2); o.start(ctx.currentTime+d); o.stop(ctx.currentTime+d+.22); });
   }catch(e){}
   try{ navigator.vibrate && navigator.vibrate([300,150,300,150,300]); }catch(e){}
 }
 function iniciarTimer(seg){
-  clearInterval(timerInterval);
-  ultimoTimer = seg; timerRestante = seg;
+  clearInterval(timerInterval); ultimoTimer = seg;
   const fim = Date.now() + seg*1000;
-  $('timer-display').classList.remove('fim');
-  $('timer-display').textContent = fmtTimer(seg);
+  $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(seg);
   timerInterval = setInterval(() => {
-    timerRestante = Math.max(0, Math.ceil((fim - Date.now())/1000));
-    $('timer-display').textContent = fmtTimer(timerRestante);
-    if(timerRestante <= 0){
-      clearInterval(timerInterval); timerInterval = null;
-      $('timer-display').classList.add('fim'); bipe();
-      mostrarToast('⏱ Descanso finalizado!', 'background:#059669');
-    }
+    const r = Math.max(0, Math.ceil((fim - Date.now())/1000));
+    $('timer-display').textContent = fmtT(r);
+    if(r <= 0){ clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.add('fim'); bipe(); toast('⏱ Descanso finalizado!'); }
   }, 250);
 }
-function pararTimer(){
-  clearInterval(timerInterval); timerInterval = null;
-  $('timer-display').classList.remove('fim');
-  $('timer-display').textContent = fmtTimer(ultimoTimer);
-}
+function pararTimer(){ clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(ultimoTimer); }
 
-// ============================ TREINOS ============================
-function diaSugerido(){
-  const d = new Date().getDay(); // 0=dom
-  const mapa = {1:'A',2:'B',3:'C',4:'A',5:'B',6:'C',0:'A'};
-  const nomes = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  return {letra: mapa[d], texto: nomes[d] + (d===0 ? ' • descanso (sugestão: Treino A)' : ' • sugestão: Treino ' + mapa[d])};
+// ============================ TREINO ============================
+function sugerido(){ return cfg.ultimo && cfg.ultimo.letra === 'A' ? 'B' : 'A'; }
+function atualizarAbas(){
+  ['A','B'].forEach(l => {
+    $('tab-'+l).classList.toggle('on', l === treinoAtual);
+    $('sub-tab-'+l).textContent = cfg.nomes[l] || '';
+    $('badge-hoje-'+l).classList.toggle('hidden', l !== sugerido());
+  });
+  $('lbl-btn-concluir').textContent = treinoAtual;
 }
-function selecionarTreino(letra){
-  treinoAtual = letra;
-  ['A','B','C'].forEach(l => $('tab-'+l).classList.toggle('on', l === letra));
-  $('titulo-treino').textContent = fichaTreino[letra].titulo;
-  renderizarExercicios();
-}
+function selecionarTreino(l){ treinoAtual = l; atualizarAbas(); renderizarExercicios(); }
 
 function renderizarExercicios(){
   const lista = $('lista-exercicios');
-  const exs = fichaTreino[treinoAtual].exercicios;
-  if(!exs.length){ lista.innerHTML = '<div class="vazio">Nenhum exercício neste treino.<br>Toque em “+ Novo” para adicionar.</div>'; return; }
+  const exs = ficha[treinoAtual].exercicios;
+  if(!exs.length){ lista.innerHTML = '<div class="vazio">Nenhum exercício nesta ficha.<br>Toque em “+ Exercício”.</div>'; return; }
   const agora = Date.now();
   lista.innerHTML = exs.map(ex => {
-    const tipo = tipoSelecionado[ex.id] || 'T';
+    const tipo = tipoSel[ex.id] || 'T';
     const hoje = historico.filter(h => h.exId === ex.id && mesmoDia(h.ts, agora));
-    const anteriores = historico.filter(h => h.exId === ex.id && !mesmoDia(h.ts, agora) && ehValida(h));
+    const ant = historico.filter(h => h.exId === ex.id && !mesmoDia(h.ts, agora) && valida(h));
     let ultima = '';
-    if(anteriores.length){
-      const dia = anteriores[anteriores.length-1].ts;
-      const doDia = anteriores.filter(h => mesmoDia(h.ts, dia));
-      const melhor = doDia.reduce((a,b)=> b.peso*b.reps > a.peso*a.reps ? b : a);
-      ultima = `<div class="ultima">Último treino (${dataCurta(dia)}): <b>${fmt(melhor.peso)} kg × ${melhor.reps}</b></div>`;
+    if(ant.length){
+      const dia = ant[ant.length-1].ts;
+      const m = ant.filter(h => mesmoDia(h.ts, dia)).reduce((a,b) => b.peso*b.reps > a.peso*a.reps ? b : a);
+      ultima = `<div class="ultima">Último treino (${dataCurta(dia)}): <b>${fmt(m.peso)} kg × ${m.reps}</b></div>`;
     }
-    const validas = hoje.filter(ehValida).length;
-    const pct = Math.min(100, Math.round(validas / Math.max(1, ex.numSeries) * 100));
+    const v = hoje.filter(valida).length;
+    const pct = Math.min(100, Math.round(v / Math.max(1, ex.numSeries) * 100));
     const chips = hoje.map(h => `<span class="chip t${h.tipo}">${h.tipo} · ${fmt(h.peso)}kg × ${h.reps}</span>`).join('');
-    const ref = hoje.length ? hoje[hoje.length-1] : (anteriores.length ? anteriores[anteriores.length-1] : null);
-    return `
-    <div class="card">
-      <div class="ex-head">
-        <div>
-          <div class="ex-nome">${esc(ex.nome)}</div>
-          <div class="ex-meta"><b>${ex.numSeries} séries</b> • ${ex.repsMin}–${ex.repsMax} reps (meta ${ex.repsMax})</div>
-        </div>
+    const ref = hoje.length ? hoje[hoje.length-1] : (ant.length ? ant[ant.length-1] : null);
+    return `<div class="card">
+      <div class="row" style="align-items:flex-start">
+        <div><div class="ex-nome">${esc(ex.nome)}</div>
+          <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">${ex.numSeries} séries</b> • ${ex.repsMin}–${ex.repsMax} reps</div></div>
         <div style="display:flex;gap:5px;flex-shrink:0">
           <button class="mini" onclick="alternarGuia('${ex.id}')">📘</button>
           <button class="mini" onclick="abrirModalExercicio('${ex.id}')">✎</button>
-          <button class="mini r" onclick="pedirRemocao('${ex.id}')">🗑</button>
+          <button class="mini" style="color:#fda4af" onclick="pedirRemocao('${ex.id}')">🗑</button>
         </div>
       </div>
       ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
       ${abertos[ex.id] && ex.explicacao ? `<div class="guia">${esc(ex.explicacao)}</div>` : ''}
       ${ultima}
       <div class="prog"><i style="width:${pct}%"></i></div>
-      <div class="ex-meta" style="margin-top:4px">${validas}/${ex.numSeries} séries válidas hoje</div>
+      <div class="t-sm" style="margin-top:4px">${v}/${ex.numSeries} séries válidas hoje</div>
       ${chips ? `<div class="chips">${chips}</div>` : ''}
       <div class="reg">
         <button class="tipo t${tipo}" onclick="alternarTipo('${ex.id}')">${tipo}</button>
         <input type="number" inputmode="decimal" step="0.5" min="0" placeholder="kg" class="mono" id="peso-${ex.id}" value="${ref ? ref.peso : ''}">
         <input type="number" inputmode="numeric" min="1" placeholder="reps" class="mono" id="reps-${ex.id}">
         <button class="ok" onclick="registrarSerie('${ex.id}')">✓ Salvar</button>
-      </div>
-    </div>`;
+      </div></div>`;
   }).join('');
 }
-
-function alternarTipo(id){
-  const ordem = ['W','T','F'];
-  const atual = tipoSelecionado[id] || 'T';
-  const pesoV = $('peso-'+id)?.value, repsV = $('reps-'+id)?.value;
-  tipoSelecionado[id] = ordem[(ordem.indexOf(atual)+1) % 3];
-  renderizarExercicios();
-  if($('peso-'+id)) $('peso-'+id).value = pesoV;
-  if($('reps-'+id)) $('reps-'+id).value = repsV;
+function preservar(id, fn){
+  const p = $('peso-'+id)?.value, r = $('reps-'+id)?.value;
+  fn(); renderizarExercicios();
+  if($('peso-'+id)) $('peso-'+id).value = p; if($('reps-'+id)) $('reps-'+id).value = r;
 }
-function alternarGuia(id){
-  const pesoV = $('peso-'+id)?.value, repsV = $('reps-'+id)?.value;
-  abertos[id] = !abertos[id];
-  renderizarExercicios();
-  if($('peso-'+id)) $('peso-'+id).value = pesoV;
-  if($('reps-'+id)) $('reps-'+id).value = repsV;
-}
+function alternarTipo(id){ preservar(id, () => { const o = ['W','T','F']; tipoSel[id] = o[(o.indexOf(tipoSel[id]||'T')+1)%3]; }); }
+function alternarGuia(id){ preservar(id, () => { abertos[id] = !abertos[id]; }); }
 
 function registrarSerie(id){
-  const peso = parseFloat(($('peso-'+id).value || '').replace(',', '.'));
-  const reps = parseInt($('reps-'+id).value, 10);
-  if(!(peso >= 0) || isNaN(peso)){ mostrarToast('Informe a carga em kg', 'background:#e11d48'); return; }
-  if(!(reps >= 1)){ mostrarToast('Informe as repetições', 'background:#e11d48'); return; }
-  const tipo = tipoSelecionado[id] || 'T';
-  historico.push({exId:id, nome:nomePorId(id), ts:Date.now(), peso, reps, tipo});
+  const peso = num('peso-'+id), reps = parseInt($('reps-'+id).value, 10);
+  if(peso === null || peso < 0){ toast('Informe a carga em kg', 'bad'); return; }
+  if(!(reps >= 1)){ toast('Informe as repetições', 'bad'); return; }
+  const tipo = tipoSel[id] || 'T';
+  historico.push({exId:id, nome:nomeEx(id), ts:Date.now(), peso, reps, tipo});
   salvarLS('gym_hist_v3', historico);
-  const ex = todosExercicios().find(e => e.id === id);
-  let msg = `Série registrada: ${fmt(peso)} kg × ${reps}`;
-  if(ex && ehValida({tipo}) && reps >= ex.repsMax) msg += ' 🎯 meta batida — considere subir a carga!';
-  mostrarToast(msg, 'background:#059669');
-  iniciarTimer(tipo === 'W' ? 60 : (ultimoTimer || 90));
-  renderizarExercicios();
-  popularSelectGrafico(id);
-  atualizarGrafico();
+  const ex = todosEx().find(e => e.id === id);
+  let msg = `Série salva: ${fmt(peso)} kg × ${reps}`;
+  if(ex && tipo !== 'W' && reps >= ex.repsMax) msg += ' 🎯 Meta batida! Considere subir a carga.';
+  toast(msg);
+  iniciarTimer(tipo === 'W' ? 60 : ultimoTimer);
+  renderizarExercicios(); popularSelect(id);
+}
+function marcarTreinoConcluidoHoje(){
+  cfg.ultimo = {letra:treinoAtual, ts:Date.now()}; salvarLS('gym_cfg_v4', cfg);
+  atualizarAbas(); atualizarSubtitulo();
+  toast(`Treino ${treinoAtual} finalizado! 💪 Próximo: ${sugerido()}`);
 }
 
-// ============================ MODAL EXERCÍCIO ============================
+// ---- modal exercício ----
 function abrirModalExercicio(id){
-  const ex = id ? fichaTreino[treinoAtual].exercicios.find(e => e.id === id) : null;
-  $('modal-titulo').textContent = ex ? 'Editar Exercício' : 'Novo Exercício';
+  const ex = id ? ficha[treinoAtual].exercicios.find(e => e.id === id) : null;
+  $('modal-titulo').textContent = ex ? 'Editar exercício' : 'Novo exercício (Treino ' + treinoAtual + ')';
   $('edit-id').value = ex ? ex.id : '';
-  $('ex-nome').value = ex?.nome || '';
-  $('ex-num-series').value = ex?.numSeries || '';
-  $('ex-reps-min').value = ex?.repsMin || '';
-  $('ex-reps-max').value = ex?.repsMax || '';
-  $('ex-ajuste').value = ex?.ajuste || '';
-  $('ex-explicacao').value = ex?.explicacao || '';
-  $('modal-ex').classList.add('on');
+  $('ex-nome').value = ex?.nome || ''; $('ex-num-series').value = ex?.numSeries || '';
+  $('ex-reps-min').value = ex?.repsMin || ''; $('ex-reps-max').value = ex?.repsMax || '';
+  $('ex-ajuste').value = ex?.ajuste || ''; $('ex-explicacao').value = ex?.explicacao || '';
+  abrirModal('modal-ex');
 }
-function fecharModal(){ $('modal-ex').classList.remove('on'); }
 function salvarExercicioFicha(){
   const nome = $('ex-nome').value.trim();
-  if(!nome){ mostrarToast('Dê um nome ao exercício', 'background:#e11d48'); return; }
-  let numSeries = parseInt($('ex-num-series').value,10) || 3;
-  let repsMin = parseInt($('ex-reps-min').value,10) || 8;
-  let repsMax = parseInt($('ex-reps-max').value,10) || 12;
-  if(repsMin > repsMax) [repsMin, repsMax] = [repsMax, repsMin];
-  const dados = {nome, numSeries, repsMin, repsMax, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim()};
-  const editId = $('edit-id').value;
-  const lista = fichaTreino[treinoAtual].exercicios;
-  if(editId){
-    const ex = lista.find(e => e.id === editId);
-    Object.assign(ex, dados);
-  } else {
-    lista.push({id:'ex_' + Date.now().toString(36), ...dados});
-  }
-  salvarLS('gym_ficha_v3', fichaTreino);
-  fecharModal();
-  renderizarExercicios();
-  popularSelectGrafico();
-  atualizarGrafico();
-  mostrarToast(editId ? 'Exercício atualizado' : 'Exercício adicionado', 'background:#059669');
+  if(!nome){ toast('Dê um nome ao exercício', 'bad'); return; }
+  let mn = parseInt($('ex-reps-min').value,10) || 8, mx = parseInt($('ex-reps-max').value,10) || 12;
+  if(mn > mx) [mn, mx] = [mx, mn];
+  const d = {nome, numSeries:parseInt($('ex-num-series').value,10) || 3, repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim()};
+  const eid = $('edit-id').value, lista = ficha[treinoAtual].exercicios;
+  if(eid) Object.assign(lista.find(e => e.id === eid), d); else lista.push({id:'ex_'+Date.now().toString(36), ...d});
+  salvarLS('gym_ficha_v4', ficha); fecharModal('modal-ex'); renderizarExercicios(); popularSelect();
+  toast(eid ? 'Exercício atualizado' : 'Exercício adicionado');
 }
 function pedirRemocao(id){
-  idParaRemover = id;
+  idRemover = id;
   $('btn-confirm-yes').onclick = () => {
-    const t = fichaTreino[treinoAtual];
-    t.exercicios = t.exercicios.filter(e => e.id !== idParaRemover);
-    salvarLS('gym_ficha_v3', fichaTreino);
-    fecharConfirm(); renderizarExercicios(); popularSelectGrafico(); atualizarGrafico();
-    mostrarToast('Exercício removido', 'background:#475569');
+    const f = ficha[treinoAtual]; f.exercicios = f.exercicios.filter(e => e.id !== idRemover);
+    salvarLS('gym_ficha_v4', ficha); fecharModal('modal-confirm'); renderizarExercicios(); popularSelect(); toast('Exercício removido', 'neutro');
   };
-  $('modal-confirm').classList.add('on');
+  abrirModal('modal-confirm');
 }
-function fecharConfirm(){ $('modal-confirm').classList.remove('on'); }
+function abrirModalNomeTreino(){ $('nome-A').value = cfg.nomes.A; $('nome-B').value = cfg.nomes.B; abrirModal('modal-nome'); }
+function salvarNomesTreino(){
+  cfg.nomes.A = $('nome-A').value.trim() || nomesPadrao.A; cfg.nomes.B = $('nome-B').value.trim() || nomesPadrao.B;
+  salvarLS('gym_cfg_v4', cfg); atualizarAbas(); fecharModal('modal-nome'); toast('Nomes atualizados');
+}
 
-// ============================ GRÁFICO ============================
-function popularSelectGrafico(manter){
-  const sel = $('select-grafico');
-  const anterior = manter || sel.value;
-  const ids = new Set(todosExercicios().map(e => e.id));
-  historico.forEach(h => ids.add(h.exId));
-  sel.innerHTML = [...ids].map(id => `<option value="${esc(id)}">${esc(nomePorId(id))}</option>`).join('');
-  if([...ids].includes(anterior)) sel.value = anterior;
-}
-function mudarMetricaGrafico(m){
-  metricaGrafico = m;
-  $('btn-metric-carga').classList.toggle('on', m === 'carga');
-  $('btn-metric-rm').classList.toggle('on', m === '1rm');
-  atualizarGrafico();
-}
-function pontosDoExercicio(id){
-  const porDia = new Map();
-  historico.filter(h => h.exId === id && ehValida(h)).forEach(h => {
-    const k = new Date(h.ts).toDateString();
-    const v = metricaGrafico === 'carga' ? h.peso : epley(h.peso, h.reps);
-    const atual = porDia.get(k);
-    if(!atual || v > atual.v) porDia.set(k, {ts:h.ts, v});
-  });
-  return [...porDia.values()].sort((a,b) => a.ts - b.ts).slice(-12);
-}
-function atualizarGrafico(){
-  const id = $('select-grafico').value;
-  desenharGrafico(id ? pontosDoExercicio(id) : []);
-  renderizarHistorico(id);
-}
-function desenharGrafico(pts){
-  const cv = $('graficoProgressao');
-  const dpr = window.devicePixelRatio || 1;
-  const w = cv.clientWidth, h = cv.clientHeight;
-  if(!w) return;
+// ============================ GRÁFICOS (canvas, sem bibliotecas) ============================
+function prepararCanvas(cv){
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  if(!w) return null;
   cv.width = w*dpr; cv.height = h*dpr;
   const c = cv.getContext('2d'); c.scale(dpr, dpr); c.clearRect(0,0,w,h);
-  if(!pts.length){
-    c.fillStyle = '#64748b'; c.font = '12px system-ui'; c.textAlign = 'center';
-    c.fillText('Registre séries de Trabalho ou Falha para ver o gráfico', w/2, h/2); return;
-  }
-  const pad = {l:38, r:14, t:16, b:26};
-  const vals = pts.map(p => p.v);
-  let min = Math.min(...vals), max = Math.max(...vals);
-  if(min === max){ min -= 5; max += 5; }
-  const margem = (max-min)*0.15; min -= margem; max += margem;
-  const X = i => pad.l + (pts.length === 1 ? (w-pad.l-pad.r)/2 : i*(w-pad.l-pad.r)/(pts.length-1));
-  const Y = v => pad.t + (1 - (v-min)/(max-min)) * (h-pad.t-pad.b);
-  c.strokeStyle = '#1e293b'; c.fillStyle = '#64748b'; c.font = '10px ui-monospace,monospace'; c.lineWidth = 1; c.textAlign = 'right';
-  for(let i=0;i<=3;i++){
-    const v = min + (max-min)*i/3, y = Y(v);
-    c.beginPath(); c.moveTo(pad.l, y); c.lineTo(w-pad.r, y); c.stroke();
-    c.fillText(Math.round(v), pad.l-6, y+3);
-  }
-  const cor = metricaGrafico === 'carga' ? '#3b82f6' : '#10b981';
-  const grad = c.createLinearGradient(0, pad.t, 0, h-pad.b);
-  grad.addColorStop(0, cor + '55'); grad.addColorStop(1, cor + '00');
-  if(pts.length > 1){
-    c.beginPath(); c.moveTo(X(0), h-pad.b);
-    pts.forEach((p,i) => c.lineTo(X(i), Y(p.v)));
-    c.lineTo(X(pts.length-1), h-pad.b); c.closePath(); c.fillStyle = grad; c.fill();
-    c.beginPath(); pts.forEach((p,i) => i ? c.lineTo(X(i), Y(p.v)) : c.moveTo(X(i), Y(p.v)));
-    c.strokeStyle = cor; c.lineWidth = 2.5; c.lineJoin = 'round'; c.stroke();
-  }
-  c.textAlign = 'center';
-  pts.forEach((p,i) => {
-    c.beginPath(); c.arc(X(i), Y(p.v), 4, 0, 7); c.fillStyle = cor; c.fill();
-    c.strokeStyle = '#0f172a'; c.lineWidth = 2; c.stroke();
-    c.fillStyle = '#e2e8f0'; c.fillText(fmt(p.v), X(i), Y(p.v)-9);
-    if(pts.length <= 6 || i % 2 === 0){ c.fillStyle = '#64748b'; c.fillText(dataCurta(p.ts), X(i), h-8); }
-  });
+  return {c, w, h};
 }
-function renderizarHistorico(id){
-  const box = $('tabela-historico-exercicio');
-  const regs = historico.filter(h => h.exId === id).slice(-30).reverse();
-  if(!regs.length){ box.innerHTML = '<div class="vazio">Sem registros para este exercício.</div>'; return; }
-  box.innerHTML = regs.map(h => `
-    <div class="hrow">
-      <span>${dataCurta(h.ts)} <span class="tag t${h.tipo}">${h.tipo}</span></span>
-      <span class="mono">${fmt(h.peso)} kg × ${h.reps}</span>
-      <span class="mono" style="color:var(--mut)">1RM ${ehValida(h) ? fmt(epley(h.peso,h.reps)) : '—'}</span>
-    </div>`).join('');
+function vazioCanvas(cv, msg){
+  const p = prepararCanvas(cv); if(!p) return;
+  p.c.fillStyle = '#64748b'; p.c.font = '12px system-ui'; p.c.textAlign = 'center'; p.c.fillText(msg, p.w/2, p.h/2);
+}
+// series: [{pts:[{ts,v}], cor, lado:'l'|'r'}]
+function desenharLinhas(cv, series){
+  const p = prepararCanvas(cv); if(!p) return;
+  const {c, w, h} = p;
+  const usaR = series.some(s => s.lado === 'r');
+  const pad = {l:38, r: usaR ? 38 : 14, t:18, b:26};
+  const tsAll = [...new Set(series.flatMap(s => s.pts.map(q => q.ts)))].sort((a,b) => a-b);
+  const X = ts => { const i = tsAll.indexOf(ts); return pad.l + (tsAll.length === 1 ? (w-pad.l-pad.r)/2 : i*(w-pad.l-pad.r)/(tsAll.length-1)); };
+  const escalas = {};
+  ['l','r'].forEach(lado => {
+    const vs = series.filter(s => s.lado === lado).flatMap(s => s.pts.map(q => q.v)); if(!vs.length) return;
+    let mn = Math.min(...vs), mx = Math.max(...vs); if(mn === mx){ mn -= 3; mx += 3; }
+    const m = (mx-mn)*.15; escalas[lado] = {mn:mn-m, mx:mx+m};
+  });
+  const Y = (v, lado) => { const e = escalas[lado]; return pad.t + (1-(v-e.mn)/(e.mx-e.mn)) * (h-pad.t-pad.b); };
+  c.font = '10px ui-monospace,monospace'; c.lineWidth = 1;
+  ['l','r'].forEach(lado => {
+    const e = escalas[lado]; if(!e) return;
+    const cor = series.find(s => s.lado === lado).cor;
+    for(let i=0;i<=3;i++){
+      const v = e.mn + (e.mx-e.mn)*i/3, y = Y(v, lado);
+      if(lado === 'l'){ c.strokeStyle = '#1e293b'; c.beginPath(); c.moveTo(pad.l, y); c.lineTo(w-pad.r, y); c.stroke(); }
+      c.fillStyle = usaR ? cor : '#64748b'; c.textAlign = lado === 'l' ? 'right' : 'left';
+      c.fillText(Math.round(v), lado === 'l' ? pad.l-6 : w-pad.r+6, y+3);
+    }
+  });
+  series.forEach(s => {
+    if(!s.pts.length) return;
+    if(s.pts.length > 1){
+      c.beginPath(); s.pts.forEach((q,i) => i ? c.lineTo(X(q.ts), Y(q.v,s.lado)) : c.moveTo(X(q.ts), Y(q.v,s.lado)));
+      c.strokeStyle = s.cor; c.lineWidth = 2.5; c.lineJoin = 'round'; c.stroke();
+    }
+    c.textAlign = 'center';
+    s.pts.forEach(q => {
+      c.beginPath(); c.arc(X(q.ts), Y(q.v,s.lado), 4, 0, 7); c.fillStyle = s.cor; c.fill(); c.strokeStyle = '#0b1120'; c.lineWidth = 2; c.stroke();
+      if(series.length === 1 || tsAll.length <= 5){ c.fillStyle = '#e2e8f0'; c.fillText(fmt(q.v), X(q.ts), Y(q.v,s.lado)-9); }
+    });
+  });
+  c.fillStyle = '#64748b'; c.textAlign = 'center';
+  tsAll.forEach((ts,i) => { if(tsAll.length <= 6 || i % 2 === 0) c.fillText(dataCurta(ts), X(ts), h-8); });
+}
+
+// ---- evolução ----
+function popularSelect(manter){
+  const sel = $('select-grafico'), ant = manter || sel.value;
+  const ids = new Set(todosEx().map(e => e.id)); historico.forEach(h => ids.add(h.exId));
+  sel.innerHTML = [...ids].map(id => `<option value="${esc(id)}">${esc(nomeEx(id))}</option>`).join('');
+  if([...ids].includes(ant)) sel.value = ant;
+}
+function mudarMetricaGrafico(m){
+  metricaGrafico = m; $('btn-metric-carga').classList.toggle('on', m === 'carga'); $('btn-metric-rm').classList.toggle('on', m === '1rm'); atualizarGrafico();
+}
+function atualizarGrafico(){
+  const id = $('select-grafico').value, cv = $('graficoProgressao');
+  const por = new Map();
+  historico.filter(h => h.exId === id && valida(h)).forEach(h => {
+    const k = new Date(h.ts).toDateString(), v = metricaGrafico === 'carga' ? h.peso : epley(h.peso, h.reps);
+    if(!por.has(k) || v > por.get(k).v) por.set(k, {ts:h.ts, v});
+  });
+  const pts = [...por.values()].sort((a,b) => a.ts-b.ts).slice(-12);
+  if(!pts.length) vazioCanvas(cv, 'Salve séries de Trabalho ou Falha para ver o gráfico');
+  else desenharLinhas(cv, [{pts, cor: metricaGrafico === 'carga' ? '#3b82f6' : '#10b981', lado:'l'}]);
+  const regs = historico.filter(h => h.exId === id).slice(-30).reverse(), box = $('tabela-historico-exercicio');
+  box.innerHTML = regs.length ? regs.map(h => `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag t${h.tipo}">${h.tipo}</span></span><span class="mono">${fmt(h.peso)} kg × ${h.reps}</span><span class="mono" style="color:var(--mut)">1RM ${valida(h) ? fmt(epley(h.peso,h.reps)) : '—'}</span></div>`).join('') : '<div class="vazio">Sem registros para este exercício.</div>';
 }
 function limparUltimoRegistroExercicio(){
   const id = $('select-grafico').value;
-  for(let i = historico.length-1; i >= 0; i--){
-    if(historico[i].exId === id){
-      const r = historico.splice(i,1)[0];
-      salvarLS('gym_hist_v3', historico);
-      renderizarExercicios(); atualizarGrafico();
-      mostrarToast(`Desfeito: ${fmt(r.peso)} kg × ${r.reps}`, 'background:#475569'); return;
-    }
+  for(let i = historico.length-1; i >= 0; i--) if(historico[i].exId === id){
+    const r = historico.splice(i,1)[0]; salvarLS('gym_hist_v3', historico); renderizarExercicios(); atualizarGrafico(); toast(`Apagado: ${fmt(r.peso)} kg × ${r.reps}`, 'neutro'); return;
   }
-  mostrarToast('Nada para desfazer', 'background:#475569');
+  toast('Nada para apagar', 'neutro');
 }
 
-// ============================ BACKUP ============================
+// ============================ SAÚDE ============================
+function classIMC(v){
+  if(v < 18.5) return {t:'Abaixo do peso', c:'#fbbf24'};
+  if(v < 25) return {t:'Normal', c:'#34d399'};
+  if(v < 30) return {t:'Sobrepeso', c:'#fbbf24'};
+  return {t:'Obesidade', c:'#fb7185'};
+}
+function classRCA(v){
+  if(v < 0.5) return {t:'Ideal', c:'#34d399'};
+  if(v < 0.6) return {t:'Atenção', c:'#fbbf24'};
+  return {t:'Risco alto', c:'#fb7185'};
+}
+function salvarMedidasCorporais(){
+  const peso = num('med-peso'), alt = num('med-altura');
+  if(alt !== null && alt > 0){ cfg.altura = alt; salvarLS('gym_cfg_v4', cfg); }
+  if(peso === null || peso <= 0){ toast('Informe o peso de hoje', 'bad'); return; }
+  const r = {ts:Date.now(), peso, cintura:num('med-cintura'), braco:num('med-braco'), peito:num('med-peito'), quadril:num('med-quadril'), coxa:num('med-coxa'), panturrilha:num('med-panturrilha')};
+  saude.push(r); salvarLS('gym_saude_v4', saude);
+  ['med-peso','med-cintura','med-braco','med-peito','med-quadril','med-coxa','med-panturrilha'].forEach(i => $(i).value = '');
+  renderizarSaude(); toast('Medidas salvas ✅');
+}
+function apagarUltimaMedida(){
+  if(!saude.length){ toast('Nada para apagar', 'neutro'); return; }
+  saude.pop(); salvarLS('gym_saude_v4', saude); renderizarSaude(); toast('Última avaliação apagada', 'neutro');
+}
+function renderizarSaude(){
+  if(cfg.altura && !$('med-altura').value) $('med-altura').value = cfg.altura;
+  const ult = saude[saude.length-1], pen = saude[saude.length-2];
+  $('saude-peso-atual').textContent = ult ? fmt(ult.peso) + ' kg' : '-- kg';
+  const d = $('saude-peso-diff');
+  if(ult && pen){ const x = ult.peso - pen.peso; d.textContent = (x > 0 ? '+' : '') + fmt(x) + ' kg'; d.style.color = '#cbd5e1'; }
+  else { d.textContent = 'Sem histórico'; d.style.color = 'var(--mut)'; }
+  const iv = $('saude-imc-valor'), is = $('saude-imc-status');
+  if(ult && cfg.altura){ const m = cfg.altura/100, v = ult.peso/(m*m), k = classIMC(v); iv.textContent = fmt(v); is.textContent = k.t; is.style.color = k.c; }
+  else { iv.textContent = '--'; is.textContent = 'Informe a altura'; is.style.color = '#cbd5e1'; }
+  const rv = $('saude-rca-valor'), rs = $('saude-rca-status'), comC = [...saude].reverse().find(s => s.cintura);
+  if(comC && cfg.altura){ const v = comC.cintura/cfg.altura, k = classRCA(v); rv.textContent = fmt(v, 2); rs.textContent = k.t; rs.style.color = k.c; }
+  else { rv.textContent = '--'; rs.textContent = 'Meça a cintura'; rs.style.color = '#cbd5e1'; }
+
+  const cv = $('graficoSaude'), pp = saude.map(s => ({ts:s.ts, v:s.peso})).slice(-12), pc = saude.filter(s => s.cintura).map(s => ({ts:s.ts, v:s.cintura})).slice(-12);
+  if(!pp.length) vazioCanvas(cv, 'Salve seu peso para ver a curva');
+  else desenharLinhas(cv, [{pts:pp, cor:'#34d399', lado:'l'}, ...(pc.length ? [{pts:pc, cor:'#fbbf24', lado:'r'}] : [])]);
+
+  const rot = {cintura:'Cintura', braco:'Braço', peito:'Peito', quadril:'Quadril', coxa:'Coxa', panturrilha:'Panturr.'};
+  const box = $('lista-historico-saude');
+  box.innerHTML = saude.length ? [...saude].reverse().slice(0,20).map(s => {
+    const extras = Object.keys(rot).filter(k => s[k]).map(k => `<span class="chip" style="color:#cbd5e1;border-color:#334155">${rot[k]} ${fmt(s[k])}</span>`).join('');
+    return `<div class="hrow" style="display:block"><div class="row"><b>${dataLonga(s.ts)}</b><span class="mono" style="color:#34d399">${fmt(s.peso)} kg</span></div>${extras ? `<div class="chips">${extras}</div>` : ''}</div>`;
+  }).join('') : '<div class="vazio">Nenhuma avaliação registrada ainda.</div>';
+}
+
+// ============================ AJUDA / BACKUP ============================
+function montarAjuda(){
+  $('lista-ajuda').innerHTML = Object.values(AJUDA).map(a => `<details><summary>${esc(a.t)}</summary><p style="white-space:pre-line">${esc(a.x)}</p></details>`).join('');
+}
 function exportarDados(){
-  const blob = new Blob([JSON.stringify({ficha:fichaTreino, historico, v:3}, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  const blob = new Blob([JSON.stringify({v:4, ficha, historico, saude, cfg}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'gymtracker-backup-' + new Date().toISOString().slice(0,10) + '.json';
-  document.body.appendChild(a); a.click(); a.remove();
-  mostrarToast('Backup exportado', 'background:#059669');
+  document.body.appendChild(a); a.click(); a.remove(); toast('Backup exportado');
 }
 function importarDados(ev){
   const f = ev.target.files[0]; if(!f) return;
@@ -532,25 +659,21 @@ function importarDados(ev){
   r.onload = () => {
     try{
       const d = JSON.parse(r.result);
-      if(!d.ficha || !Array.isArray(d.historico)) throw new Error('formato');
-      fichaTreino = d.ficha; historico = d.historico;
-      salvarLS('gym_ficha_v3', fichaTreino); salvarLS('gym_hist_v3', historico);
-      selecionarTreino(treinoAtual); popularSelectGrafico(); atualizarGrafico();
-      mostrarToast('Backup importado', 'background:#059669');
-    }catch(e){ mostrarToast('Arquivo de backup inválido', 'background:#e11d48'); }
+      if(!d.ficha || !d.ficha.A || !d.ficha.B || !Array.isArray(d.historico)) throw new Error('formato');
+      ficha = {A:d.ficha.A, B:d.ficha.B}; historico = d.historico; saude = Array.isArray(d.saude) ? d.saude : []; cfg = d.cfg || cfg; if(!cfg.nomes) cfg.nomes = {...nomesPadrao};
+      salvarLS('gym_ficha_v4', ficha); salvarLS('gym_hist_v3', historico); salvarLS('gym_saude_v4', saude); salvarLS('gym_cfg_v4', cfg);
+      atualizarAbas(); renderizarExercicios(); popularSelect(); atualizarSubtitulo(); toast('Backup importado ✅');
+    }catch(e){ toast('Arquivo de backup inválido', 'bad'); }
   };
   r.readAsText(f); ev.target.value = '';
 }
 
 // ============================ INÍCIO ============================
 (function init(){
-  const s = diaSugerido();
-  $('dia-sugerido').textContent = s.texto;
-  $('timer-display').textContent = fmtTimer(ultimoTimer);
-  selecionarTreino(s.letra);
-  popularSelectGrafico();
-  atualizarGrafico();
-  window.addEventListener('resize', atualizarGrafico);
+  $('timer-display').textContent = fmtT(ultimoTimer);
+  treinoAtual = sugerido();
+  atualizarAbas(); renderizarExercicios(); popularSelect(); montarAjuda(); atualizarSubtitulo();
+  window.addEventListener('resize', () => { if(abaAtual === 'evolucao') atualizarGrafico(); if(abaAtual === 'saude') renderizarSaude(); });
 })();
 </script>
 </body>
