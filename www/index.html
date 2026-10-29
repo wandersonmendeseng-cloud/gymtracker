@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -101,6 +99,10 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 .rk .nm{flex:1;min-width:0;font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rk .nm small{display:block;font-weight:500;font-size:10px;color:var(--mut)}
 .rk .vl{font-weight:800;font-size:16px}
+.tC{background:rgba(52,211,153,.15);color:#34d399;border-color:rgba(52,211,153,.35)}
+.regc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.regc label{display:block;font-size:9px;font-weight:700;color:var(--mut);margin:0 0 3px;text-transform:uppercase;white-space:nowrap}
+.regc input{text-align:center;padding:9px 2px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
 .modal.on{display:flex}
 .box{background:#0f172a;border:1px solid #334155;border-radius:18px;padding:18px;width:100%;max-width:380px;max-height:88vh;overflow-y:auto}
@@ -162,7 +164,6 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <div style="font-size:11px;color:var(--mut);margin:-4px 2px 12px">
     Tipo de série: <span class="tag tW">W</span> aquec. · <span class="tag tT">T</span> trabalho · <span class="tag tF">F</span> falha
     <button class="help" onclick="abrirAjuda('series')">?</button>
-    <span style="float:right">Toque numa série salva para apagar</span>
   </div>
   <div id="lista-exercicios"></div>
 </main>
@@ -256,6 +257,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
       <button class="b p" style="flex:1" onclick="document.getElementById('arq-import').click()">📥 Importar Backup</button>
       <input type="file" id="arq-import" accept="application/json" style="display:none" onchange="importarDados(event)">
     </div>
+    <button class="b" style="width:100%;margin-top:8px" onclick="pedirRestaurarFicha()">↺ Restaurar minha ficha padrão (A/B)</button>
   </div>
   <div class="dev-card">
     <span class="dev-badge">GymTracker &amp; Saúde v5.1</span>
@@ -319,10 +321,11 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <h3 id="modal-titulo">Novo exercício</h3>
   <input type="hidden" id="edit-id">
   <label>Nome do exercício *</label><input type="text" id="ex-nome" placeholder="Ex: Supino inclinado no Smith">
+  <label>Tipo</label><select id="ex-modo" onchange="ajustarModalModo()"><option value="forca">Musculação (com meta de repetições)</option><option value="falha">Musculação até a falha</option><option value="cardio">Cardio (tempo, distância, velocidade)</option></select>
   <div class="g3">
-    <div><label>Nº séries</label><input type="number" inputmode="numeric" id="ex-num-series" placeholder="4" class="mono" style="text-align:center"></div>
-    <div><label>Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" class="mono" style="text-align:center"></div>
-    <div><label>Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" class="mono" style="text-align:center"></div>
+    <div id="ex-w-series"><label>Nº séries</label><input type="number" inputmode="numeric" id="ex-num-series" placeholder="4" class="mono" style="text-align:center"></div>
+    <div id="ex-w-min"><label id="ex-l-min">Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" class="mono" style="text-align:center"></div>
+    <div id="ex-w-max"><label id="ex-l-max">Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" class="mono" style="text-align:center"></div>
   </div>
   <label style="color:#fbbf24">⚙️ Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
   <label>📘 Guia de execução / notas</label><textarea id="ex-explicacao" rows="3" placeholder="Ex: escápulas retraídas, descida em 2 segundos."></textarea>
@@ -392,13 +395,15 @@ const AJUDA = {
   imc_rca:{t:'📊 IMC, % Gordura (BF) e Cintura/Altura',x:'% BF (Método da Marinha dos EUA): Usa altura, cintura e pescoço para estimar seu percentual de gordura corporal e massa magra de forma muito mais fiel que o IMC.\n\nIMC = peso (kg) ÷ altura (m)².\n18,5 a 24,9: normal | 25 a 29,9: sobrepeso.\nO IMC não separa músculo de gordura.\n\nRelação cintura/altura = cintura ÷ altura. Abaixo de 0,5 é considerado ideal para a saúde cardiovascular.'},
   como_medir:{t:'📏 Como medir',x:'Meça sempre no mesmo horário, de preferência em jejum e de manhã, com fita métrica flexível.\n\nCintura: na altura do umbigo, relaxado.\nPescoço: logo abaixo do pomo de Adão, sem apertar.\nBraço: no meio do bíceps.\nPeito: na linha dos mamilos.\nCoxa: no meio da coxa.'},
   progressao:{t:'🎯 Progressão de carga',x:'Cada exercício tem uma faixa de repetições (ex.: 8–12). Quando você atingir o número máximo da faixa no treino anterior, o app mostra um banner verde sugerindo +2 kg com um botão para preencher o peso automaticamente.'},
+  cardio:{t:'🏃 Cardio',x:'Exercícios de cardio não usam kg nem repetições. Informe o tempo (min), a distância (km) ou a velocidade (km/h) e, se houver, a inclinação (%). Se preencher o tempo e a distância, o app calcula a velocidade; se preencher o tempo e a velocidade, ele calcula a distância.\n\nNa aba Evolução, escolha o cardio para ver a distância e a velocidade ao longo dos dias.\n\nPara criar um: + Exercício e, em Tipo, escolha Cardio.'},
+  falha:{t:'🔥 Exercício até a falha',x:'Alguns exercícios (como o rest-pause) não têm um número fixo de repetições: você vai até a falha. Neles, o tipo da série já vem como F, e o app não mostra meta de repetições nem sugere subir a carga.\n\nNo rest-pause, anote o total de repetições somando as mini-séries. Você também pode trocar o tipo de qualquer exercício no ✎.'},
   domingo:{t:'☀️ Domingos e Sequência (Streak)',x:'A maioria das academias fecha aos domingos. Quando a opção está em "Folga", o domingo é ignorado na cobrança: se você treinou no sábado e na segunda-feira, sua sequência continua intacta!\n\nE se você treinar em um domingo mesmo no modo Folga, ele ainda ganha +1 dia de bônus na sua sequência.\n\nSe você malha todo domingo obrigatoriamente, mude o botão para "Treino".'},
   ranking:{t:'🏆 Frequência, Calendário e Ranking',x:'Um dia conta como treinado quando você salva uma série válida ou toca em Finalizar Treino. Você também pode tocar diretamente em qualquer dia do calendário para marcar ou desmarcar presença!\n\nUse o botão "Card PNG (Stories)" para gerar uma imagem com seu resumo e recordes para postar no WhatsApp ou Instagram.'},
   recorde:{t:'🥇 Recordes pessoais',x:'Quando você salva uma série de Trabalho ou Falha com uma carga maior que a do seu histórico, ou com um 1RM estimado maior, o app toca um som especial de vitória, exibe um alerta dourado de NOVO RECORDE e marca a série com 🏆.'}
 };
 
 // ============================ DADOS ============================
-const fichaPadrao = {
+const fichaAntiga = {
   A:{exercicios:[
     {id:"supino_reto",nome:"Supino Reto com Barra",numSeries:4,repsMin:8,repsMax:10,ajuste:"Suporte da barra na altura 6 • Pés firmes no solo",explicacao:"Retraia e deprima as escápulas no banco. Desça a barra até a linha inferior do peitoral, cotovelos a cerca de 45° do tronco."},
     {id:"puxada_frente",nome:"Puxada Alta Aberta (Pulldown)",numSeries:4,repsMin:8,repsMax:12,ajuste:"Trava dos joelhos no furo 3 • Pegada pronada aberta",explicacao:"Inicie deprimindo as escápulas. Puxe a barra até a parte alta do peito, cotovelos em direção ao quadril."},
@@ -413,12 +418,50 @@ const fichaPadrao = {
     {id:"panturrilha",nome:"Panturrilha em Pé",numSeries:4,repsMin:12,repsMax:20,ajuste:"Ombros sob os apoios • Ponta dos pés na borda",explicacao:"Desça alongando bem e suba o máximo possível, com pausa de 1 segundo no topo."},
     {id:"prancha",nome:"Prancha Abdominal (reps = segundos ÷ 10)",numSeries:3,repsMin:3,repsMax:6,ajuste:"Antebraços no chão • Corpo em linha reta",explicacao:"Contraia abdômen e glúteos, sem deixar o quadril cair. Anote 1 rep a cada 10 segundos sustentados."}]}
 };
+const E = (id,nome,numSeries,repsMin,repsMax,ajuste='',explicacao='') => ({id,nome,numSeries,repsMin,repsMax,ajuste,explicacao});
+const FALHA = (id,nome,numSeries,ajuste='',explicacao='') => ({id,nome,numSeries,repsMin:0,repsMax:0,falha:true,ajuste,explicacao});
+const CARDIO = (id,nome,metaMin,metaMax,ajuste='',explicacao='',incl=0) => ({id,nome,modo:'cardio',numSeries:1,repsMin:metaMin,repsMax:metaMax,incl,ajuste,explicacao});
+const fichaPadrao = {
+  A:{exercicios:[
+    E('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',2,10,10,'⏱ 10 segundos por série','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('a_along_delt','Alongamento de deltoide e tríceps',1,20,20,'⏱ 20 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('a_supino','Supino reto com isometria de 4" perto do peito',3,10,15,'5 superlentas + 10 rápidas','Faça 5 repetições superlentas com isometria de 4" perto do peito, seguidas de 10 rápidas (15 reps por série).'),
+    E('a_voador_peito','Voador peitoral com pico de contração de 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_elev_frontal','Elevação frontal de costas para o cross-corda',3,12,15),
+    E('a_triceps_21','Tríceps barra reta 21',3,21,21,'Método 21','Método 21: 7 repetições na metade inferior + 7 na metade superior + 7 completas.'),
+    E('a_arnold','Desenvolvimento Arnold sentado HBC',3,12,15),
+    E('a_puxada_art','Puxada articulada com pico de contração 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_serrote','Remada serrote HBC',3,12,15),
+    E('a_voador_dorsal','Voador dorsal',3,12,15),
+    E('a_biceps_maq','Bíceps máquina',3,12,15),
+    E('a_abd_inf','Abdominal inferior',3,20,20),
+    CARDIO('a_hiit',"HIIT no transport ou na bike (1' forte, 1' fraco)",10,15,"⏱ 10 a 15 minutos • 1' forte / 1' fraco",'Alterne 1 minuto forte e 1 minuto fraco. Anote o tempo total, a distância e a velocidade média.')]},
+  B:{exercicios:[
+    E('b_along_post','Alongamento de posterior de coxa sentado',1,15,15,'⏱ 15 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('b_along_glut','Alongamento de glúteo e quadrado lombar sentado',1,15,15,'⏱ 15 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('b_leg_press','Leg Press',3,12,15),
+    FALHA('b_adutora_rp','Cadeira adutora em rest-pause',3,'Método rest-pause • até a falha','Série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    FALHA('b_extensora_rp','Cadeira extensora com pico de contração de 2" em rest-pause',3,'Rest-pause • pico de 2" • até a falha','Segure 2" de pico de contração. Série até a falha, descanse uns 15 segundos e continue. Anote o total de repetições.'),
+    E('b_afundo','Afundo unilateral HBC',3,12,12),
+    E('b_abdutora','Cadeira abdutora',3,12,15),
+    E('b_donkey','Panturrilha donkey',3,15,15),
+    FALHA('b_abdutora_rp','Cadeira abdutora em rest-pause',3,'Método rest-pause • até a falha','Série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    FALHA('b_mesa_flexora','Mesa flexora com pico de contração de 2"',3,'Pico de contração de 2" • até a falha'),
+    E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
+    CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
+};
 const nomesPadrao = {A:'Superiores', B:'Inferiores & Core'};
 
 function lerLS(k, p){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? p; }catch(e){ return p; } }
 function salvarLS(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ toast('Não foi possível salvar os dados', 'bad'); } }
 
-let ficha     = lerLS('gym_ficha_v4', null) || JSON.parse(JSON.stringify(fichaPadrao));
+let ficha     = JSON.parse(JSON.stringify(fichaPadrao));
+(function(){
+  const salva = lerLS('gym_ficha_v4', null);
+  if(!salva || !salva.A || !salva.B) return;
+  if(JSON.stringify(salva) === JSON.stringify(fichaAntiga)) salvarLS('gym_ficha_v4', ficha);
+  else ficha = salva;
+})();
 let historico = lerLS('gym_hist_v3', []);
 let saude     = lerLS('gym_saude_v4', []);
 let cfg       = lerLS('gym_cfg_v4', {nomes:{...nomesPadrao}, altura:null, ultimo:null, treinaDomingo:false, offDays:[], nome:'Wanderson'});
@@ -445,6 +488,7 @@ const mesmoDia = (a,b) => new Date(a).toDateString() === new Date(b).toDateStrin
 const dataCurta = ts => new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
 const dataLonga = ts => new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
 const valida = h => h.tipo === 'T' || h.tipo === 'F';
+const tipoPadrao = id => (todosEx().find(e => e.id === id)?.falha ? 'F' : 'T');
 const num = id => { const v = parseFloat(String($(id).value).replace(',', '.')); return isNaN(v) ? null : v; };
 
 let toastT = null;
@@ -563,7 +607,7 @@ function pedirExclusaoChip(ts){
   const item = historico.find(h => h.ts === ts);
   if(!item) return;
   $('confirm-titulo').textContent = 'Apagar esta série?';
-  $('confirm-texto').textContent = `${item.nome}: ${fmt(item.peso)} kg × ${item.reps} reps (${item.tipo})`;
+  $('confirm-texto').textContent = item.tipo === 'C' ? `${item.nome}: ${descCardio(item)}` : `${item.nome}: ${fmt(item.peso)} kg × ${item.reps} reps (${item.tipo})`;
   $('btn-confirm-yes').onclick = () => {
     historico = historico.filter(h => h.ts !== ts);
     salvarLS('gym_hist_v3', historico);
@@ -602,13 +646,66 @@ function calcularAnilhas(){
     ${resto > 0.1 ? `<span class="t-sm" style="color:#fbbf24;margin-top:6px">Sobram ${fmt(resto,2)} kg sem anilha padrão</span>` : ''}`;
 }
 
+function descCardio(h){
+  return [h.min ? fmt(h.min,1) + ' min' : null, h.km ? fmt(h.km,2) + ' km' : null, h.vel ? fmt(h.vel,1) + ' km/h' : null, h.incl ? 'inc ' + fmt(h.incl,1) + '%' : null].filter(Boolean).join(' • ');
+}
+function renderCardio(ex, idx){
+  const agora = Date.now();
+  const hoje = historico.filter(h => h.exId === ex.id && h.tipo === 'C' && mesmoDia(h.ts, agora));
+  const ant = historico.filter(h => h.exId === ex.id && h.tipo === 'C' && !mesmoDia(h.ts, agora));
+  const ref = hoje.length ? hoje[hoje.length-1] : (ant.length ? ant[ant.length-1] : null);
+  const ultima = ant.length ? `<div class="ultima">Último (${dataCurta(ant[ant.length-1].ts)}): <b>${descCardio(ant[ant.length-1])}</b></div>` : '';
+  const meta = ex.repsMax ? 'meta ' + (ex.repsMin === ex.repsMax ? ex.repsMax : ex.repsMin + '–' + ex.repsMax) + ' min' : 'sem meta de tempo';
+  const chips = hoje.map(h => `<span class="chip tC" onclick="pedirExclusaoChip(${h.ts})" title="Toque para apagar">${descCardio(h)} ✕</span>`).join('');
+  const val = k => (ref && ref[k]) ? Math.round(ref[k]*100)/100 : '';
+  const inc = ref ? (ref.incl || '') : (ex.incl || '');
+  return `<div class="card">
+    <div class="row" style="align-items:flex-start">
+      <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
+        <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">🏃 Cardio</b> • ${meta}</div></div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
+        <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
+        <button class="mini" onclick="alternarGuia('${ex.id}')" title="Guia">📘</button>
+        <button class="mini" onclick="abrirModalExercicio('${ex.id}')" title="Editar">✎</button>
+        <button class="mini" style="color:#fda4af" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
+      </div>
+    </div>
+    ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
+    ${abertos[ex.id] && ex.explicacao ? `<div class="guia">${esc(ex.explicacao)}</div>` : ''}
+    ${ultima}
+    ${chips ? `<div class="chips">${chips}</div>` : ''}
+    <div class="regc">
+      <div><label>Tempo (min)</label><input type="number" inputmode="decimal" step="0.5" min="0" class="mono" id="cmin-${ex.id}" value="${val('min')}"></div>
+      <div><label>Dist. (km)</label><input type="number" inputmode="decimal" step="0.01" min="0" class="mono" id="cdist-${ex.id}" value="${val('km')}"></div>
+      <div><label>Vel. (km/h)</label><input type="number" inputmode="decimal" step="0.1" min="0" class="mono" id="cvel-${ex.id}" value=""></div>
+      <div><label>Inclin. (%)</label><input type="number" inputmode="decimal" step="0.5" min="0" class="mono" id="cinc-${ex.id}" value="${inc}"></div>
+    </div>
+    <div class="t-sm" style="margin-top:6px">Preencha o tempo e a distância <b>ou</b> a velocidade: o app calcula o que faltar.</div>
+    <button class="ok" style="width:100%;margin-top:8px" onclick="registrarCardio('${ex.id}')">✓ Salvar cardio</button>
+  </div>`;
+}
+function registrarCardio(id){
+  const mn = num('cmin-'+id); let km = num('cdist-'+id), vel = num('cvel-'+id); const inc = num('cinc-'+id);
+  if(mn === null || mn <= 0){ toast('Informe o tempo em minutos', 'bad'); return; }
+  if((km !== null && km < 0) || (vel !== null && vel < 0)){ toast('Distância e velocidade não podem ser negativas', 'bad'); return; }
+  if(km && !vel) vel = km / (mn/60); else if(vel && !km) km = vel * mn / 60;
+  const kd = chave(Date.now()); cfg.offDays = cfg.offDays.filter(x => x !== kd); salvarLS('gym_cfg_v4', cfg);
+  const r2 = x => Math.round((x || 0) * 100) / 100;
+  const reg = {exId:id, nome:nomeEx(id), ts:Date.now(), tipo:'C', min:mn, km:r2(km), vel:r2(vel), incl:inc || 0};
+  historico.push(reg); salvarLS('gym_hist_v3', historico);
+  toast('🏃 Cardio salvo: ' + descCardio(reg));
+  renderizarExercicios(); popularSelect(id);
+}
+
 function renderizarExercicios(){
   const lista = $('lista-exercicios');
   const exs = ficha[treinoAtual].exercicios;
   if(!exs.length){ lista.innerHTML = '<div class="vazio">Nenhum exercício nesta ficha.<br>Toque em “+ Exercício”.</div>'; return; }
   const agora = Date.now();
   lista.innerHTML = exs.map((ex, idx) => {
-    const tipo = tipoSel[ex.id] || 'T';
+    if(ex.modo === 'cardio') return renderCardio(ex, idx);
+    const tipo = tipoSel[ex.id] || (ex.falha ? 'F' : 'T');
     const hoje = historico.filter(h => h.exId === ex.id && mesmoDia(h.ts, agora));
     const ant = historico.filter(h => h.exId === ex.id && !mesmoDia(h.ts, agora) && valida(h));
     let ultima = '', bannerProg = '';
@@ -616,7 +713,7 @@ function renderizarExercicios(){
       const dia = ant[ant.length-1].ts;
       const m = ant.filter(h => mesmoDia(h.ts, dia)).reduce((a,b) => b.peso*b.reps > a.peso*a.reps ? b : a);
       ultima = `<div class="ultima">Último treino (${dataCurta(dia)}): <b>${fmt(m.peso)} kg × ${m.reps}</b> (1RM: ${fmt(epley(m.peso,m.reps))} kg)</div>`;
-      if(m.reps >= ex.repsMax && m.peso > 0){
+      if(!ex.falha && m.reps >= ex.repsMax && m.peso > 0){
         const sug = m.peso + 2;
         bannerProg = `<div class="overload"><span>🔥 Meta batida (${m.reps} reps)! Subir carga?</span><button onclick="aplicarSugestaoPeso('${ex.id}', ${sug})">Usar ${fmt(sug)} kg</button></div>`;
       }
@@ -628,7 +725,7 @@ function renderizarExercicios(){
     return `<div class="card">
       <div class="row" style="align-items:flex-start">
         <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
-          <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">${ex.numSeries} séries</b> • ${ex.repsMin}–${ex.repsMax} reps</div></div>
+          <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">${ex.numSeries} séries</b> • ${ex.falha ? 'até a falha' : ex.repsMin + '–' + ex.repsMax + ' reps'}</div></div>
         <div style="display:flex;gap:4px;flex-shrink:0">
           <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
           <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
@@ -654,18 +751,19 @@ function renderizarExercicios(){
   }).join('');
 }
 function preservar(id, fn){
-  const p = $('peso-'+id)?.value, r = $('reps-'+id)?.value;
+  const pf = ['peso-','reps-','cmin-','cdist-','cvel-','cinc-'];
+  const v = pf.map(q => $(q+id)?.value);
   fn(); renderizarExercicios();
-  if($('peso-'+id)) $('peso-'+id).value = p; if($('reps-'+id)) $('reps-'+id).value = r;
+  pf.forEach((q,i) => { if($(q+id) && v[i] !== undefined) $(q+id).value = v[i]; });
 }
-function alternarTipo(id){ preservar(id, () => { const o = ['W','T','F']; tipoSel[id] = o[(o.indexOf(tipoSel[id]||'T')+1)%3]; }); }
+function alternarTipo(id){ preservar(id, () => { const o = ['W','T','F']; tipoSel[id] = o[(o.indexOf(tipoSel[id]||tipoPadrao(id))+1)%3]; }); }
 function alternarGuia(id){ preservar(id, () => { abertos[id] = !abertos[id]; }); }
 
 function registrarSerie(id){
   const peso = num('peso-'+id), reps = parseInt($('reps-'+id).value, 10);
   if(peso === null || peso < 0){ toast('Informe a carga em kg', 'bad'); return; }
   if(!(reps >= 1)){ toast('Informe as repetições', 'bad'); return; }
-  const tipo = tipoSel[id] || 'T';
+  const tipo = tipoSel[id] || tipoPadrao(id);
   let pr = false;
   if(tipo !== 'W'){
     const prev = historico.filter(h => h.exId === id && valida(h));
@@ -685,7 +783,7 @@ function registrarSerie(id){
     toast('🏆 NOVO RECORDE! ' + fmt(peso) + ' kg × ' + reps, 'pr');
   } else {
     let msg = `Série salva: ${fmt(peso)} kg × ${reps}`;
-    if(ex && tipo !== 'W' && reps >= ex.repsMax) msg += ' 🎯 Meta batida! Suba a carga no próximo.';
+    if(ex && !ex.falha && tipo !== 'W' && reps >= ex.repsMax) msg += ' 🎯 Meta batida! Suba a carga no próximo.';
     toast(msg);
   }
   iniciarTimer(tipo === 'W' ? 60 : ultimoTimer);
@@ -700,8 +798,15 @@ function marcarTreinoConcluidoHoje(){
   atualizarAbas(); atualizarSubtitulo();
   toast(`Treino ${treinoAtual} finalizado! 💪 Próximo: ${sugerido()}`);
 }
-
 // ---- modal exercício ----
+function ajustarModalModo(){
+  const m = $('ex-modo').value;
+  $('ex-w-series').style.display = m === 'cardio' ? 'none' : '';
+  $('ex-w-min').style.display = m === 'falha' ? 'none' : '';
+  $('ex-w-max').style.display = m === 'falha' ? 'none' : '';
+  $('ex-l-min').textContent = m === 'cardio' ? 'Meta mín (min)' : 'Reps mín';
+  $('ex-l-max').textContent = m === 'cardio' ? 'Meta máx (min)' : 'Reps máx';
+}
 function abrirModalExercicio(id){
   const ex = id ? ficha[treinoAtual].exercicios.find(e => e.id === id) : null;
   $('modal-titulo').textContent = ex ? 'Editar exercício' : 'Novo exercício (Treino ' + treinoAtual + ')';
@@ -709,14 +814,19 @@ function abrirModalExercicio(id){
   $('ex-nome').value = ex?.nome || ''; $('ex-num-series').value = ex?.numSeries || '';
   $('ex-reps-min').value = ex?.repsMin || ''; $('ex-reps-max').value = ex?.repsMax || '';
   $('ex-ajuste').value = ex?.ajuste || ''; $('ex-explicacao').value = ex?.explicacao || '';
+  $('ex-modo').value = ex ? (ex.modo === 'cardio' ? 'cardio' : (ex.falha ? 'falha' : 'forca')) : 'forca'; ajustarModalModo();
   abrirModal('modal-ex');
 }
 function salvarExercicioFicha(){
   const nome = $('ex-nome').value.trim();
   if(!nome){ toast('Dê um nome ao exercício', 'bad'); return; }
-  let mn = parseInt($('ex-reps-min').value,10) || 8, mx = parseInt($('ex-reps-max').value,10) || 12;
+  const modo = $('ex-modo').value;
+  let mn, mx;
+  if(modo === 'falha'){ mn = 0; mx = 0; }
+  else if(modo === 'cardio'){ mn = parseInt($('ex-reps-min').value,10) || 0; mx = parseInt($('ex-reps-max').value,10) || 0; }
+  else { mn = parseInt($('ex-reps-min').value,10) || 8; mx = parseInt($('ex-reps-max').value,10) || 12; }
   if(mn > mx) [mn, mx] = [mx, mn];
-  const d = {nome, numSeries:parseInt($('ex-num-series').value,10) || 3, repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim()};
+  const d = {nome, numSeries: modo === 'cardio' ? 1 : (parseInt($('ex-num-series').value,10) || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), modo: modo === 'cardio' ? 'cardio' : undefined, falha: modo === 'falha' ? true : undefined};
   const eid = $('edit-id').value, lista = ficha[treinoAtual].exercicios;
   if(eid) Object.assign(lista.find(e => e.id === eid), d); else lista.push({id:'ex_'+Date.now().toString(36), ...d});
   salvarLS('gym_ficha_v4', ficha); fecharModal('modal-ex'); renderizarExercicios(); popularSelect();
@@ -802,26 +912,44 @@ function mudarMetricaGrafico(m){
 }
 function atualizarGrafico(){
   const id = $('select-grafico').value, cv = $('graficoProgressao');
+  const cfgEx = todosEx().find(e => e.id === id);
+  const cardio = (cfgEx && cfgEx.modo === 'cardio') || historico.some(h => h.exId === id && h.tipo === 'C');
+  $('btn-metric-carga').textContent = cardio ? '📏 Distância (km)' : '🏋️ Peso usado (kg)';
+  $('btn-metric-rm').textContent = cardio ? '⚡ Velocidade (km/h)' : '⚡ Força 1RM';
   const por = new Map();
-  historico.filter(h => h.exId === id && valida(h)).forEach(h => {
-    const k = new Date(h.ts).toDateString(), v = metricaGrafico === 'carga' ? h.peso : epley(h.peso, h.reps);
+  const base = cardio ? historico.filter(h => h.exId === id && h.tipo === 'C') : historico.filter(h => h.exId === id && valida(h));
+  base.forEach(h => {
+    const k = new Date(h.ts).toDateString();
+    const v = cardio ? (metricaGrafico === 'carga' ? h.km : h.vel) : (metricaGrafico === 'carga' ? h.peso : epley(h.peso, h.reps));
+    if(cardio && !(v > 0)) return;
     if(!por.has(k) || v > por.get(k).v) por.set(k, {ts:h.ts, v});
   });
   const pts = [...por.values()].sort((a,b) => a.ts-b.ts).slice(-12);
-  if(!pts.length) vazioCanvas(cv, 'Salve séries de Trabalho ou Falha para ver o gráfico');
+  if(!pts.length) vazioCanvas(cv, cardio ? 'Salve um cardio com distância ou velocidade' : 'Salve séries de Trabalho ou Falha para ver o gráfico');
   else desenharLinhas(cv, [{pts, cor: metricaGrafico === 'carga' ? '#3b82f6' : '#10b981', lado:'l'}]);
-  const val = historico.filter(h => h.exId === id && valida(h)), rb = $('recorde-ex');
-  if(val.length){
-    const b = val.reduce((a,c) => epley(c.peso,c.reps) > epley(a.peso,a.reps) ? c : a), mp = Math.max(...val.map(h => h.peso));
-    rb.innerHTML = `🏆 Recorde de carga: <b style="color:#e2e8f0">${fmt(mp)} kg</b><br>Melhor 1RM estimado: <b style="color:#e2e8f0">${fmt(epley(b.peso,b.reps))} kg</b> (${fmt(b.peso)} × ${b.reps} em ${dataLonga(b.ts)})`;
-  } else rb.textContent = '';
+  const rb = $('recorde-ex');
+  if(cardio){
+    const c = base;
+    if(c.length){
+      const mk = Math.max(...c.map(h => h.km || 0)), mv = Math.max(...c.map(h => h.vel || 0)), mt = Math.max(...c.map(h => h.min || 0));
+      rb.innerHTML = `🏆 Maior distância: <b style="color:#e2e8f0">${fmt(mk,2)} km</b><br>Melhor velocidade média: <b style="color:#e2e8f0">${fmt(mv,1)} km/h</b><br>Maior tempo: <b style="color:#e2e8f0">${fmt(mt,1)} min</b>`;
+    } else rb.textContent = '';
+  } else {
+    const val = base;
+    if(val.length){
+      const b = val.reduce((a,c) => epley(c.peso,c.reps) > epley(a.peso,a.reps) ? c : a), mp = Math.max(...val.map(h => h.peso));
+      rb.innerHTML = `🏆 Recorde de carga: <b style="color:#e2e8f0">${fmt(mp)} kg</b><br>Melhor 1RM estimado: <b style="color:#e2e8f0">${fmt(epley(b.peso,b.reps))} kg</b> (${fmt(b.peso)} × ${b.reps} em ${dataLonga(b.ts)})`;
+    } else rb.textContent = '';
+  }
   const regs = historico.filter(h => h.exId === id).slice(-30).reverse(), box = $('tabela-historico-exercicio');
-  box.innerHTML = regs.length ? regs.map(h => `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag t${h.tipo}">${h.tipo}</span>${h.pr ? ' 🏆' : ''}</span><span class="mono">${fmt(h.peso)} kg × ${h.reps}</span><span class="mono" style="color:var(--mut)">1RM ${valida(h) ? fmt(epley(h.peso,h.reps)) : '—'}</span></div>`).join('') : '<div class="vazio">Sem registros para este exercício.</div>';
+  box.innerHTML = regs.length ? regs.map(h => h.tipo === 'C'
+    ? `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag tC">C</span></span><span class="mono" style="text-align:right">${descCardio(h)}</span></div>`
+    : `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag t${h.tipo}">${h.tipo}</span>${h.pr ? ' 🏆' : ''}</span><span class="mono">${fmt(h.peso)} kg × ${h.reps}</span><span class="mono" style="color:var(--mut)">1RM ${valida(h) ? fmt(epley(h.peso,h.reps)) : '—'}</span></div>`).join('') : '<div class="vazio">Sem registros para este exercício.</div>';
 }
 function limparUltimoRegistroExercicio(){
   const id = $('select-grafico').value;
   for(let i = historico.length-1; i >= 0; i--) if(historico[i].exId === id){
-    const r = historico.splice(i,1)[0]; salvarLS('gym_hist_v3', historico); renderizarExercicios(); atualizarGrafico(); toast(`Apagado: ${fmt(r.peso)} kg × ${r.reps}`, 'neutro'); return;
+    const r = historico.splice(i,1)[0]; salvarLS('gym_hist_v3', historico); renderizarExercicios(); atualizarGrafico(); toast(r.tipo === 'C' ? 'Apagado: ' + descCardio(r) : `Apagado: ${fmt(r.peso)} kg × ${r.reps}`, 'neutro'); return;
   }
   toast('Nada para apagar', 'neutro');
 }
@@ -1045,10 +1173,11 @@ function copiarTexto(t){
 async function compartilharResumo(){
   if(!cfg.nome){ toast('Digite seu nome primeiro', 'bad'); return; }
   const t = textoResumo();
-  if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share){
-    try{ await window.Capacitor.Plugins.Share.share({text: t, title: 'GymTracker Ranking'}); return; }catch(e){}
-  }
-  try{ if(navigator.share){ await navigator.share({text:t}); return; } }catch(e){ if(e && e.name === 'AbortError') return; }
+  try{
+    const SH = window.Capacitor?.Plugins?.Share;
+    if(SH){ await SH.share({text:t, dialogTitle:'Enviar resumo'}); return; }
+    if(navigator.share){ await navigator.share({text:t}); return; }
+  }catch(e){ if(e && (e.name === 'AbortError' || String(e).toLowerCase().includes('cancel'))) return; }
   copiarTexto(t);
 }
 function importarAmigo(){
@@ -1061,6 +1190,16 @@ function importarAmigo(){
     cfg.amigos[nome] = {m:o.m, dm:Math.max(0,Math.floor(o.dm)), t:Math.max(0,Math.floor(o.t)), s:Math.max(0,Math.floor(o.s)), ts:o.ts};
     salvarLS('gym_cfg_v4', cfg); $('freq-cola').value = ''; renderizarFreq(); toast('Resumo de ' + nome + ' adicionado ✅');
   }catch(e){ toast('Resumo inválido ou incompleto', 'bad'); }
+}
+
+function pedirRestaurarFicha(){
+  $('confirm-titulo').textContent = 'Restaurar ficha padrão?';
+  $('confirm-texto').textContent = 'Troca os exercícios de A e B pela sua ficha padrão. O histórico de séries é mantido.';
+  $('btn-confirm-yes').onclick = () => {
+    ficha = JSON.parse(JSON.stringify(fichaPadrao)); salvarLS('gym_ficha_v4', ficha);
+    fecharModal('modal-confirm'); renderizarExercicios(); popularSelect(); toast('Ficha padrão restaurada ✅');
+  };
+  abrirModal('modal-confirm');
 }
 
 // ============================ CARD PNG (STORIES / WHATSAPP) ============================
@@ -1138,25 +1277,31 @@ async function compartilharCardPNG(){
   const dataUrl = window._cardDataUrl || $('canvasCard').toDataURL('image/png');
   const nomeArq = 'gymtracker-resumo-' + Date.now() + '.png';
 
-  // 1. Compartilhamento Nativo Android via Capacitor (WhatsApp, Stories, Galeria)
-  if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem && window.Capacitor.Plugins.Share){
+  // 1. APK (Capacitor): salva em Documentos/GymTracker e abre o menu de compartilhar
+  const nativo = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  const FS = window.Capacitor?.Plugins?.Filesystem, SH = window.Capacitor?.Plugins?.Share;
+  if(FS && SH){
     try{
       const base64Data = dataUrl.split(',')[1];
-      const salvo = await window.Capacitor.Plugins.Filesystem.writeFile({
-        path: nomeArq,
-        data: base64Data,
-        directory: 'CACHE'
-      });
-      await window.Capacitor.Plugins.Share.share({
-        title: 'Meu Resumo no GymTracker',
-        text: '💪 Mais um treino concluído no GymTracker!',
-        url: salvo.uri,
-        dialogTitle: 'Compartilhar ou Salvar Imagem'
-      });
+      let salvouDoc = false;
+      try{
+        try{ await FS.requestPermissions(); }catch(e){}
+        await FS.writeFile({path:'GymTracker/' + nomeArq, data:base64Data, directory:'DOCUMENTS', recursive:true});
+        salvouDoc = true;
+      }catch(e){}
+      const tmp = await FS.writeFile({path:nomeArq, data:base64Data, directory:'CACHE'});
+      if(salvouDoc) toast('✅ Salvo em Documentos/GymTracker');
+      await SH.share({title:'Meu Resumo no GymTracker', text:'💪 Mais um treino concluído no GymTracker!', files:[tmp.uri], dialogTitle:'Compartilhar ou Salvar Imagem'});
       return;
     }catch(e){
       if(e && String(e).toLowerCase().includes('cancel')) return;
+      toast('Não consegui abrir o compartilhamento: ' + (e && e.message ? e.message : e), 'bad');
+      return;
     }
+  }
+  if(nativo){
+    toast('Este APK não tem o recurso de compartilhar. Gere o APK novamente no GitHub.', 'bad');
+    return;
   }
 
   // 2. Compartilhamento Web Share API (Chrome Android)
@@ -1178,7 +1323,7 @@ async function compartilharCardPNG(){
     a.href = dataUrl;
     a.download = 'gymtracker-resumo.png';
     document.body.appendChild(a); a.click(); a.remove();
-    toast('Imagem salva na pasta Downloads!');
+    toast('Imagem baixada (veja a pasta Downloads)');
   }catch(e){
     toast('Segure o dedo sobre a imagem para compartilhar!', 'neutro');
   }
