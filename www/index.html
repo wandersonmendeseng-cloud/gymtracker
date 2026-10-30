@@ -6,141 +6,151 @@
 <meta name="theme-color" content="#0b1120">
 <title>GymTracker &amp; Saúde 5.1</title>
 <style>
-:root{--bg:#0b1120;--card:#151f32;--line:#1e293b;--mut:#94a3b8;--txt:#f8fafc;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--rose:#f43f5e}
-html.claro{filter:invert(1) hue-rotate(180deg)}
-html.claro img,html.claro .fth img{filter:invert(1) hue-rotate(180deg)}
-#btn-tema{background:#1e293b;border-radius:99px;width:36px;height:36px;font-size:17px;flex-shrink:0;margin-left:8px}
+:root{--bg:#0b1120;--card:#151f32;--line:#1e293b;--mut:#94a3b8;--txt:#f8fafc;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--rose:#f43f5e;
+--s2:#0f172a;--s1:#1e293b;--bd:#334155;--inp:#060a12;--t2:#cbd5e1;--t3:#64748b;--gr:#34d399;--gr2:#6ee7b7;--am:#fbbf24;--bl:#60a5fa;--ro:#fb7185;--hdr:rgba(15,23,42,.95)}
+html[data-tema=preto]{--bg:#000;--card:#0b0f19;--line:#1a2233;--s2:#05070d;--s1:#141b2a;--bd:#2a3550;--inp:#000;--hdr:rgba(0,0,0,.95)}
+html[data-tema=claro]{--bg:#f1f5f9;--card:#ffffff;--line:#e2e8f0;--mut:#64748b;--txt:#0f172a;--s2:#f8fafc;--s1:#e8edf4;--bd:#cbd5e1;--inp:#ffffff;--t2:#334155;--t3:#94a3b8;--gr:#059669;--gr2:#047857;--am:#b45309;--bl:#2563eb;--ro:#e11d48;--hdr:rgba(255,255,255,.95)}
+html[data-tema=claro] .card{box-shadow:0 2px 10px rgba(15,23,42,.08)}
+html[data-tema=claro] .help{background:rgba(37,99,235,.12)}
+.swatch{width:36px;height:36px;border-radius:99px;border:3px solid transparent;flex-shrink:0}
+.swatch.on{border-color:var(--txt)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg button{padding:9px 4px;border-radius:12px;background:var(--s1);color:var(--t2);font-size:11.5px;font-weight:700;border:1px solid var(--bd)}
+.seg button.on{background:var(--blue);color:#fff;border-color:transparent}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Roboto,sans-serif}
 body{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:96px;user-select:none;-webkit-user-select:none}
 button{font:inherit;color:inherit;border:0;cursor:pointer}
 button:active{transform:scale(.96)}
-input,textarea,select{font:inherit;font-size:13px;color:var(--txt);background:#060a12;border:1px solid #334155;border-radius:12px;padding:10px;width:100%;outline:none;user-select:text;-webkit-user-select:text}
+input,textarea,select{font:inherit;font-size:13px;color:var(--txt);background:var(--inp);border:1px solid var(--bd);border-radius:12px;padding:10px;width:100%;outline:none;user-select:text;-webkit-user-select:text}
 input:focus,textarea:focus,select:focus{border-color:var(--blue)}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .hidden{display:none!important}
-header{position:sticky;top:0;z-index:30;background:rgba(15,23,42,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-header h1{margin:0;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
-header h1:before{content:"";width:10px;height:10px;border-radius:99px;background:#34d399;display:inline-block}
-#header-subtitle{margin:2px 0 0;font-size:11px;font-weight:500;color:#60a5fa}
-.timer{display:flex;align-items:center;gap:8px;background:#0f172a;border:1px solid var(--line);border-radius:16px;padding:6px 10px}
+header{position:sticky;top:0;z-index:30;background:var(--hdr);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header h1{margin:0;font-size:clamp(13px,4vw,16px);font-weight:800;display:flex;align-items:center;gap:6px;white-space:nowrap}
+header>div:first-child{min-width:0}
+#header-subtitle{font-size:11px}
+header h1:before{content:"";width:10px;height:10px;border-radius:99px;background:var(--gr);display:inline-block}
+#header-subtitle{margin:2px 0 0;font-size:11px;font-weight:500;color:var(--bl)}
+.timer{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--line);border-radius:16px;padding:6px 10px}
 .timer small{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-weight:700}
 #timer-display{display:block;font-size:15px;font-weight:800;color:var(--green);text-align:right}
 #timer-display.fim{color:var(--rose)}
 .tb{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.tb button{font-size:10px;font-weight:700;padding:3px 7px;border-radius:7px;background:#1e293b;border:1px solid #334155;color:#e2e8f0}
-.tb .x{background:rgba(76,5,25,.7);border-color:#9f1239;color:#fda4af}
-.help{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:99px;background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.4);font-size:11px;font-weight:800;padding:0;vertical-align:middle}
+.tb button{font-size:10px;font-weight:700;padding:3px 7px;border-radius:7px;background:var(--s1);border:1px solid var(--bd);color:var(--t2)}
+.tb .x{background:rgba(76,5,25,.7);border-color:#9f1239;color:var(--ro)}
+.help{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:99px;background:rgba(59,130,246,.2);color:var(--bl);border:1px solid rgba(59,130,246,.4);font-size:11px;font-weight:800;padding:0;vertical-align:middle}
 main{padding:14px 14px 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 6px 24px -4px rgba(0,0,0,.4);padding:14px;margin-bottom:14px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .t-sm{font-size:11px;color:var(--mut)}
-.link{background:none;color:#60a5fa;font-size:11px;font-weight:600}
-.link.r{color:#fb7185}
+.link{background:none;color:var(--bl);font-size:11px;font-weight:600}
+.link.r{color:var(--ro)}
 .ab{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.abtn{text-align:left;padding:11px 12px;border-radius:16px;font-weight:800;font-size:13px;background:#0f172a;color:var(--mut);border:1px solid var(--line)}
+.abtn{text-align:left;padding:11px 12px;border-radius:16px;font-weight:800;font-size:13px;background:var(--s2);color:var(--mut);border:1px solid var(--line)}
 .abtn small{display:block;font-size:11px;font-weight:500;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .abtn.on{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(37,99,235,.3)}
-.hoje{font-size:9px;background:#34d399;color:#022c22;padding:1px 6px;border-radius:99px;font-weight:800;float:right}
+.hoje{font-size:9px;background:var(--gr);color:#022c22;padding:1px 6px;border-radius:99px;font-weight:800;float:right}
 .acoes{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
-.b{padding:9px 12px;border-radius:12px;font-weight:700;font-size:12px;background:#1e293b;color:#cbd5e1}
-.b.g{background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.35)}
+.b{padding:9px 12px;border-radius:12px;font-weight:700;font-size:12px;background:var(--s1);color:var(--t2)}
+.b.g{background:rgba(16,185,129,.18);color:var(--gr2);border:1px solid rgba(16,185,129,.35)}
 .b.p{background:var(--blue);color:#fff}
 .b.d{background:#e11d48;color:#fff}
 .b.gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#060a12;font-weight:800}
 .b.full{width:100%;background:#059669;color:#fff;padding:12px}
 .tag{display:inline-block;padding:1px 6px;border-radius:5px;font-weight:700;border:1px solid;font-size:11px}
-.tW{background:rgba(245,158,11,.18);color:#fbbf24;border-color:rgba(245,158,11,.35)}
-.tT{background:rgba(59,130,246,.18);color:#60a5fa;border-color:rgba(59,130,246,.35)}
-.tF{background:rgba(244,63,94,.18);color:#fb7185;border-color:rgba(244,63,94,.35)}
+.tW{background:rgba(245,158,11,.18);color:var(--am);border-color:rgba(245,158,11,.35)}
+.tT{background:rgba(59,130,246,.18);color:var(--bl);border-color:rgba(59,130,246,.35)}
+.tF{background:rgba(244,63,94,.18);color:var(--ro);border-color:rgba(244,63,94,.35)}
 .ex-nome{font-weight:700;font-size:14px}
-.mini{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:4px 7px;font-size:11px;color:#cbd5e1}
-.ajuste{margin-top:8px;font-size:11px;color:#fbbf24;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:6px 9px}
-.overload{margin-top:8px;font-size:11.5px;color:#6ee7b7;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);border-radius:10px;padding:7px 9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mini{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:4px 7px;font-size:11px;color:var(--t2)}
+.ajuste{margin-top:8px;font-size:11px;color:var(--am);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:6px 9px}
+.overload{margin-top:8px;font-size:11.5px;color:var(--gr2);background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);border-radius:10px;padding:7px 9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .overload button{background:#10b981;color:#022c22;font-weight:800;font-size:11px;padding:4px 8px;border-radius:7px;flex-shrink:0}
-.guia{margin-top:8px;font-size:11.5px;line-height:1.45;color:#cbd5e1;background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-.ultima{margin-top:8px;font-size:11px;color:var(--mut)}.ultima b{color:#e2e8f0}
+.guia{margin-top:8px;font-size:11.5px;line-height:1.45;color:var(--t2);background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.ultima{margin-top:8px;font-size:11px;color:var(--mut)}.ultima b{color:var(--t2)}
 .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .chip{font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid;cursor:pointer}
 .reg{display:grid;grid-template-columns:48px 1fr 1fr 78px;gap:6px;margin-top:10px;align-items:center}
 .reg input{text-align:center;padding:9px 4px}
 .tipo{min-height:40px;border-radius:12px;font-weight:800;font-size:15px;border:1px solid}
 .ok{background:var(--green);color:#fff;border-radius:12px;font-weight:700;font-size:12px;min-height:40px}
-.prog{height:5px;background:#0f172a;border-radius:9px;margin-top:10px;overflow:hidden}
-.prog i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#10b981)}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#0f172a;padding:4px;border-radius:12px;border:1px solid var(--line);margin:8px 0 12px}
+.prog{height:5px;background:var(--s2);border-radius:9px;margin-top:10px;overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#10b981)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--s2);padding:4px;border-radius:12px;border:1px solid var(--line);margin:8px 0 12px}
 .seg button{padding:8px;border-radius:9px;font-size:12px;font-weight:700;background:transparent;color:var(--mut)}
 .seg button.on{background:var(--blue);color:#fff}
 .chartbox{background:rgba(2,6,15,.7);border:1px solid var(--line);border-radius:14px;padding:6px}
 canvas{width:100%;height:200px;display:block}
-.hrow{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;padding:7px 10px;background:#0f172a;border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+.hrow{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;padding:7px 10px;background:var(--s2);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
 .vazio{text-align:center;color:var(--mut);font-size:12px;padding:20px 8px}
 label.l{display:block;font-size:10px;font-weight:700;color:var(--mut);margin:0 0 4px;text-transform:uppercase}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ind{background:#0f172a;border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}
+.ind{background:var(--s2);border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}
 .ind small{display:block;font-size:10px;font-weight:700;color:var(--mut);text-transform:uppercase}
 .ind b{display:block;font-size:15px;margin-top:3px}
-.ind span{display:block;font-size:10px;font-weight:700;margin-top:3px;color:#cbd5e1}
-details{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.ind span{display:block;font-size:10px;font-weight:700;margin-top:3px;color:var(--t2)}
+details{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}
 summary{font-size:12.5px;font-weight:700;cursor:pointer}
-details p{font-size:12px;line-height:1.5;color:#cbd5e1;margin:8px 0 0}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;z-index:40;background:rgba(15,23,42,.97);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+details p{font-size:12px;line-height:1.5;color:var(--t2);margin:8px 0 0}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;z-index:40;background:var(--hdr);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
 nav button{background:none;color:var(--mut);padding:6px 2px;border-radius:12px;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav button span{font-size:19px;line-height:1}
-nav button.on{color:#fff;background:rgba(59,130,246,.2)}
+nav button.on{color:var(--blue);background:color-mix(in srgb,var(--blue) 18%,transparent)}
+html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be123c}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
 .cal .h{font-size:10px;font-weight:700;color:var(--mut);padding:2px 0}
-.cal .d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:12px;background:#0f172a;border:1px solid var(--line);color:#94a3b8;cursor:pointer;position:relative}
+.cal .d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:12px;background:var(--s2);border:1px solid var(--line);color:var(--mut);cursor:pointer;position:relative}
 .cal .d.dom{border-style:dashed;opacity:.85}
 .cal .d.on{background:var(--green);color:#fff;font-weight:800;border:0;opacity:1}
-.cal .d.hj{outline:2px solid #60a5fa;outline-offset:1px}
+.cal .d.hj{outline:2px solid var(--bl);outline-offset:1px}
 .cal .d.v{background:transparent;border-color:transparent;cursor:default}
-.rk{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0f172a;border:1px solid var(--line);border-radius:14px;margin-bottom:6px}
+.rk{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border:1px solid var(--line);border-radius:14px;margin-bottom:6px}
 .rk.eu{border-color:var(--blue);background:rgba(59,130,246,.12)}
 .rk .pos{font-size:18px;width:28px;text-align:center}
 .rk .nm{flex:1;min-width:0;font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rk .nm small{display:block;font-weight:500;font-size:10px;color:var(--mut)}
 .rk .vl{font-weight:800;font-size:16px}
-.tC{background:rgba(52,211,153,.15);color:#34d399;border-color:rgba(52,211,153,.35)}
+.tC{background:rgba(52,211,153,.15);color:var(--gr);border-color:rgba(52,211,153,.35)}
 .regc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
 .regc label{display:block;font-size:9px;font-weight:700;color:var(--mut);margin:0 0 3px;text-transform:uppercase;white-space:nowrap}
 .regc input{text-align:center;padding:9px 2px}
 .tgl{padding:6px 12px;border-radius:99px;font-size:11px;font-weight:800;flex-shrink:0}
-.tgl.on{background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.4)}
-.tgl.off{background:#1e293b;color:#94a3b8;border:1px solid #334155}
-.dchip{width:36px;height:36px;border-radius:10px;background:#0f172a;border:1px solid #334155;color:#94a3b8;font-weight:800;font-size:12px}
+.tgl.on{background:rgba(16,185,129,.2);color:var(--gr2);border:1px solid rgba(16,185,129,.4)}
+.tgl.off{background:var(--s1);color:var(--mut);border:1px solid var(--bd)}
+.dchip{width:36px;height:36px;border-radius:10px;background:var(--s2);border:1px solid var(--bd);color:var(--mut);font-weight:800;font-size:12px}
 .dchip.on{background:var(--blue);color:#fff;border-color:transparent}
-.nt{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
+.nt{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
 .nt .row b{font-size:12.5px}
-.chk{width:46px;height:46px;border-radius:12px;border:2px solid #475569;background:#0f172a;font-size:24px;font-weight:800;color:#fff}
+.chk{width:46px;height:46px;border-radius:12px;border:2px solid #475569;background:var(--s2);font-size:24px;font-weight:800;color:#fff}
 .chk.on{background:var(--green);border-color:var(--green)}
 .fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.fth{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;background:#0f172a;cursor:pointer}
+.fth{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;background:var(--s2);cursor:pointer}
 .fth img{width:100%;height:100%;object-fit:cover;display:block}
 .fth small{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);font-size:9.5px;padding:3px 5px;text-align:center}
-.fth button{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.65);border-radius:99px;width:22px;height:22px;font-size:11px;color:#fda4af}
+.fth button{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.65);border-radius:99px;width:22px;height:22px;font-size:11px;color:var(--ro)}
 .fcomp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .fcomp figure{margin:0;text-align:center}
-.fcomp img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:1px solid #334155;display:block;background:#0f172a}
-.fcomp figcaption{font-size:11px;margin-top:4px;color:#cbd5e1}
+.fcomp img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:1px solid var(--bd);display:block;background:var(--s2)}
+.fcomp figcaption{font-size:11px;margin-top:4px;color:var(--t2)}
 .meta-i{margin-bottom:12px}
 .meta-i .row{font-size:12px}
 .meta-i .prog{margin-top:6px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
 .modal.on{display:flex}
-.box{background:#0f172a;border:1px solid #334155;border-radius:18px;padding:18px;width:100%;max-width:380px;max-height:88vh;overflow-y:auto}
+.box{background:var(--s2);border:1px solid var(--bd);border-radius:18px;padding:18px;width:100%;max-width:380px;max-height:88vh;overflow-y:auto}
 .box h3{margin:0 0 10px;font-size:16px}
-.box label{display:block;font-size:11px;font-weight:600;color:#cbd5e1;margin:10px 0 4px}
-.box p.ap{font-size:13px;line-height:1.55;color:#cbd5e1;margin:0;white-space:pre-line}
+.box label{display:block;font-size:11px;font-weight:600;color:var(--t2);margin:10px 0 4px}
+.box p.ap{font-size:13px;line-height:1.55;color:var(--t2);margin:0;white-space:pre-line}
 .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-.sw{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
 .sw-btn{padding:6px 12px;border-radius:99px;font-size:11px;font-weight:800}
-.sw-btn.off{background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.4)}
-.sw-btn.on{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid rgba(245,158,11,.4)}
+.sw-btn.off{background:rgba(16,185,129,.18);color:var(--gr2);border:1px solid rgba(16,185,129,.4)}
+.sw-btn.on{background:rgba(245,158,11,.2);color:var(--am);border:1px solid rgba(245,158,11,.4)}
 .plate{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:8px;font-weight:800;font-size:12px;margin:3px;border:1px solid rgba(255,255,255,.2)}
-.dev-card{background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:20px;padding:16px;text-align:center;margin-bottom:14px}
-.dev-badge{display:inline-block;background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.35);padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.dev-card{background:linear-gradient(135deg,var(--s2),var(--s1));border:1px solid var(--bd);border-radius:20px;padding:16px;text-align:center;margin-bottom:14px}
+.dev-badge{display:inline-block;background:rgba(52,211,153,.15);color:var(--gr);border:1px solid rgba(52,211,153,.35);padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
 #toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:70;display:none;color:#fff;font-size:12px;font-weight:700;padding:10px 16px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.45);width:max-content;max-width:90%;text-align:center}
 </style>
 </head>
@@ -149,7 +159,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 
 <header>
   <div>
-    <h1 id="header-title">Meu Treino (A / B) <button id="btn-tema" onclick="alternarTema()" aria-label="Alternar tema claro/escuro">🌙</button></h1>
+    <h1 id="header-title">Meu Treino (A / B)</h1>
     <p id="header-subtitle"></p>
   </div>
   <div class="timer">
@@ -170,7 +180,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 <main id="screen-treino">
   <div class="card">
     <div class="row">
-      <b style="font-size:12px;color:#cbd5e1">Escolha a ficha de hoje <button class="help" onclick="abrirAjuda('divisao_ab')">?</button></b>
+      <b style="font-size:12px;color:var(--t2)">Escolha a ficha de hoje <button class="help" onclick="abrirAjuda('divisao_ab')">?</button></b>
       <div style="display:flex;gap:8px">
         <button class="link" onclick="abrirModalAnilhas()">🏋️ Anilhas</button>
         <button class="link" onclick="abrirModalNomeTreino()">✏️ Renomear A/B</button>
@@ -210,7 +220,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <div class="card">
     <div class="row" style="margin-bottom:10px">
       <div><b style="font-size:14px">Histórico de séries</b><div class="t-sm">Do exercício selecionado acima</div></div>
-      <button class="b" style="color:#fda4af" onclick="limparUltimoRegistroExercicio()">🗑️ Apagar última</button>
+      <button class="b" style="color:var(--ro)" onclick="limparUltimoRegistroExercicio()">🗑️ Apagar última</button>
     </div>
     <div id="tabela-historico-exercicio" style="max-height:300px;overflow-y:auto"></div>
   </div>
@@ -225,11 +235,11 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
     </div>
     <div class="g2" style="margin-bottom:8px">
       <div class="ind"><small>Peso atual</small><b id="saude-peso-atual" class="mono">-- kg</b><span id="saude-peso-diff" style="color:var(--mut)">Sem histórico</span></div>
-      <div class="ind"><small>Gordura (% BF)</small><b id="saude-bf-valor" class="mono" style="color:#fbbf24">--%</b><span id="saude-bf-status">Meça cintura e pescoço</span></div>
+      <div class="ind"><small>Gordura (% BF)</small><b id="saude-bf-valor" class="mono" style="color:var(--am)">--%</b><span id="saude-bf-status">Meça cintura e pescoço</span></div>
     </div>
     <div class="g2">
-      <div class="ind"><small>IMC</small><b id="saude-imc-valor" class="mono" style="color:#60a5fa">--</b><span id="saude-imc-status">Informe a altura</span></div>
-      <div class="ind"><small>Cintura/Alt.</small><b id="saude-rca-valor" class="mono" style="color:#34d399">--</b><span id="saude-rca-status">Meça a cintura</span></div>
+      <div class="ind"><small>IMC</small><b id="saude-imc-valor" class="mono" style="color:var(--bl)">--</b><span id="saude-imc-status">Informe a altura</span></div>
+      <div class="ind"><small>Cintura/Alt.</small><b id="saude-rca-valor" class="mono" style="color:var(--gr)">--</b><span id="saude-rca-status">Meça a cintura</span></div>
     </div>
   </div>
 
@@ -242,9 +252,9 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
     <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📏 Registrar peso e medidas</b><button class="link" onclick="abrirAjuda('como_medir')">Como medir? ?</button></div>
     <div class="g2" style="margin-bottom:10px">
       <div><label class="l">Altura (cm)</label><input type="number" inputmode="decimal" id="med-altura" placeholder="175" class="mono"></div>
-      <div><label class="l" style="color:#34d399">Peso (kg) *</label><input type="number" inputmode="decimal" step="0.1" id="med-peso" placeholder="78.5" class="mono"></div>
-      <div><label class="l" style="color:#fbbf24">Cintura (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-cintura" placeholder="82" class="mono"></div>
-      <div><label class="l" style="color:#fbbf24">Pescoço (cm) [p/ %BF]</label><input type="number" inputmode="decimal" step="0.5" id="med-pescoco" placeholder="38" class="mono"></div>
+      <div><label class="l" style="color:var(--gr)">Peso (kg) *</label><input type="number" inputmode="decimal" step="0.1" id="med-peso" placeholder="78.5" class="mono"></div>
+      <div><label class="l" style="color:var(--am)">Cintura (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-cintura" placeholder="82" class="mono"></div>
+      <div><label class="l" style="color:var(--am)">Pescoço (cm) [p/ %BF]</label><input type="number" inputmode="decimal" step="0.5" id="med-pescoco" placeholder="38" class="mono"></div>
     </div>
     <details>
       <summary>💪 Braço, peito, quadril, coxa, panturrilha (opcional)</summary>
@@ -261,13 +271,20 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 
   <div class="card">
     <b style="font-size:14px">📉 Curva de peso &amp; cintura</b>
-    <div class="t-sm" style="margin:3px 0 8px"><span style="color:#34d399">● peso (kg, eixo esq.)</span> &nbsp; <span style="color:#fbbf24">● cintura (cm, eixo dir.)</span></div>
+    <div class="t-sm" style="margin:3px 0 8px"><span style="color:var(--gr)">● peso (kg, eixo esq.)</span> &nbsp; <span style="color:var(--am)">● cintura (cm, eixo dir.)</span></div>
     <div class="chartbox"><canvas id="graficoSaude"></canvas></div>
   </div>
 
   <div class="card">
+    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">📐 Medidas ao longo do tempo</b>
+      <select id="medida-sel" style="width:auto" onchange="renderizarMedidas()"><option value="cintura">Cintura</option><option value="braco">Braço</option><option value="peito">Peito</option><option value="quadril">Quadril</option><option value="coxa">Coxa</option><option value="panturrilha">Panturrilha</option><option value="pescoco">Pescoço</option></select></div>
+    <div class="chartbox"><canvas id="graficoMedidas"></canvas></div>
+    <div class="t-sm" id="medida-dif" style="margin-top:6px;text-align:center"></div>
+  </div>
+
+  <div class="card">
     <b style="font-size:14px">📸 Fotos de progresso <button class="help" onclick="abrirAjuda('fotos')">?</button></b>
-    <p class="t-sm" style="margin:4px 0 10px">As fotos ficam só neste aparelho e <b>não entram no backup</b>.</p>
+    <p class="t-sm" style="margin:4px 0 10px">As fotos ficam neste aparelho e entram no backup exportado.</p>
     <div class="g2">
       <select id="foto-ang"><option>Frente</option><option>Lado</option><option>Costas</option></select>
       <button class="b p" onclick="$('foto-arq').click()">➕ Adicionar foto</button>
@@ -291,13 +308,35 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   </div>
 </main>
 
-<!-- ========== ABA AJUDA ========== -->
-<main id="screen-ajuda" class="hidden">
+<!-- ========== ABA CONFIG ========== -->
+<main id="screen-config" class="hidden">
   <div class="card">
-    <b style="font-size:15px">Guia rápido da academia</b>
-    <p class="t-sm" style="margin:3px 0 10px">Toque em um assunto para ler a explicação.</p>
-    <div id="lista-ajuda"></div>
+    <b style="font-size:14px">🎨 Aparência</b>
+    <label class="l" style="margin-top:10px">Tema</label>
+    <div class="seg" id="seg-tema">
+      <button data-v="auto" onclick="escolherTema('auto')">🌓 Auto</button>
+      <button data-v="escuro" onclick="escolherTema('escuro')">🌙 Escuro</button>
+      <button data-v="preto" onclick="escolherTema('preto')">⚫ Preto</button>
+      <button data-v="claro" onclick="escolherTema('claro')">☀️ Claro</button>
+    </div>
+    <p class="t-sm" style="margin:6px 0 0">Auto segue o tema do celular. Preto economiza bateria em telas AMOLED.</p>
+    <label class="l" style="margin-top:12px">Cor de destaque</label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="swatch" data-v="azul" style="background:#3b82f6" onclick="escolherAcento('azul')" aria-label="Azul"></button>
+      <button class="swatch" data-v="verde" style="background:#10b981" onclick="escolherAcento('verde')" aria-label="Verde"></button>
+      <button class="swatch" data-v="roxo" style="background:#8b5cf6" onclick="escolherAcento('roxo')" aria-label="Roxo"></button>
+      <button class="swatch" data-v="laranja" style="background:#f97316" onclick="escolherAcento('laranja')" aria-label="Laranja"></button>
+      <button class="swatch" data-v="rosa" style="background:#ec4899" onclick="escolherAcento('rosa')" aria-label="Rosa"></button>
+    </div>
   </div>
+
+  <div class="card">
+    <div class="row">
+      <div style="min-width:0"><b style="font-size:14px">🔔 Lembretes e notificações <button class="help" onclick="abrirAjuda('lembretes')">?</button></b><div class="t-sm" id="notif-resumo" style="margin-top:2px">Desligadas</div></div>
+      <button class="b p" onclick="abrirModalNotif()">Configurar</button>
+    </div>
+  </div>
+
   <div class="card">
     <b style="font-size:14px">💾 Backup dos dados</b>
     <p class="t-sm" style="margin:3px 0 10px">Seus dados ficam salvos 100% offline neste aparelho. Exporte uma cópia de segurança quando quiser.</p>
@@ -306,11 +345,23 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
       <button class="b p" style="flex:1" onclick="document.getElementById('arq-import').click()">📥 Importar Backup</button>
       <input type="file" id="arq-import" accept="application/json" style="display:none" onchange="importarDados(event)">
     </div>
+    <div class="nt"><div class="row"><div style="min-width:0"><b>🗓 Backup automático semanal</b><div class="t-sm" id="bkp-auto-txt"></div></div><button id="bkp-auto-btn" class="tgl on" onclick="tglBackupAuto()">Ligado</button></div>
+      <button class="b" style="width:100%;margin-top:8px" onclick="backupAutomatico(true)">Fazer backup agora</button>
+    </div>
     <button class="b" style="width:100%;margin-top:8px" onclick="pedirRestaurarFicha()">↺ Restaurar minha ficha padrão (A/B)</button>
   </div>
+</main>
+
+<!-- ========== ABA AJUDA ========== -->
+<main id="screen-ajuda" class="hidden">
+  <div class="card">
+    <b style="font-size:15px">Guia rápido da academia</b>
+    <p class="t-sm" style="margin:3px 0 10px">Toque em um assunto para ler a explicação.</p>
+    <div id="lista-ajuda"></div>
+  </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v5.1</span>
-    <div style="font-size:15px;font-weight:800;color:#f8fafc">Desenvolvido por Wanderson Mendes dos Santos</div>
+    <span class="dev-badge">GymTracker &amp; Saúde v5.4</span>
+    <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
 </main>
@@ -319,9 +370,9 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 <main id="screen-freq" class="hidden">
   <div class="card">
     <div class="g3">
-      <div class="ind"><small>No mês</small><b id="fq-mes" class="mono" style="color:#34d399">0</b><span>dias</span></div>
-      <div class="ind"><small>Sequência</small><b id="fq-seq" class="mono" style="color:#fbbf24">0</b><span>dias seguidos</span></div>
-      <div class="ind"><small>Total</small><b id="fq-total" class="mono" style="color:#60a5fa">0</b><span>dias</span></div>
+      <div class="ind"><small>No mês</small><b id="fq-mes" class="mono" style="color:var(--gr)">0</b><span>dias</span></div>
+      <div class="ind"><small>Sequência</small><b id="fq-seq" class="mono" style="color:var(--am)">0</b><span>dias seguidos</span></div>
+      <div class="ind"><small>Total</small><b id="fq-total" class="mono" style="color:var(--bl)">0</b><span>dias</span></div>
     </div>
     <div class="sw">
       <div>
@@ -336,13 +387,6 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
     <div class="row" style="margin-bottom:10px"><button class="b" onclick="mudarMesCal(-1)">‹</button><b id="cal-titulo"></b><button class="b" onclick="mudarMesCal(1)">›</button></div>
     <div class="cal" id="cal-grid"></div>
     <p class="t-sm" style="margin:10px 0 0">💡 <b>Toque em qualquer dia</b> do calendário para marcar ou desmarcar presença manualmente.</p>
-  </div>
-
-  <div class="card">
-    <div class="row">
-      <div style="min-width:0"><b style="font-size:14px">🔔 Lembretes e notificações <button class="help" onclick="abrirAjuda('lembretes')">?</button></b><div class="t-sm" id="notif-resumo" style="margin-top:2px">Desligadas</div></div>
-      <button class="b p" onclick="abrirModalNotif()">Configurar</button>
-    </div>
   </div>
 
   <div class="card">
@@ -370,6 +414,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <button id="nav-evolucao" onclick="mudarAba('evolucao')"><span>📈</span>Evolução</button>
   <button id="nav-saude" onclick="mudarAba('saude')"><span>❤️</span>Saúde</button>
   <button id="nav-freq" onclick="mudarAba('freq')"><span>🔥</span>Frequência</button>
+  <button id="nav-config" onclick="mudarAba('config')"><span>⚙️</span>Config</button>
   <button id="nav-ajuda" onclick="mudarAba('ajuda')"><span>❓</span>Ajuda</button>
 </nav>
 
@@ -384,7 +429,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
     <div id="ex-w-min"><label id="ex-l-min">Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" class="mono" style="text-align:center"></div>
     <div id="ex-w-max"><label id="ex-l-max">Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" class="mono" style="text-align:center"></div>
   </div>
-  <label style="color:#fbbf24">⚙️ Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
+  <label style="color:var(--am)">⚙️ Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
   <label>📘 Guia de execução / notas</label><textarea id="ex-explicacao" rows="3" placeholder="Ex: escápulas retraídas, descida em 2 segundos."></textarea>
   <div class="acts"><button class="b" onclick="fecharModal('modal-ex')">Cancelar</button><button class="b p" onclick="salvarExercicioFicha()">Salvar</button></div>
 </div></div>
@@ -410,9 +455,9 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 <!-- Modal Card PNG -->
 <div id="modal-png" class="modal" onclick="if(event.target===this)fecharModal('modal-png')"><div class="box" style="text-align:center">
   <h3>🖼️ Seu Card de Treino</h3>
-  <p class="t-sm" style="margin:-4px 0 8px;color:#34d399">Toque em <b>Compartilhar / Salvar</b> para enviar no WhatsApp, Instagram ou salvar na Galeria</p>
+  <p class="t-sm" style="margin:-4px 0 8px;color:var(--gr)">Toque em <b>Compartilhar / Salvar</b> para enviar no WhatsApp, Instagram ou salvar na Galeria</p>
   <canvas id="canvasCard" class="hidden"></canvas>
-  <img id="imgCardPreview" alt="Card de Treino" style="width:100%;height:auto;border-radius:14px;border:1px solid #334155;display:block" />
+  <img id="imgCardPreview" alt="Card de Treino" style="width:100%;height:auto;border-radius:14px;border:1px solid var(--bd);display:block" />
   <div class="acts" style="justify-content:center">
     <button class="b" onclick="fecharModal('modal-png')">Fechar</button>
     <button class="b gold" style="flex:1;padding:12px" onclick="compartilharCardPNG()">📤 Compartilhar / Salvar</button>
@@ -444,7 +489,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 <!-- Modal lembretes -->
 <div id="modal-notif" class="modal"><div class="box">
   <h3>🔔 Lembretes e notificações</h3>
-  <p class="t-sm" id="nt-aviso" style="margin:-4px 0 8px;color:#fbbf24"></p>
+  <p class="t-sm" id="nt-aviso" style="margin:-4px 0 8px;color:var(--am)"></p>
   <div class="nt" style="margin-top:0"><div class="row"><div><b>Ativar notificações</b><div class="t-sm">Liga ou desliga todas</div></div><button id="nt-ativo" class="tgl off" onclick="tglNotif('ativo')">Desligado</button></div></div>
   <div class="nt"><div class="row"><div><b>⏱ Fim do descanso</b><div class="t-sm">Avisa mesmo com a tela apagada</div></div><button id="nt-descanso" class="tgl off" onclick="tglNotif('descanso')">Desligado</button></div></div>
   <div class="nt">
@@ -493,21 +538,27 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <h3>📄 Relatório do mês</h3>
   <div class="row" style="margin-bottom:8px"><button class="b" onclick="mudarMesRel(-1)">‹</button><b id="rel-titulo"></b><button class="b" onclick="mudarMesRel(1)">›</button></div>
   <canvas id="canvasRel" class="hidden"></canvas>
-  <img id="imgRel" alt="Relatório do mês" style="width:100%;height:auto;border-radius:12px;border:1px solid #334155;display:block">
+  <img id="imgRel" alt="Relatório do mês" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--bd);display:block">
   <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rel')">Fechar</button><button class="b gold" onclick="compartilharRelatorio('img')">🖼️ Imagem</button><button class="b gold" onclick="compartilharRelatorio('pdf')">📄 PDF</button></div>
 </div></div>
 
 <script>
+const ACENTOS = {azul:'#3b82f6', verde:'#10b981', roxo:'#8b5cf6', laranja:'#f97316', rosa:'#ec4899'};
+function lerPref(k, d){ try{ return localStorage.getItem(k) || d; }catch(e){ return d; } }
+function modoTema(){ return lerPref('gym_tema', 'auto'); }
 function aplicarTema(){
-  let c = false; try{ c = localStorage.getItem('gym_tema') === 'claro'; }catch(e){}
-  document.documentElement.classList.toggle('claro', c);
-  const b = document.getElementById('btn-tema'); if(b) b.textContent = c ? '☀️' : '🌙';
-  const m = document.querySelector('meta[name=theme-color]'); if(m) m.content = c ? '#f4efe0' : '#0b1120';
+  const m = modoTema(), sys = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches;
+  const t = m === 'auto' ? (sys ? 'claro' : 'escuro') : m, ac = ACENTOS[lerPref('gym_acento', 'azul')] || ACENTOS.azul;
+  const r = document.documentElement; r.setAttribute('data-tema', t); r.style.setProperty('--blue', ac);
+  const mt = document.querySelector('meta[name=theme-color]'); if(mt) mt.content = t === 'claro' ? '#f1f5f9' : (t === 'preto' ? '#000000' : '#0b1120');
+  document.querySelectorAll('#seg-tema button').forEach(b => b.classList.toggle('on', b.dataset.v === m));
+  document.querySelectorAll('.swatch').forEach(b => b.classList.toggle('on', b.dataset.v === lerPref('gym_acento', 'azul')));
 }
-function alternarTema(){
-  let c = false; try{ c = localStorage.getItem('gym_tema') === 'claro'; localStorage.setItem('gym_tema', c ? 'escuro' : 'claro'); }catch(e){}
-  aplicarTema();
-}
+function escolherTema(v){ try{ localStorage.setItem('gym_tema', v); }catch(e){} aplicarTema(); redesenharTela(); }
+function escolherAcento(v){ try{ localStorage.setItem('gym_acento', v); }catch(e){} aplicarTema(); redesenharTela(); }
+function redesenharTela(){ if(abaAtual === 'evolucao') atualizarGrafico(); if(abaAtual === 'saude') renderizarSaude(); }
+function COR(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || '#94a3b8'; }
+try{ matchMedia('(prefers-color-scheme: light)').addEventListener('change', aplicarTema); }catch(e){}
 aplicarTema();
 // ============================ AJUDA ============================
 const AJUDA = {
@@ -609,9 +660,38 @@ const fichaV51b = {
     E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
     CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
 };
-const fichaPadrao = {
+const fichaV52 = {
   A:{exercicios:[
     ALONG('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',2,10),
+    ALONG('a_along_delt','Alongamento de deltoide e tríceps',1,20),
+    E('a_supino','Supino reto com isometria de 4" perto do peito',3,10,15,'5 superlentas + 10 rápidas','Faça 5 repetições superlentas com isometria de 4" perto do peito, seguidas de 10 rápidas (15 reps por série).'),
+    E('a_voador_peito','Voador peitoral com pico de contração de 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_elev_frontal','Elevação frontal de costas para o cross-corda',3,12,15),
+    E('a_triceps_21','Tríceps barra reta 21',3,21,21,'Método 21','Método 21: 7 repetições na metade inferior + 7 na metade superior + 7 completas.'),
+    E('a_arnold','Desenvolvimento Arnold sentado HBC',3,12,15),
+    E('a_puxada_art','Puxada articulada com pico de contração 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_serrote','Remada serrote HBC',3,12,15),
+    E('a_voador_dorsal','Voador dorsal',3,12,15),
+    E('a_biceps_maq','Bíceps máquina',3,12,15),
+    E('a_abd_inf','Abdominal inferior',3,20,20),
+    CARDIO('a_hiit',"HIIT no transport ou na bike (1' forte, 1' fraco)",10,15,"⏱ 10 a 15 minutos • 1' forte / 1' fraco",'Alterne 1 minuto forte e 1 minuto fraco. Anote o tempo total, a distância e a velocidade média.')]},
+  B:{exercicios:[
+    ALONG('b_along_post','Alongamento de posterior de coxa sentado',1,15),
+    ALONG('b_along_glut','Alongamento de glúteo e quadrado lombar sentado',1,15),
+    E('b_leg_press','Leg Press',3,12,15),
+    FALHA('b_adutora_rp','Cadeira adutora em rest-pause',3,'Método rest-pause • até a falha','Série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    FALHA('b_extensora_rp','Cadeira extensora com pico de contração de 2" em rest-pause',3,'Rest-pause • pico de 2" • até a falha','Segure 2" de pico de contração. Série até a falha, descanse uns 15 segundos e continue. Anote o total de repetições.'),
+    E('b_afundo','Afundo unilateral HBC',3,12,12),
+    E('b_abdutora','Cadeira abdutora',3,12,15),
+    E('b_donkey','Panturrilha donkey',3,15,15),
+    FALHA('b_abdutora_rp','Cadeira abdutora em rest-pause',3,'Método rest-pause • até a falha','Série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    FALHA('b_mesa_flexora','Mesa flexora com pico de contração de 2"',3,'Pico de contração de 2" • até a falha'),
+    E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
+    CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
+};
+const fichaPadrao = {
+  A:{exercicios:[
+    ALONG('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',1,10),
     ALONG('a_along_delt','Alongamento de deltoide e tríceps',1,20),
     E('a_supino','Supino reto com isometria de 4" perto do peito',3,10,15,'5 superlentas + 10 rápidas','Faça 5 repetições superlentas com isometria de 4" perto do peito, seguidas de 10 rápidas (15 reps por série).'),
     E('a_voador_peito','Voador peitoral com pico de contração de 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
@@ -648,7 +728,7 @@ let ficha     = JSON.parse(JSON.stringify(fichaPadrao));
   const salva = lerLS('gym_ficha_v4', null);
   if(!salva || !salva.A || !salva.B) return;
   const js = JSON.stringify(salva);
-  if([fichaAntiga, fichaV51a, fichaV51b].some(f => JSON.stringify(f) === js)) salvarLS('gym_ficha_v4', ficha);
+  if([fichaAntiga, fichaV51a, fichaV51b, fichaV52].some(f => JSON.stringify(f) === js)) salvarLS('gym_ficha_v4', ficha);
   else ficha = salva;
 })();
 let historico = lerLS('gym_hist_v3', []);
@@ -715,10 +795,10 @@ function nomeEx(id){
 }
 
 // ============================ ABAS ============================
-const TITULOS = {treino:'Meu Treino (A / B)', evolucao:'Evolução', saude:'Saúde & Corpo', ajuda:'Guia & Ajuda', freq:'Frequência'};
+const TITULOS = {treino:'Meu Treino (A / B)', evolucao:'Evolução', saude:'Saúde & Corpo', ajuda:'Guia & Ajuda', freq:'Frequência', config:'Configurações'};
 function mudarAba(a){
   abaAtual = a;
-  ['treino','evolucao','saude','freq','ajuda'].forEach(n => {
+  ['treino','evolucao','saude','freq','config','ajuda'].forEach(n => {
     $('screen-'+n).classList.toggle('hidden', n !== a);
     $('nav-'+n).classList.toggle('on', n === a);
   });
@@ -726,6 +806,7 @@ function mudarAba(a){
   atualizarSubtitulo();
   window.scrollTo(0,0);
   if(a === 'evolucao') atualizarGrafico();
+  if(a === 'config'){ atualizarResumoNotif(); atualizarBackupAuto(); aplicarTema(); }
   if(a === 'saude') renderizarSaude();
   if(a === 'freq') renderizarFreq();
 }
@@ -839,9 +920,9 @@ function calcularAnilhas(){
     while(resto >= p - 1e-4){ escolhidas.push(p); resto -= p; }
   });
   const chips = escolhidas.map(p => `<span class="plate" style="background:${cores[p]};color:${p===5||p===15?'#060a12':'#fff'}">${fmt(p,2)} kg</span>`).join('');
-  box.innerHTML = `<small>Cada lado da barra leva</small><b class="mono" style="color:#34d399;font-size:18px">${fmt(lado,2)} kg</b>
+  box.innerHTML = `<small>Cada lado da barra leva</small><b class="mono" style="color:var(--gr);font-size:18px">${fmt(lado,2)} kg</b>
     <div style="margin-top:8px">${chips || '<span class="t-sm">Peso menor que 1,25 kg</span>'}</div>
-    ${resto > 0.1 ? `<span class="t-sm" style="color:#fbbf24;margin-top:6px">Sobram ${fmt(resto,2)} kg sem anilha padrão</span>` : ''}`;
+    ${resto > 0.1 ? `<span class="t-sm" style="color:var(--am);margin-top:6px">Sobram ${fmt(resto,2)} kg sem anilha padrão</span>` : ''}`;
 }
 
 function renderAlongamento(ex, idx){
@@ -852,12 +933,12 @@ function renderAlongamento(ex, idx){
   return `<div class="card"${ok ? ' style="border-color:rgba(16,185,129,.5)"' : ''}>
     <div class="row" style="align-items:flex-start">
       <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
-        <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">🧘 Alongamento</b> • ${n}× ${seg ? seg + ' s' : ''}</div></div>
+        <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">🧘 Alongamento</b> • ${n}× ${seg ? seg + ' s' : ''}</div></div>
       <div style="display:flex;gap:4px;flex-shrink:0">
         <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
         <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
         <button class="mini" onclick="abrirModalExercicio('${ex.id}')" title="Editar">✎</button>
-        <button class="mini" style="color:#fda4af" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
+        <button class="mini" style="color:var(--ro)" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
       </div>
     </div>
     ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
@@ -887,13 +968,13 @@ function renderCardio(ex, idx){
   return `<div class="card">
     <div class="row" style="align-items:flex-start">
       <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
-        <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">🏃 Cardio</b> • ${meta}</div></div>
+        <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">🏃 Cardio</b> • ${meta}</div></div>
       <div style="display:flex;gap:4px;flex-shrink:0">
         <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
         <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
         <button class="mini" onclick="alternarGuia('${ex.id}')" title="Guia">📘</button>
         <button class="mini" onclick="abrirModalExercicio('${ex.id}')" title="Editar">✎</button>
-        <button class="mini" style="color:#fda4af" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
+        <button class="mini" style="color:var(--ro)" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
       </div>
     </div>
     ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
@@ -951,14 +1032,14 @@ function renderizarExercicios(){
     return `<div class="card">
       <div class="row" style="align-items:flex-start">
         <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
-          <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">${ex.numSeries} séries</b> • ${ex.falha ? 'até a falha' : ex.repsMin + '–' + ex.repsMax + ' reps'}</div></div>
+          <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">${ex.numSeries} séries</b> • ${ex.falha ? 'até a falha' : ex.repsMin + '–' + ex.repsMax + ' reps'}</div></div>
         <div style="display:flex;gap:4px;flex-shrink:0">
           <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
           <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
           <button class="mini" onclick="abrirModalAnilhas($('peso-${ex.id}')?.value)" title="Anilhas">🏋️</button>
           <button class="mini" onclick="alternarGuia('${ex.id}')" title="Guia">📘</button>
           <button class="mini" onclick="abrirModalExercicio('${ex.id}')" title="Editar">✎</button>
-          <button class="mini" style="color:#fda4af" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
+          <button class="mini" style="color:var(--ro)" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
         </div>
       </div>
       ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
@@ -1087,7 +1168,7 @@ function prepararCanvas(cv){
 }
 function vazioCanvas(cv, msg){
   const p = prepararCanvas(cv); if(!p) return;
-  p.c.fillStyle = '#64748b'; p.c.font = '12px system-ui'; p.c.textAlign = 'center'; p.c.fillText(msg, p.w/2, p.h/2);
+  p.c.fillStyle = COR('--t3'); p.c.font = '12px system-ui'; p.c.textAlign = 'center'; p.c.fillText(msg, p.w/2, p.h/2);
 }
 function desenharLinhas(cv, series){
   const p = prepararCanvas(cv); if(!p) return;
@@ -1109,8 +1190,8 @@ function desenharLinhas(cv, series){
     const cor = series.find(s => s.lado === lado).cor;
     for(let i=0;i<=3;i++){
       const v = e.mn + (e.mx-e.mn)*i/3, y = Y(v, lado);
-      if(lado === 'l'){ c.strokeStyle = '#1e293b'; c.beginPath(); c.moveTo(pad.l, y); c.lineTo(w-pad.r, y); c.stroke(); }
-      c.fillStyle = usaR ? cor : '#64748b'; c.textAlign = lado === 'l' ? 'right' : 'left';
+      if(lado === 'l'){ c.strokeStyle = COR('--line'); c.beginPath(); c.moveTo(pad.l, y); c.lineTo(w-pad.r, y); c.stroke(); }
+      c.fillStyle = usaR ? cor : COR('--t3'); c.textAlign = lado === 'l' ? 'right' : 'left';
       c.fillText(Math.round(v), lado === 'l' ? pad.l-6 : w-pad.r+6, y+3);
     }
   });
@@ -1122,11 +1203,11 @@ function desenharLinhas(cv, series){
     }
     c.textAlign = 'center';
     s.pts.forEach(q => {
-      c.beginPath(); c.arc(X(q.ts), Y(q.v,s.lado), 4, 0, 7); c.fillStyle = s.cor; c.fill(); c.strokeStyle = '#0b1120'; c.lineWidth = 2; c.stroke();
-      if(series.length === 1 || tsAll.length <= 5){ c.fillStyle = '#e2e8f0'; c.fillText(fmt(q.v), X(q.ts), Y(q.v,s.lado)-9); }
+      c.beginPath(); c.arc(X(q.ts), Y(q.v,s.lado), 4, 0, 7); c.fillStyle = s.cor; c.fill(); c.strokeStyle = COR('--card'); c.lineWidth = 2; c.stroke();
+      if(series.length === 1 || tsAll.length <= 5){ c.fillStyle = COR('--t2'); c.fillText(fmt(q.v), X(q.ts), Y(q.v,s.lado)-9); }
     });
   });
-  c.fillStyle = '#64748b'; c.textAlign = 'center';
+  c.fillStyle = COR('--t3'); c.textAlign = 'center';
   tsAll.forEach((ts,i) => { if(tsAll.length <= 6 || i % 2 === 0) c.fillText(dataCurta(ts), X(ts), h-8); });
 }
 
@@ -1157,19 +1238,19 @@ function atualizarGrafico(){
   });
   const pts = [...por.values()].sort((a,b) => a.ts-b.ts).slice(-12);
   if(!pts.length) vazioCanvas(cv, cardio ? 'Salve um cardio com distância ou velocidade' : 'Salve séries de Trabalho ou Falha para ver o gráfico');
-  else desenharLinhas(cv, [{pts, cor: metricaGrafico === 'carga' ? '#3b82f6' : '#10b981', lado:'l'}]);
+  else desenharLinhas(cv, [{pts, cor: metricaGrafico === 'carga' ? COR('--blue') : COR('--green'), lado:'l'}]);
   const rb = $('recorde-ex');
   if(cardio){
     const c = base;
     if(c.length){
       const mk = Math.max(...c.map(h => h.km || 0)), mv = Math.max(...c.map(h => h.vel || 0)), mt = Math.max(...c.map(h => h.min || 0));
-      rb.innerHTML = `🏆 Maior distância: <b style="color:#e2e8f0">${fmt(mk,2)} km</b><br>Melhor velocidade média: <b style="color:#e2e8f0">${fmt(mv,1)} km/h</b><br>Maior tempo: <b style="color:#e2e8f0">${fmt(mt,1)} min</b>`;
+      rb.innerHTML = `🏆 Maior distância: <b style="color:var(--t2)">${fmt(mk,2)} km</b><br>Melhor velocidade média: <b style="color:var(--t2)">${fmt(mv,1)} km/h</b><br>Maior tempo: <b style="color:var(--t2)">${fmt(mt,1)} min</b>`;
     } else rb.textContent = '';
   } else {
     const val = base;
     if(val.length){
       const b = val.reduce((a,c) => epley(c.peso,c.reps) > epley(a.peso,a.reps) ? c : a), mp = Math.max(...val.map(h => h.peso));
-      rb.innerHTML = `🏆 Recorde de carga: <b style="color:#e2e8f0">${fmt(mp)} kg</b><br>Melhor 1RM estimado: <b style="color:#e2e8f0">${fmt(epley(b.peso,b.reps))} kg</b> (${fmt(b.peso)} × ${b.reps} em ${dataLonga(b.ts)})`;
+      rb.innerHTML = `🏆 Recorde de carga: <b style="color:var(--t2)">${fmt(mp)} kg</b><br>Melhor 1RM estimado: <b style="color:var(--t2)">${fmt(epley(b.peso,b.reps))} kg</b> (${fmt(b.peso)} × ${b.reps} em ${dataLonga(b.ts)})`;
     } else rb.textContent = '';
   }
   const regs = historico.filter(h => h.exId === id).slice(-30).reverse(), box = $('tabela-historico-exercicio');
@@ -1187,15 +1268,15 @@ function limparUltimoRegistroExercicio(){
 
 // ============================ SAÚDE ============================
 function classIMC(v){
-  if(v < 18.5) return {t:'Abaixo do peso', c:'#fbbf24'};
-  if(v < 25) return {t:'Normal', c:'#34d399'};
-  if(v < 30) return {t:'Sobrepeso', c:'#fbbf24'};
-  return {t:'Obesidade', c:'#fb7185'};
+  if(v < 18.5) return {t:'Abaixo do peso', c:'var(--am)'};
+  if(v < 25) return {t:'Normal', c:'var(--gr)'};
+  if(v < 30) return {t:'Sobrepeso', c:'var(--am)'};
+  return {t:'Obesidade', c:'var(--ro)'};
 }
 function classRCA(v){
-  if(v < 0.5) return {t:'Ideal', c:'#34d399'};
-  if(v < 0.6) return {t:'Atenção', c:'#fbbf24'};
-  return {t:'Risco alto', c:'#fb7185'};
+  if(v < 0.5) return {t:'Ideal', c:'var(--gr)'};
+  if(v < 0.6) return {t:'Atenção', c:'var(--am)'};
+  return {t:'Risco alto', c:'var(--ro)'};
 }
 function calcNavyBF(cintura, pescoco, altura){
   if(!cintura || !pescoco || !altura || cintura <= pescoco) return null;
@@ -1220,16 +1301,16 @@ function renderizarSaude(){
   const ult = saude[saude.length-1], pen = saude[saude.length-2];
   $('saude-peso-atual').textContent = ult ? fmt(ult.peso) + ' kg' : '-- kg';
   const d = $('saude-peso-diff');
-  if(ult && pen){ const x = ult.peso - pen.peso; d.textContent = (x > 0 ? '+' : '') + fmt(x) + ' kg'; d.style.color = '#cbd5e1'; }
+  if(ult && pen){ const x = ult.peso - pen.peso; d.textContent = (x > 0 ? '+' : '') + fmt(x) + ' kg'; d.style.color = 'var(--t2)'; }
   else { d.textContent = 'Sem histórico'; d.style.color = 'var(--mut)'; }
 
   const iv = $('saude-imc-valor'), is = $('saude-imc-status');
   if(ult && cfg.altura){ const m = cfg.altura/100, v = ult.peso/(m*m), k = classIMC(v); iv.textContent = fmt(v); is.textContent = k.t; is.style.color = k.c; }
-  else { iv.textContent = '--'; is.textContent = 'Informe a altura'; is.style.color = '#cbd5e1'; }
+  else { iv.textContent = '--'; is.textContent = 'Informe a altura'; is.style.color = 'var(--t2)'; }
 
   const rv = $('saude-rca-valor'), rs = $('saude-rca-status'), comC = [...saude].reverse().find(s => s.cintura);
   if(comC && cfg.altura){ const v = comC.cintura/cfg.altura, k = classRCA(v); rv.textContent = fmt(v, 2); rs.textContent = k.t; rs.style.color = k.c; }
-  else { rv.textContent = '--'; rs.textContent = 'Meça a cintura'; rs.style.color = '#cbd5e1'; }
+  else { rv.textContent = '--'; rs.textContent = 'Meça a cintura'; rs.style.color = 'var(--t2)'; }
 
   const bfv = $('saude-bf-valor'), bfs = $('saude-bf-status');
   const comBF = [...saude].reverse().find(s => s.cintura && s.pescoco);
@@ -1239,44 +1320,64 @@ function renderizarSaude(){
       const magra = comBF.peso * (1 - bf/100);
       bfv.textContent = fmt(bf, 1) + '%';
       bfs.textContent = `Massa magra: ~${fmt(magra,1)} kg`;
-      bfs.style.color = '#34d399';
+      bfs.style.color = 'var(--gr)';
     } else { bfv.textContent = '--%'; bfs.textContent = 'Revise cintura/pescoço'; }
-  } else { bfv.textContent = '--%'; bfs.textContent = 'Meça cintura e pescoço'; bfs.style.color = '#cbd5e1'; }
+  } else { bfv.textContent = '--%'; bfs.textContent = 'Meça cintura e pescoço'; bfs.style.color = 'var(--t2)'; }
 
   const cv = $('graficoSaude'), pp = saude.map(s => ({ts:s.ts, v:s.peso})).slice(-12), pc = saude.filter(s => s.cintura).map(s => ({ts:s.ts, v:s.cintura})).slice(-12);
   if(!pp.length) vazioCanvas(cv, 'Salve seu peso para ver a curva');
-  else desenharLinhas(cv, [{pts:pp, cor:'#34d399', lado:'l'}, ...(pc.length ? [{pts:pc, cor:'#fbbf24', lado:'r'}] : [])]);
+  else desenharLinhas(cv, [{pts:pp, cor:COR('--gr'), lado:'l'}, ...(pc.length ? [{pts:pc, cor:COR('--am'), lado:'r'}] : [])]);
 
   const rot = {cintura:'Cintura', pescoco:'Pescoço', braco:'Braço', peito:'Peito', quadril:'Quadril', coxa:'Coxa', panturrilha:'Panturr.'};
   const box = $('lista-historico-saude');
   box.innerHTML = saude.length ? [...saude].reverse().slice(0,20).map(s => {
-    const extras = Object.keys(rot).filter(k => s[k]).map(k => `<span class="chip" style="color:#cbd5e1;border-color:#334155">${rot[k]} ${fmt(s[k])}</span>`).join('');
-    return `<div class="hrow" style="display:block"><div class="row"><b>${dataLonga(s.ts)}</b><span class="mono" style="color:#34d399">${fmt(s.peso)} kg</span></div>${extras ? `<div class="chips">${extras}</div>` : ''}</div>`;
+    const extras = Object.keys(rot).filter(k => s[k]).map(k => `<span class="chip" style="color:var(--t2);border-color:var(--bd)">${rot[k]} ${fmt(s[k])}</span>`).join('');
+    return `<div class="hrow" style="display:block"><div class="row"><b>${dataLonga(s.ts)}</b><span class="mono" style="color:var(--gr)">${fmt(s.peso)} kg</span></div>${extras ? `<div class="chips">${extras}</div>` : ''}</div>`;
   }).join('') : '<div class="vazio">Nenhuma avaliação registrada ainda.</div>';
-  renderizarMetas(); renderizarFotos();
+  renderizarMedidas(); renderizarMetas(); renderizarFotos();
+}
+function renderizarMedidas(){
+  const k = $('medida-sel').value, cv = $('graficoMedidas'), dif = $('medida-dif');
+  const pts = saude.filter(x => x[k]).map(x => ({ts:x.ts, v:x[k]})).slice(-20);
+  if(pts.length < 2){ vazioCanvas(cv, pts.length ? 'Registre mais uma medição para ver a curva' : 'Sem medições de ' + $('medida-sel').selectedOptions[0].text.toLowerCase()); dif.textContent = ''; return; }
+  desenharLinhas(cv, [{pts, cor:COR('--am'), lado:'l'}]);
+  const d = pts[pts.length-1].v - pts[0].v;
+  dif.textContent = fmt(pts[0].v) + ' → ' + fmt(pts[pts.length-1].v) + ' cm (' + (d > 0 ? '+' : '') + fmt(d) + ' cm desde ' + dataLonga(pts[0].ts) + ')';
 }
 
 // ============================ AJUDA / BACKUP ============================
 function montarAjuda(){
   $('lista-ajuda').innerHTML = Object.values(AJUDA).map(a => `<details><summary>${esc(a.t)}</summary><p style="white-space:pre-line">${esc(a.x)}</p></details>`).join('');
 }
+async function montarBackup(){
+  let fotos = []; try{ fotos = (await DBF.todas()) || []; }catch(e){}
+  return JSON.stringify({v:6, ficha, historico, saude, cfg, fotos});
+}
 async function exportarDados(){
-  const jsonStr = JSON.stringify({v:5, ficha, historico, saude, cfg}, null, 2);
-  const nomeArq = 'gymtracker-backup-' + new Date().toISOString().slice(0,10) + '.json';
-  // Se estiver no APK com Capacitor nativo
-  if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem && window.Capacitor.Plugins.Share){
-    try{
-      const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(jsonStr)));
-      const salvo = await window.Capacitor.Plugins.Filesystem.writeFile({path: nomeArq, data: b64, directory: 'CACHE'});
-      await window.Capacitor.Plugins.Share.share({title: 'Backup GymTracker', url: salvo.uri, dialogTitle: 'Salvar ou Enviar Backup'});
-      return;
-    }catch(e){}
-  }
+  const jsonStr = await montarBackup(), nomeArq = 'gymtracker-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  const P = window.Capacitor && window.Capacitor.Plugins;
+  if(P && P.Filesystem && P.Share) return compartilharArquivoB64(u8ToB64(new TextEncoder().encode(jsonStr)), nomeArq, 'application/json', 'Backup GymTracker', 'Backup dos meus dados do GymTracker');
   const blob = new Blob([jsonStr], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = nomeArq;
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nomeArq;
   document.body.appendChild(a); a.click(); a.remove(); toast('Backup exportado');
 }
+async function backupAutomatico(forcar){
+  const FS = window.Capacitor?.Plugins?.Filesystem; if(!FS) return;
+  if(!forcar && (cfg.backupAuto === false || Date.now() - (cfg.backupAutoTs || 0) < 7 * 86400000)) return;
+  try{
+    const dados = await montarBackup();
+    try{ await FS.requestPermissions(); }catch(e){}
+    await FS.writeFile({path:'GymTracker/gymtracker-backup-automatico.json', data:dados, directory:'DOCUMENTS', encoding:'utf8', recursive:true});
+    cfg.backupAutoTs = Date.now(); salvarLS('gym_cfg_v4', cfg); atualizarBackupAuto();
+    if(forcar) toast('✅ Backup salvo em Documentos/GymTracker');
+  }catch(e){ if(forcar) toast('Não consegui salvar o backup automático', 'bad'); }
+}
+function atualizarBackupAuto(){
+  const el = $('bkp-auto-txt'), b = $('bkp-auto-btn'); if(!el) return;
+  const on = cfg.backupAuto !== false; b.textContent = on ? 'Ligado' : 'Desligado'; b.className = 'tgl ' + (on ? 'on' : 'off');
+  el.textContent = window.Capacitor?.Plugins?.Filesystem ? (cfg.backupAutoTs ? 'Último: ' + dataLonga(cfg.backupAutoTs) + ' • Documentos/GymTracker' : 'Ainda não feito • semanal em Documentos/GymTracker') : 'Disponível só no app instalado';
+}
+function tglBackupAuto(){ cfg.backupAuto = cfg.backupAuto === false; salvarLS('gym_cfg_v4', cfg); atualizarBackupAuto(); if(cfg.backupAuto) backupAutomatico(true); }
 function importarDados(ev){
   const f = ev.target.files[0]; if(!f) return;
   const r = new FileReader();
@@ -1286,7 +1387,8 @@ function importarDados(ev){
       if(!d.ficha || !d.ficha.A || !d.ficha.B || !Array.isArray(d.historico)) throw new Error('formato');
       ficha = {A:d.ficha.A, B:d.ficha.B}; historico = d.historico; saude = Array.isArray(d.saude) ? d.saude : []; cfg = d.cfg || cfg; normalizarCfg();
       salvarLS('gym_ficha_v4', ficha); salvarLS('gym_hist_v3', historico); salvarLS('gym_saude_v4', saude); salvarLS('gym_cfg_v4', cfg);
-      atualizarAbas(); renderizarExercicios(); popularSelect(); atualizarSubtitulo(); toast('Backup importado ✅');
+      if(Array.isArray(d.fotos)) (async () => { for(const f of d.fotos) if(f && f.id && f.img) try{ await DBF.salvar(f); }catch(e){} await carregarFotos(); })();
+      atualizarAbas(); renderizarExercicios(); popularSelect(); atualizarSubtitulo(); atualizarBackupAuto(); toast('Backup importado ✅' + (Array.isArray(d.fotos) && d.fotos.length ? ' (com ' + d.fotos.length + ' foto(s))' : ''));
     }catch(e){ toast('Arquivo de backup inválido', 'bad'); }
   };
   r.readAsText(f); ev.target.value = '';
@@ -1388,7 +1490,7 @@ function renderizarFreq(){
   const med = ['🥇','🥈','🥉'];
   $('ranking-lista').innerHTML = lista.map((x,i) => {
     const sub = x.eu ? `Sequência: ${x.s} dia(s)` : (x.velho && rankModo === 'mes' ? 'Resumo de outro mês: peça um novo' : `Sequência: ${x.s} • atualizado ${dataCurta(x.ts)}`);
-    const rem = x.eu ? '' : `<button class="mini" style="color:#fda4af" onclick="removerAmigo(${Object.keys(cfg.amigos).indexOf(x.nome)})">✕</button>`;
+    const rem = x.eu ? '' : `<button class="mini" style="color:var(--ro)" onclick="removerAmigo(${Object.keys(cfg.amigos).indexOf(x.nome)})">✕</button>`;
     return `<div class="rk${x.eu ? ' eu' : ''}"><span class="pos">${med[i] || (i+1) + 'º'}</span><span class="nm">${esc(x.nome)}${x.eu ? ' (você)' : ''}<small>${esc(sub)}</small></span><span class="vl mono">${val(x)}</span>${rem}</div>`;
   }).join('') + (lista.length === 1 ? '<div class="vazio" style="padding:10px">Adicione resumos de amigos para montar o ranking.</div>' : '');
 }
@@ -1735,7 +1837,7 @@ function renderizarMetas(){
   box.innerHTML = L.map(x => {
     const p = progMeta(x.ref, x.atual), ini = x.ref.ini == null ? x.atual : x.ref.ini;
     const atualTxt = x.atual == null ? '--' : fmt(x.atual) + ' ' + x.un;
-    return `<div class="meta-i"><div class="row"><b>${esc(x.nome)}</b><span class="mono" style="color:${p.ok ? '#34d399' : '#cbd5e1'}">${p.ok ? '✅ ' : ''}${atualTxt} → ${fmt(x.ref.alvo)} ${x.un}</span></div>
+    return `<div class="meta-i"><div class="row"><b>${esc(x.nome)}</b><span class="mono" style="color:${p.ok ? 'var(--gr)' : 'var(--t2)'}">${p.ok ? '✅ ' : ''}${atualTxt} → ${fmt(x.ref.alvo)} ${x.un}</span></div>
       <div class="prog"><i style="width:${Math.round(p.pct)}%"></i></div>
       <div class="t-sm" style="margin-top:3px">${Math.round(p.pct)}% • ${ini == null ? 'sem ponto de partida ainda' : 'início: ' + fmt(ini) + ' ' + x.un}</div></div>`;
   }).join('');
@@ -1748,7 +1850,7 @@ function abrirModalMetas(){
   renderMetasCargas(); abrirModal('modal-metas');
 }
 function renderMetasCargas(){
-  $('metas-cargas').innerHTML = metasTmp.cargas.length ? metasTmp.cargas.map((m, i) => `<div class="hrow"><span>${esc(nomeEx(m.exId))}</span><span class="mono">${fmt(m.alvo)} kg <button class="mini" style="color:#fda4af" onclick="remMetaCarga(${i})">✕</button></span></div>`).join('') : '<div class="t-sm">Nenhuma meta de carga.</div>';
+  $('metas-cargas').innerHTML = metasTmp.cargas.length ? metasTmp.cargas.map((m, i) => `<div class="hrow"><span>${esc(nomeEx(m.exId))}</span><span class="mono">${fmt(m.alvo)} kg <button class="mini" style="color:var(--ro)" onclick="remMetaCarga(${i})">✕</button></span></div>`).join('') : '<div class="t-sm">Nenhuma meta de carga.</div>';
 }
 function addMetaCarga(){
   const id = $('meta-ex').value, alvo = num('meta-carga');
@@ -1964,7 +2066,8 @@ async function compartilharRelatorio(tipo){
   $('timer-display').textContent = fmtT(ultimoTimer);
   treinoAtual = sugerido();
   atualizarAbas(); renderizarExercicios(); popularSelect(); montarAjuda(); atualizarSubtitulo();
-  carregarFotos(); iniciarNotificacoes();
+  carregarFotos(); iniciarNotificacoes(); atualizarBackupAuto(); setTimeout(() => backupAutomatico(false), 4000);
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) backupAutomatico(false); });
   window.addEventListener('resize', () => { if(abaAtual === 'evolucao') atualizarGrafico(); if(abaAtual === 'saude') renderizarSaude(); if(abaAtual === 'freq') renderizarFreq(); });
 })();
 </script>
