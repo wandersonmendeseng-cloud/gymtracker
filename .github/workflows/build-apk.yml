@@ -19,6 +19,17 @@ jobs:
       - run: |
           npx cap add android
           npx cap sync android
+      - name: Permissoes de notificacao
+        run: |
+          python3 - <<'PY'
+          p = 'android/app/src/main/AndroidManifest.xml'
+          s = open(p).read()
+          perms = ['android.permission.POST_NOTIFICATIONS','android.permission.SCHEDULE_EXACT_ALARM','android.permission.USE_EXACT_ALARM','android.permission.RECEIVE_BOOT_COMPLETED','android.permission.VIBRATE','android.permission.WRITE_EXTERNAL_STORAGE']
+          add = ''.join('    <uses-permission android:name="%s" />\n' % x for x in perms if x not in s)
+          s = s.replace('<application', add + '    <application', 1)
+          open(p, 'w').write(s)
+          print('manifest ok')
+          PY
       - name: Criar icone do app
         run: |
           pip install pillow
