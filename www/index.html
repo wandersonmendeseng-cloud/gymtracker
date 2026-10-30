@@ -7,6 +7,9 @@
 <title>GymTracker &amp; Saúde 5.1</title>
 <style>
 :root{--bg:#0b1120;--card:#151f32;--line:#1e293b;--mut:#94a3b8;--txt:#f8fafc;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--rose:#f43f5e}
+html.claro{filter:invert(1) hue-rotate(180deg)}
+html.claro img,html.claro .fth img{filter:invert(1) hue-rotate(180deg)}
+#btn-tema{background:#1e293b;border-radius:99px;width:36px;height:36px;font-size:17px;flex-shrink:0;margin-left:8px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Roboto,sans-serif}
 body{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:96px;user-select:none;-webkit-user-select:none}
@@ -103,6 +106,27 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 .regc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
 .regc label{display:block;font-size:9px;font-weight:700;color:var(--mut);margin:0 0 3px;text-transform:uppercase;white-space:nowrap}
 .regc input{text-align:center;padding:9px 2px}
+.tgl{padding:6px 12px;border-radius:99px;font-size:11px;font-weight:800;flex-shrink:0}
+.tgl.on{background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.4)}
+.tgl.off{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.dchip{width:36px;height:36px;border-radius:10px;background:#0f172a;border:1px solid #334155;color:#94a3b8;font-weight:800;font-size:12px}
+.dchip.on{background:var(--blue);color:#fff;border-color:transparent}
+.nt{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
+.nt .row b{font-size:12.5px}
+.chk{width:46px;height:46px;border-radius:12px;border:2px solid #475569;background:#0f172a;font-size:24px;font-weight:800;color:#fff}
+.chk.on{background:var(--green);border-color:var(--green)}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.fth{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;background:#0f172a;cursor:pointer}
+.fth img{width:100%;height:100%;object-fit:cover;display:block}
+.fth small{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);font-size:9.5px;padding:3px 5px;text-align:center}
+.fth button{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.65);border-radius:99px;width:22px;height:22px;font-size:11px;color:#fda4af}
+.fcomp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.fcomp figure{margin:0;text-align:center}
+.fcomp img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:1px solid #334155;display:block;background:#0f172a}
+.fcomp figcaption{font-size:11px;margin-top:4px;color:#cbd5e1}
+.meta-i{margin-bottom:12px}
+.meta-i .row{font-size:12px}
+.meta-i .prog{margin-top:6px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
 .modal.on{display:flex}
 .box{background:#0f172a;border:1px solid #334155;border-radius:18px;padding:18px;width:100%;max-width:380px;max-height:88vh;overflow-y:auto}
@@ -125,7 +149,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
 
 <header>
   <div>
-    <h1 id="header-title">Meu Treino (A / B)</h1>
+    <h1 id="header-title">Meu Treino (A / B) <button id="btn-tema" onclick="alternarTema()" aria-label="Alternar tema claro/escuro">🌙</button></h1>
     <p id="header-subtitle"></p>
   </div>
   <div class="timer">
@@ -210,6 +234,11 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   </div>
 
   <div class="card">
+    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">🎯 Metas <button class="help" onclick="abrirAjuda('metas')">?</button></b><button class="b" onclick="abrirModalMetas()">✎ Editar</button></div>
+    <div id="metas-lista"></div>
+  </div>
+
+  <div class="card">
     <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📏 Registrar peso e medidas</b><button class="link" onclick="abrirAjuda('como_medir')">Como medir? ?</button></div>
     <div class="g2" style="margin-bottom:10px">
       <div><label class="l">Altura (cm)</label><input type="number" inputmode="decimal" id="med-altura" placeholder="175" class="mono"></div>
@@ -234,6 +263,26 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
     <b style="font-size:14px">📉 Curva de peso &amp; cintura</b>
     <div class="t-sm" style="margin:3px 0 8px"><span style="color:#34d399">● peso (kg, eixo esq.)</span> &nbsp; <span style="color:#fbbf24">● cintura (cm, eixo dir.)</span></div>
     <div class="chartbox"><canvas id="graficoSaude"></canvas></div>
+  </div>
+
+  <div class="card">
+    <b style="font-size:14px">📸 Fotos de progresso <button class="help" onclick="abrirAjuda('fotos')">?</button></b>
+    <p class="t-sm" style="margin:4px 0 10px">As fotos ficam só neste aparelho e <b>não entram no backup</b>.</p>
+    <div class="g2">
+      <select id="foto-ang"><option>Frente</option><option>Lado</option><option>Costas</option></select>
+      <button class="b p" onclick="$('foto-arq').click()">➕ Adicionar foto</button>
+    </div>
+    <input type="file" id="foto-arq" accept="image/*" style="display:none" onchange="adicionarFoto(event)">
+    <div class="fgrid" id="fotos-grid"></div>
+    <div id="foto-comparador" class="hidden">
+      <div class="g2" style="margin-top:14px">
+        <div><label class="l">Antes</label><select id="foto-antes" onchange="renderizarComparacao()"></select></div>
+        <div><label class="l">Depois</label><select id="foto-depois" onchange="renderizarComparacao()"></select></div>
+      </div>
+      <div class="fcomp" id="foto-comp"></div>
+      <div class="t-sm" id="foto-dif" style="margin-top:8px;text-align:center"></div>
+      <button class="b gold" style="width:100%;margin-top:10px;padding:11px" onclick="compartilharComparacao()">📤 Compartilhar comparação</button>
+    </div>
   </div>
 
   <div class="card">
@@ -290,6 +339,13 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   </div>
 
   <div class="card">
+    <div class="row">
+      <div style="min-width:0"><b style="font-size:14px">🔔 Lembretes e notificações <button class="help" onclick="abrirAjuda('lembretes')">?</button></b><div class="t-sm" id="notif-resumo" style="margin-top:2px">Desligadas</div></div>
+      <button class="b p" onclick="abrirModalNotif()">Configurar</button>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="row"><b style="font-size:15px">🏆 Ranking do grupo <button class="help" onclick="abrirAjuda('ranking')">?</button></b></div>
     <div class="seg">
       <button id="rk-mes" class="on" onclick="mudarRank('mes')">📅 Este mês</button>
@@ -302,6 +358,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
       <button class="b g" style="padding:11px" onclick="compartilharResumo()">📤 Enviar Código</button>
       <button class="b gold" style="padding:11px" onclick="gerarCardPNG()">🖼️ Card PNG (Stories)</button>
     </div>
+    <button class="b p" style="width:100%;margin-top:8px;padding:11px" onclick="abrirRelatorio()">📄 Relatório do mês (imagem ou PDF)</button>
     <label class="l" style="margin-top:16px">Resumo recebido de um amigo</label>
     <textarea id="freq-cola" rows="3" placeholder="Cole aqui a mensagem (#GT1:...) que seu amigo enviou"></textarea>
     <button class="b p" style="width:100%;margin-top:8px;padding:11px" onclick="importarAmigo()">➕ Adicionar ao ranking</button>
@@ -321,7 +378,7 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <h3 id="modal-titulo">Novo exercício</h3>
   <input type="hidden" id="edit-id">
   <label>Nome do exercício *</label><input type="text" id="ex-nome" placeholder="Ex: Supino inclinado no Smith">
-  <label>Tipo</label><select id="ex-modo" onchange="ajustarModalModo()"><option value="forca">Musculação (com meta de repetições)</option><option value="falha">Musculação até a falha</option><option value="cardio">Cardio (tempo, distância, velocidade)</option></select>
+  <label>Tipo</label><select id="ex-modo" onchange="ajustarModalModo()"><option value="forca">Musculação (com meta de repetições)</option><option value="falha">Musculação até a falha</option><option value="cardio">Cardio (tempo, distância, velocidade)</option><option value="along">Alongamento (só marcar como feito)</option></select>
   <div class="g3">
     <div id="ex-w-series"><label>Nº séries</label><input type="number" inputmode="numeric" id="ex-num-series" placeholder="4" class="mono" style="text-align:center"></div>
     <div id="ex-w-min"><label id="ex-l-min">Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" class="mono" style="text-align:center"></div>
@@ -384,7 +441,74 @@ nav button.on{color:#fff;background:rgba(59,130,246,.2)}
   <div class="acts"><button class="b p" onclick="fecharModal('modal-ajuda')">Entendi</button></div>
 </div></div>
 
+<!-- Modal lembretes -->
+<div id="modal-notif" class="modal"><div class="box">
+  <h3>🔔 Lembretes e notificações</h3>
+  <p class="t-sm" id="nt-aviso" style="margin:-4px 0 8px;color:#fbbf24"></p>
+  <div class="nt" style="margin-top:0"><div class="row"><div><b>Ativar notificações</b><div class="t-sm">Liga ou desliga todas</div></div><button id="nt-ativo" class="tgl off" onclick="tglNotif('ativo')">Desligado</button></div></div>
+  <div class="nt"><div class="row"><div><b>⏱ Fim do descanso</b><div class="t-sm">Avisa mesmo com a tela apagada</div></div><button id="nt-descanso" class="tgl off" onclick="tglNotif('descanso')">Desligado</button></div></div>
+  <div class="nt">
+    <div class="row"><div><b>🏋️ Lembrete de treino</b><div class="t-sm">"Hoje é Treino A"</div></div><button id="nt-treino" class="tgl off" onclick="tglNotif('treino')">Desligado</button></div>
+    <div style="display:flex;gap:6px;margin:10px 0 8px" id="nt-dias"></div>
+    <label class="l">Horário</label><input type="time" id="nt-treino-hora">
+  </div>
+  <div class="nt">
+    <div class="row"><div><b>😅 Dias sem treinar</b><div class="t-sm">Protege a sua sequência</div></div><button id="nt-inativo" class="tgl off" onclick="tglNotif('inativo')">Desligado</button></div>
+    <div class="g2" style="margin-top:10px">
+      <div><label class="l">Avisar após</label><select id="nt-inativo-dias"><option value="2">2 dias</option><option value="3">3 dias</option><option value="4">4 dias</option><option value="5">5 dias</option></select></div>
+      <div><label class="l">Horário</label><input type="time" id="nt-inativo-hora"></div>
+    </div>
+  </div>
+  <div class="nt">
+    <div class="row"><div><b>⚖️ Pesar e medir</b><div class="t-sm">Para manter a aba Saúde em dia</div></div><button id="nt-peso" class="tgl off" onclick="tglNotif('peso')">Desligado</button></div>
+    <div class="g2" style="margin-top:10px">
+      <div><label class="l">Frequência</label><select id="nt-peso-freq"><option value="7">Toda semana</option><option value="14">A cada 15 dias</option></select></div>
+      <div><label class="l">Dia</label><select id="nt-peso-dia"><option value="0">Domingo</option><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option></select></div>
+    </div>
+    <label class="l" style="margin-top:8px">Horário</label><input type="time" id="nt-peso-hora">
+  </div>
+  <div class="nt"><div class="row"><div><b>🏆 Recordes e metas</b><div class="t-sm">Avisa quando você bater um recorde ou meta</div></div><button id="nt-metas" class="tgl off" onclick="tglNotif('metas')">Desligado</button></div></div>
+  <div class="g2" style="margin-top:12px">
+    <button class="b" onclick="liberarAlarmes()">⏰ Liberar alarmes exatos</button>
+    <button class="b" onclick="testarNotif()">🔔 Enviar teste</button>
+  </div>
+  <p class="t-sm" style="margin:8px 0 0">Se as notificações atrasarem, libere o app da economia de bateria nas configurações do celular.</p>
+  <div class="acts"><button class="b" onclick="fecharModal('modal-notif')">Cancelar</button><button class="b p" onclick="salvarNotif()">Salvar</button></div>
+</div></div>
+
+<!-- Modal metas -->
+<div id="modal-metas" class="modal"><div class="box">
+  <h3>🎯 Minhas metas</h3>
+  <label>Peso alvo (kg)</label><input type="number" inputmode="decimal" step="0.1" id="meta-peso" class="mono" placeholder="Ex: 75">
+  <label>% de gordura alvo</label><input type="number" inputmode="decimal" step="0.1" id="meta-bf" class="mono" placeholder="Ex: 15">
+  <label>Metas de carga</label>
+  <div id="metas-cargas"></div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:6px"><select id="meta-ex"></select><input type="number" inputmode="decimal" step="0.5" id="meta-carga" class="mono" placeholder="kg"></div>
+  <button class="b" style="width:100%;margin-top:8px" onclick="addMetaCarga()">➕ Adicionar meta de carga</button>
+  <div class="acts"><button class="b" onclick="fecharModal('modal-metas')">Cancelar</button><button class="b p" onclick="salvarMetas()">Salvar</button></div>
+</div></div>
+
+<!-- Modal relatório -->
+<div id="modal-rel" class="modal" onclick="if(event.target===this)fecharModal('modal-rel')"><div class="box" style="text-align:center">
+  <h3>📄 Relatório do mês</h3>
+  <div class="row" style="margin-bottom:8px"><button class="b" onclick="mudarMesRel(-1)">‹</button><b id="rel-titulo"></b><button class="b" onclick="mudarMesRel(1)">›</button></div>
+  <canvas id="canvasRel" class="hidden"></canvas>
+  <img id="imgRel" alt="Relatório do mês" style="width:100%;height:auto;border-radius:12px;border:1px solid #334155;display:block">
+  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rel')">Fechar</button><button class="b gold" onclick="compartilharRelatorio('img')">🖼️ Imagem</button><button class="b gold" onclick="compartilharRelatorio('pdf')">📄 PDF</button></div>
+</div></div>
+
 <script>
+function aplicarTema(){
+  let c = false; try{ c = localStorage.getItem('gym_tema') === 'claro'; }catch(e){}
+  document.documentElement.classList.toggle('claro', c);
+  const b = document.getElementById('btn-tema'); if(b) b.textContent = c ? '☀️' : '🌙';
+  const m = document.querySelector('meta[name=theme-color]'); if(m) m.content = c ? '#f4efe0' : '#0b1120';
+}
+function alternarTema(){
+  let c = false; try{ c = localStorage.getItem('gym_tema') === 'claro'; localStorage.setItem('gym_tema', c ? 'escuro' : 'claro'); }catch(e){}
+  aplicarTema();
+}
+aplicarTema();
 // ============================ AJUDA ============================
 const AJUDA = {
   timer:{t:'⏱ Descanso entre séries',x:'É o tempo de pausa entre uma série e a próxima. Descansar o suficiente deixa você repetir a carga com qualidade.\n\nReferência comum: 60 s para exercícios leves ou isolados, 90 s para o padrão e 120 s ou mais para exercícios pesados.\n\nO cronômetro dispara sozinho quando você salva uma série e avisa com som e vibração no fim.'},
@@ -397,6 +521,11 @@ const AJUDA = {
   progressao:{t:'🎯 Progressão de carga',x:'Cada exercício tem uma faixa de repetições (ex.: 8–12). Quando você atingir o número máximo da faixa no treino anterior, o app mostra um banner verde sugerindo +2 kg com um botão para preencher o peso automaticamente.'},
   cardio:{t:'🏃 Cardio',x:'Exercícios de cardio não usam kg nem repetições. Informe o tempo (min), a distância (km) ou a velocidade (km/h) e, se houver, a inclinação (%). Se preencher o tempo e a distância, o app calcula a velocidade; se preencher o tempo e a velocidade, ele calcula a distância.\n\nNa aba Evolução, escolha o cardio para ver a distância e a velocidade ao longo dos dias.\n\nPara criar um: + Exercício e, em Tipo, escolha Cardio.'},
   falha:{t:'🔥 Exercício até a falha',x:'Alguns exercícios (como o rest-pause) não têm um número fixo de repetições: você vai até a falha. Neles, o tipo da série já vem como F, e o app não mostra meta de repetições nem sugere subir a carga.\n\nNo rest-pause, anote o total de repetições somando as mini-séries. Você também pode trocar o tipo de qualquer exercício no ✎.'},
+  lembretes:{t:'🔔 Lembretes e notificações',x:'Funcionam sem internet: o próprio celular agenda e dispara os avisos.\n\n• Fim do descanso: avisa na hora certa, mesmo com a tela apagada.\n• Lembrete de treino: você escolhe os dias e o horário ("Hoje é Treino A").\n• Dias sem treinar: avisa se passar o número de dias que você definir.\n• Pesar e medir: toda semana ou a cada 15 dias.\n• Recordes e metas: avisa quando bater.\n\nPara ativar, toque em Configurar, ligue as notificações e permita quando o Android perguntar. Se atrasarem, libere o app da economia de bateria e toque em Liberar alarmes exatos.'},
+  metas:{t:'🎯 Metas',x:'Defina um peso alvo, um % de gordura alvo e metas de carga por exercício. A barra mostra o quanto você já andou do ponto de partida até o alvo.\n\nO ponto de partida é o seu valor no momento em que a meta foi criada (para peso e gordura, o primeiro registro que o app encontrar). Ao bater a meta, o app avisa e marca com ✅.'},
+  fotos:{t:'📸 Fotos de progresso',x:'Tire ou escolha fotos de frente, de lado e de costas, sempre com a mesma luz e distância. Depois escolha uma foto Antes e uma Depois para ver lado a lado, com a data e o peso do dia.\n\nAs fotos ficam só neste aparelho e não entram no backup. Se for trocar de celular, compartilhe a comparação como imagem.'},
+  relatorio:{t:'📄 Relatório do mês',x:'Gera uma página com os seus números do mês: dias treinados, sequência, séries, volume, cardio, recordes, evolução de cargas, medidas e metas. Use as setas para trocar de mês e compartilhe como imagem ou PDF.'},
+  along:{t:'🧘 Alongamento',x:'Alongamentos não têm kg nem repetições. Toque no quadrado para marcar como feito (um quadrado por série). Alongar sozinho não conta como dia de treino na Frequência.'},
   domingo:{t:'☀️ Domingos e Sequência (Streak)',x:'A maioria das academias fecha aos domingos. Quando a opção está em "Folga", o domingo é ignorado na cobrança: se você treinou no sábado e na segunda-feira, sua sequência continua intacta!\n\nE se você treinar em um domingo mesmo no modo Folga, ele ainda ganha +1 dia de bônus na sua sequência.\n\nSe você malha todo domingo obrigatoriamente, mude o botão para "Treino".'},
   ranking:{t:'🏆 Frequência, Calendário e Ranking',x:'Um dia conta como treinado quando você salva uma série válida ou toca em Finalizar Treino. Você também pode tocar diretamente em qualquer dia do calendário para marcar ou desmarcar presença!\n\nUse o botão "Card PNG (Stories)" para gerar uma imagem com seu resumo e recordes para postar no WhatsApp ou Instagram.'},
   recorde:{t:'🥇 Recordes pessoais',x:'Quando você salva uma série de Trabalho ou Falha com uma carga maior que a do seu histórico, ou com um 1RM estimado maior, o app toca um som especial de vitória, exibe um alerta dourado de NOVO RECORDE e marca a série com 🏆.'}
@@ -421,7 +550,37 @@ const fichaAntiga = {
 const E = (id,nome,numSeries,repsMin,repsMax,ajuste='',explicacao='') => ({id,nome,numSeries,repsMin,repsMax,ajuste,explicacao});
 const FALHA = (id,nome,numSeries,ajuste='',explicacao='') => ({id,nome,numSeries,repsMin:0,repsMax:0,falha:true,ajuste,explicacao});
 const CARDIO = (id,nome,metaMin,metaMax,ajuste='',explicacao='',incl=0) => ({id,nome,modo:'cardio',numSeries:1,repsMin:metaMin,repsMax:metaMax,incl,ajuste,explicacao});
-const fichaPadrao = {
+const ALONG = (id,nome,numSeries,seg,ajuste='',explicacao='') => ({id,nome,modo:'alongamento',numSeries,repsMin:seg,repsMax:seg,ajuste,explicacao});
+const fichaV51a = {
+  A:{exercicios:[
+    E('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',2,10,10,'⏱ 10 segundos por série','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('a_along_delt','Alongamento de deltoide e tríceps',1,20,20,'⏱ 20 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('a_supino','Supino reto com isometria de 4" perto do peito',3,10,15,'5 superlentas + 10 rápidas','Faça 5 repetições superlentas com isometria de 4" perto do peito, seguidas de 10 rápidas (15 reps por série).'),
+    E('a_voador_peito','Voador peitoral com pico de contração de 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_elev_frontal','Elevação frontal de costas para o cross-corda',3,12,15),
+    E('a_triceps_21','Tríceps barra reta 21',3,21,21,'Método 21','Método 21: 7 repetições na metade inferior + 7 na metade superior + 7 completas.'),
+    E('a_arnold','Desenvolvimento Arnold sentado HBC',3,12,15),
+    E('a_puxada_art','Puxada articulada com pico de contração 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_serrote','Remada serrote HBC',3,12,15),
+    E('a_voador_dorsal','Voador dorsal',3,12,15),
+    E('a_biceps_maq','Bíceps máquina',3,12,15),
+    E('a_abd_inf','Abdominal inferior',3,20,20),
+    E('a_hiit',"HIIT no transport ou na bike (1' forte, 1' fraco)",1,10,15,'⏱ 10 a 15 minutos','Alterne 1 minuto forte e 1 minuto fraco. Anote os minutos totais em "reps".')]},
+  B:{exercicios:[
+    E('b_along_post','Alongamento de posterior de coxa sentado',1,15,15,'⏱ 15 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('b_along_glut','Alongamento de glúteo e quadrado lombar sentado',1,15,15,'⏱ 15 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
+    E('b_leg_press','Leg Press',3,12,15),
+    E('b_adutora_rp','Cadeira adutora em rest-pause',3,8,12,'Método rest-pause','Faça a série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    E('b_extensora_rp','Cadeira extensora com pico de contração de 2" em rest-pause',3,8,12,'Rest-pause • pico de 2"','Segure 2" de pico de contração. Série até a falha, descanse uns 15 segundos e continue. Anote o total de repetições.'),
+    E('b_afundo','Afundo unilateral HBC',3,12,12),
+    E('b_abdutora','Cadeira abdutora',3,12,15),
+    E('b_donkey','Panturrilha donkey',3,15,15),
+    E('b_abdutora_rp','Cadeira abdutora em rest-pause',3,8,12,'Método rest-pause','Faça a série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    E('b_mesa_flexora','Mesa flexora com pico de contração de 2"',3,12,15,'Pico de contração de 2"'),
+    E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
+    E('b_esteira','Caminhada na esteira com inclinação 12%',1,10,20,'⏱ Cardio final • inclinação 12%','Anote os minutos em "reps".')]}
+};
+const fichaV51b = {
   A:{exercicios:[
     E('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',2,10,10,'⏱ 10 segundos por série','Alongamento: anote os segundos em "reps" e use 0 kg.'),
     E('a_along_delt','Alongamento de deltoide e tríceps',1,20,20,'⏱ 20 segundos','Alongamento: anote os segundos em "reps" e use 0 kg.'),
@@ -450,6 +609,35 @@ const fichaPadrao = {
     E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
     CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
 };
+const fichaPadrao = {
+  A:{exercicios:[
+    ALONG('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',2,10),
+    ALONG('a_along_delt','Alongamento de deltoide e tríceps',1,20),
+    E('a_supino','Supino reto com isometria de 4" perto do peito',3,10,15,'5 superlentas + 10 rápidas','Faça 5 repetições superlentas com isometria de 4" perto do peito, seguidas de 10 rápidas (15 reps por série).'),
+    E('a_voador_peito','Voador peitoral com pico de contração de 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_elev_frontal','Elevação frontal de costas para o cross-corda',3,12,15),
+    E('a_triceps_21','Tríceps barra reta 21',3,21,21,'Método 21','Método 21: 7 repetições na metade inferior + 7 na metade superior + 7 completas.'),
+    E('a_arnold','Desenvolvimento Arnold sentado HBC',3,12,15),
+    E('a_puxada_art','Puxada articulada com pico de contração 2"',3,10,10,'10 reps + 10" de isometria','Segure 2" de pico de contração em cada repetição. Ao final, mantenha 10" contraído.'),
+    E('a_serrote','Remada serrote HBC',3,12,15),
+    E('a_voador_dorsal','Voador dorsal',3,12,15),
+    E('a_biceps_maq','Bíceps máquina',3,12,15),
+    E('a_abd_inf','Abdominal inferior',3,20,20),
+    CARDIO('a_hiit',"HIIT no transport ou na bike (1' forte, 1' fraco)",10,15,"⏱ 10 a 15 minutos • 1' forte / 1' fraco",'Alterne 1 minuto forte e 1 minuto fraco. Anote o tempo total, a distância e a velocidade média.')]},
+  B:{exercicios:[
+    ALONG('b_along_post','Alongamento de posterior de coxa sentado',1,15),
+    ALONG('b_along_glut','Alongamento de glúteo e quadrado lombar sentado',1,15),
+    E('b_leg_press','Leg Press',3,12,15),
+    FALHA('b_adutora_rp','Cadeira adutora em rest-pause',3,'Método rest-pause • até a falha','Série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    FALHA('b_extensora_rp','Cadeira extensora com pico de contração de 2" em rest-pause',3,'Rest-pause • pico de 2" • até a falha','Segure 2" de pico de contração. Série até a falha, descanse uns 15 segundos e continue. Anote o total de repetições.'),
+    E('b_afundo','Afundo unilateral HBC',3,12,12),
+    E('b_abdutora','Cadeira abdutora',3,12,15),
+    E('b_donkey','Panturrilha donkey',3,15,15),
+    FALHA('b_abdutora_rp','Cadeira abdutora em rest-pause',3,'Método rest-pause • até a falha','Série até a falha, descanse uns 15 segundos e continue até a falha de novo. Anote o total de repetições.'),
+    FALHA('b_mesa_flexora','Mesa flexora com pico de contração de 2"',3,'Pico de contração de 2" • até a falha'),
+    E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
+    CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
+};
 const nomesPadrao = {A:'Superiores', B:'Inferiores & Core'};
 
 function lerLS(k, p){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? p; }catch(e){ return p; } }
@@ -459,12 +647,17 @@ let ficha     = JSON.parse(JSON.stringify(fichaPadrao));
 (function(){
   const salva = lerLS('gym_ficha_v4', null);
   if(!salva || !salva.A || !salva.B) return;
-  if(JSON.stringify(salva) === JSON.stringify(fichaAntiga)) salvarLS('gym_ficha_v4', ficha);
+  const js = JSON.stringify(salva);
+  if([fichaAntiga, fichaV51a, fichaV51b].some(f => JSON.stringify(f) === js)) salvarLS('gym_ficha_v4', ficha);
   else ficha = salva;
 })();
 let historico = lerLS('gym_hist_v3', []);
 let saude     = lerLS('gym_saude_v4', []);
 let cfg       = lerLS('gym_cfg_v4', {nomes:{...nomesPadrao}, altura:null, ultimo:null, treinaDomingo:false, offDays:[], nome:'Wanderson'});
+const NOTIF_PADRAO = {ativo:false, descanso:true, metas:true,
+  treino:{ativo:true, dias:[1,3,5], hora:'18:00'},
+  inativo:{ativo:true, dias:3, hora:'19:00'},
+  peso:{ativo:true, freq:7, dia:1, hora:'08:00'}};
 function normalizarCfg(){
   if(!cfg.nomes) cfg.nomes = {...nomesPadrao};
   if(!Array.isArray(cfg.dias)) cfg.dias = [];
@@ -472,6 +665,11 @@ function normalizarCfg(){
   if(!cfg.amigos) cfg.amigos = {};
   if(!cfg.nome) cfg.nome = 'Wanderson';
   if(typeof cfg.treinaDomingo !== 'boolean') cfg.treinaDomingo = false;
+  const n = cfg.notif || {}, N = NOTIF_PADRAO;
+  cfg.notif = {...N, ...n, treino:{...N.treino, ...(n.treino||{})}, inativo:{...N.inativo, ...(n.inativo||{})}, peso:{...N.peso, ...(n.peso||{})}};
+  if(!Array.isArray(cfg.notif.treino.dias)) cfg.notif.treino.dias = [...N.treino.dias];
+  const m = cfg.metas || {};
+  cfg.metas = {peso: m.peso || null, bf: m.bf || null, cargas: Array.isArray(m.cargas) ? m.cargas : []};
 }
 normalizarCfg();
 
@@ -566,7 +764,7 @@ function somRecorde(){
   try{ navigator.vibrate && navigator.vibrate([150,80,150,80,400]); }catch(e){}
 }
 function iniciarTimer(seg){
-  clearInterval(timerInterval); ultimoTimer = seg;
+  clearInterval(timerInterval); ultimoTimer = seg; agendarDescanso(seg);
   const fim = Date.now() + seg*1000;
   $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(seg);
   timerInterval = setInterval(() => {
@@ -575,7 +773,7 @@ function iniciarTimer(seg){
     if(r <= 0){ clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.add('fim'); bipe(); toast('⏱ Descanso finalizado!'); }
   }, 250);
 }
-function pararTimer(){ clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(ultimoTimer); }
+function pararTimer(){ cancelarDescanso(); clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(ultimoTimer); }
 
 // ============================ TREINO ============================
 function sugerido(){ return cfg.ultimo && cfg.ultimo.letra === 'A' ? 'B' : 'A'; }
@@ -646,6 +844,33 @@ function calcularAnilhas(){
     ${resto > 0.1 ? `<span class="t-sm" style="color:#fbbf24;margin-top:6px">Sobram ${fmt(resto,2)} kg sem anilha padrão</span>` : ''}`;
 }
 
+function renderAlongamento(ex, idx){
+  const feitos = historico.filter(h => h.exId === ex.id && h.tipo === 'A' && mesmoDia(h.ts, Date.now())).length;
+  const n = Math.max(1, ex.numSeries || 1), seg = ex.repsMax || ex.repsMin || 0;
+  const quad = Array.from({length:n}, (_, i) => `<button class="chk${i < feitos ? ' on' : ''}" onclick="alternarAlong('${ex.id}',${i})" aria-label="Marcar série ${i+1}">${i < feitos ? '✓' : ''}</button>`).join('');
+  const ok = feitos >= n;
+  return `<div class="card"${ok ? ' style="border-color:rgba(16,185,129,.5)"' : ''}>
+    <div class="row" style="align-items:flex-start">
+      <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
+        <div class="t-sm" style="margin-top:2px"><b style="color:#34d399">🧘 Alongamento</b> • ${n}× ${seg ? seg + ' s' : ''}</div></div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
+        <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
+        <button class="mini" onclick="abrirModalExercicio('${ex.id}')" title="Editar">✎</button>
+        <button class="mini" style="color:#fda4af" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
+      </div>
+    </div>
+    ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
+    <div style="display:flex;align-items:center;gap:8px;margin-top:12px">${quad}<span class="t-sm" style="margin-left:6px">${ok ? '✅ Feito!' : 'Toque para marcar como feito'}</span></div>
+  </div>`;
+}
+function alternarAlong(id, i){
+  const hoje = historico.filter(h => h.exId === id && h.tipo === 'A' && mesmoDia(h.ts, Date.now())).length;
+  const alvo = (i + 1 === hoje) ? i : i + 1;
+  historico = historico.filter(h => !(h.exId === id && h.tipo === 'A' && mesmoDia(h.ts, Date.now())));
+  for(let k = 0; k < alvo; k++) historico.push({exId:id, nome:nomeEx(id), ts:Date.now() + k, tipo:'A'});
+  salvarLS('gym_hist_v3', historico); renderizarExercicios();
+}
 function descCardio(h){
   return [h.min ? fmt(h.min,1) + ' min' : null, h.km ? fmt(h.km,2) + ' km' : null, h.vel ? fmt(h.vel,1) + ' km/h' : null, h.incl ? 'inc ' + fmt(h.incl,1) + '%' : null].filter(Boolean).join(' • ');
 }
@@ -695,7 +920,7 @@ function registrarCardio(id){
   const reg = {exId:id, nome:nomeEx(id), ts:Date.now(), tipo:'C', min:mn, km:r2(km), vel:r2(vel), incl:inc || 0};
   historico.push(reg); salvarLS('gym_hist_v3', historico);
   toast('🏃 Cardio salvo: ' + descCardio(reg));
-  renderizarExercicios(); popularSelect(id);
+  renderizarExercicios(); popularSelect(id); agendarReagendar();
 }
 
 function renderizarExercicios(){
@@ -705,6 +930,7 @@ function renderizarExercicios(){
   const agora = Date.now();
   lista.innerHTML = exs.map((ex, idx) => {
     if(ex.modo === 'cardio') return renderCardio(ex, idx);
+    if(ex.modo === 'alongamento') return renderAlongamento(ex, idx);
     const tipo = tipoSel[ex.id] || (ex.falha ? 'F' : 'T');
     const hoje = historico.filter(h => h.exId === ex.id && mesmoDia(h.ts, agora));
     const ant = historico.filter(h => h.exId === ex.id && !mesmoDia(h.ts, agora) && valida(h));
@@ -781,13 +1007,15 @@ function registrarSerie(id){
   if(pr){
     somRecorde();
     toast('🏆 NOVO RECORDE! ' + fmt(peso) + ' kg × ' + reps, 'pr');
+    notificarAgora('🏆 Novo recorde!', nomeEx(id) + ': ' + fmt(peso) + ' kg × ' + reps);
   } else {
     let msg = `Série salva: ${fmt(peso)} kg × ${reps}`;
-    if(ex && !ex.falha && tipo !== 'W' && reps >= ex.repsMax) msg += ' 🎯 Meta batida! Suba a carga no próximo.';
+    if(ex && !ex.falha && tipo !== 'W' && reps >= ex.repsMax){ msg += ' 🎯 Meta batida! Suba a carga no próximo.'; notificarAgora('🎯 Meta de repetições batida!', nomeEx(id) + ': ' + fmt(peso) + ' kg × ' + reps + '. Hora de subir a carga!'); }
     toast(msg);
   }
   iniciarTimer(tipo === 'W' ? 60 : ultimoTimer);
   renderizarExercicios(); popularSelect(id);
+  checarMetas(); agendarReagendar();
 }
 function marcarTreinoConcluidoHoje(){
   const kd = chave(Date.now());
@@ -797,15 +1025,16 @@ function marcarTreinoConcluidoHoje(){
   salvarLS('gym_cfg_v4', cfg);
   atualizarAbas(); atualizarSubtitulo();
   toast(`Treino ${treinoAtual} finalizado! 💪 Próximo: ${sugerido()}`);
+  agendarReagendar();
 }
 // ---- modal exercício ----
 function ajustarModalModo(){
   const m = $('ex-modo').value;
   $('ex-w-series').style.display = m === 'cardio' ? 'none' : '';
-  $('ex-w-min').style.display = m === 'falha' ? 'none' : '';
+  $('ex-w-min').style.display = (m === 'falha' || m === 'along') ? 'none' : '';
   $('ex-w-max').style.display = m === 'falha' ? 'none' : '';
   $('ex-l-min').textContent = m === 'cardio' ? 'Meta mín (min)' : 'Reps mín';
-  $('ex-l-max').textContent = m === 'cardio' ? 'Meta máx (min)' : 'Reps máx';
+  $('ex-l-max').textContent = m === 'cardio' ? 'Meta máx (min)' : (m === 'along' ? 'Duração (seg)' : 'Reps máx');
 }
 function abrirModalExercicio(id){
   const ex = id ? ficha[treinoAtual].exercicios.find(e => e.id === id) : null;
@@ -814,19 +1043,20 @@ function abrirModalExercicio(id){
   $('ex-nome').value = ex?.nome || ''; $('ex-num-series').value = ex?.numSeries || '';
   $('ex-reps-min').value = ex?.repsMin || ''; $('ex-reps-max').value = ex?.repsMax || '';
   $('ex-ajuste').value = ex?.ajuste || ''; $('ex-explicacao').value = ex?.explicacao || '';
-  $('ex-modo').value = ex ? (ex.modo === 'cardio' ? 'cardio' : (ex.falha ? 'falha' : 'forca')) : 'forca'; ajustarModalModo();
+  $('ex-modo').value = ex ? (ex.modo === 'cardio' ? 'cardio' : ex.modo === 'alongamento' ? 'along' : (ex.falha ? 'falha' : 'forca')) : 'forca'; ajustarModalModo();
   abrirModal('modal-ex');
 }
 function salvarExercicioFicha(){
   const nome = $('ex-nome').value.trim();
   if(!nome){ toast('Dê um nome ao exercício', 'bad'); return; }
   const modo = $('ex-modo').value;
-  let mn, mx;
+  let mn, mx, ns = parseInt($('ex-num-series').value,10);
   if(modo === 'falha'){ mn = 0; mx = 0; }
   else if(modo === 'cardio'){ mn = parseInt($('ex-reps-min').value,10) || 0; mx = parseInt($('ex-reps-max').value,10) || 0; }
+  else if(modo === 'along'){ mx = mn = parseInt($('ex-reps-max').value,10) || 20; ns = ns || 1; }
   else { mn = parseInt($('ex-reps-min').value,10) || 8; mx = parseInt($('ex-reps-max').value,10) || 12; }
   if(mn > mx) [mn, mx] = [mx, mn];
-  const d = {nome, numSeries: modo === 'cardio' ? 1 : (parseInt($('ex-num-series').value,10) || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), modo: modo === 'cardio' ? 'cardio' : undefined, falha: modo === 'falha' ? true : undefined};
+  const d = {nome, numSeries: modo === 'cardio' ? 1 : (ns || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), modo: modo === 'cardio' ? 'cardio' : (modo === 'along' ? 'alongamento' : undefined), falha: modo === 'falha' ? true : undefined};
   const eid = $('edit-id').value, lista = ficha[treinoAtual].exercicios;
   if(eid) Object.assign(lista.find(e => e.id === eid), d); else lista.push({id:'ex_'+Date.now().toString(36), ...d});
   salvarLS('gym_ficha_v4', ficha); fecharModal('modal-ex'); renderizarExercicios(); popularSelect();
@@ -903,7 +1133,8 @@ function desenharLinhas(cv, series){
 // ---- evolução ----
 function popularSelect(manter){
   const sel = $('select-grafico'), ant = manter || sel.value;
-  const ids = new Set(todosEx().map(e => e.id)); historico.forEach(h => ids.add(h.exId));
+  const along = new Set(todosEx().filter(e => e.modo === 'alongamento').map(e => e.id)); historico.forEach(h => { if(h.tipo === 'A') along.add(h.exId); });
+  const ids = new Set(todosEx().map(e => e.id).filter(i => !along.has(i))); historico.forEach(h => { if(!along.has(h.exId)) ids.add(h.exId); });
   sel.innerHTML = [...ids].map(id => `<option value="${esc(id)}">${esc(nomeEx(id))}</option>`).join('');
   if([...ids].includes(ant)) sel.value = ant;
 }
@@ -978,7 +1209,7 @@ function salvarMedidasCorporais(){
   const r = {ts:Date.now(), peso, cintura:num('med-cintura'), pescoco:num('med-pescoco'), braco:num('med-braco'), peito:num('med-peito'), quadril:num('med-quadril'), coxa:num('med-coxa'), panturrilha:num('med-panturrilha')};
   saude.push(r); salvarLS('gym_saude_v4', saude);
   ['med-peso','med-cintura','med-pescoco','med-braco','med-peito','med-quadril','med-coxa','med-panturrilha'].forEach(i => $(i).value = '');
-  renderizarSaude(); toast('Medidas salvas ✅');
+  renderizarSaude(); toast('Medidas salvas ✅'); checarMetas(); agendarReagendar();
 }
 function apagarUltimaMedida(){
   if(!saude.length){ toast('Nada para apagar', 'neutro'); return; }
@@ -1022,6 +1253,7 @@ function renderizarSaude(){
     const extras = Object.keys(rot).filter(k => s[k]).map(k => `<span class="chip" style="color:#cbd5e1;border-color:#334155">${rot[k]} ${fmt(s[k])}</span>`).join('');
     return `<div class="hrow" style="display:block"><div class="row"><b>${dataLonga(s.ts)}</b><span class="mono" style="color:#34d399">${fmt(s.peso)} kg</span></div>${extras ? `<div class="chips">${extras}</div>` : ''}</div>`;
   }).join('') : '<div class="vazio">Nenhuma avaliação registrada ainda.</div>';
+  renderizarMetas(); renderizarFotos();
 }
 
 // ============================ AJUDA / BACKUP ============================
@@ -1069,7 +1301,7 @@ let rankModo = 'mes';
 
 function diasSet(){
   const st = new Set(cfg.dias);
-  historico.forEach(h => { if(h.tipo !== 'W') st.add(chave(h.ts)); });
+  historico.forEach(h => { if(h.tipo !== 'W' && h.tipo !== 'A') st.add(chave(h.ts)); });
   cfg.offDays.forEach(k => st.delete(k));
   return st;
 }
@@ -1124,6 +1356,7 @@ function salvarNomeRank(){ cfg.nome = $('freq-nome').value.trim().slice(0,30); s
 
 function renderizarFreq(){
   const st = diasSet(), hk = chave(Date.now()), pref = hk.slice(0,7), r = resumo();
+  atualizarResumoNotif();
   $('fq-mes').textContent = r.dm; $('fq-seq').textContent = r.s; $('fq-total').textContent = r.t;
 
   const btnDom = $('btn-domingo'), lblDom = $('lbl-domingo-desc');
@@ -1273,25 +1506,21 @@ function gerarCardPNG(){
   abrirModal('modal-png');
 }
 
-async function compartilharCardPNG(){
-  const dataUrl = window._cardDataUrl || $('canvasCard').toDataURL('image/png');
-  const nomeArq = 'gymtracker-resumo-' + Date.now() + '.png';
-
-  // 1. APK (Capacitor): salva em Documentos/GymTracker e abre o menu de compartilhar
+async function compartilharArquivoB64(b64, nomeArq, mime, titulo, texto){
   const nativo = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
   const FS = window.Capacitor?.Plugins?.Filesystem, SH = window.Capacitor?.Plugins?.Share;
+  // 1. APK (Capacitor): salva em Documentos/GymTracker e abre o menu de compartilhar
   if(FS && SH){
     try{
-      const base64Data = dataUrl.split(',')[1];
       let salvouDoc = false;
       try{
         try{ await FS.requestPermissions(); }catch(e){}
-        await FS.writeFile({path:'GymTracker/' + nomeArq, data:base64Data, directory:'DOCUMENTS', recursive:true});
+        await FS.writeFile({path:'GymTracker/' + nomeArq, data:b64, directory:'DOCUMENTS', recursive:true});
         salvouDoc = true;
       }catch(e){}
-      const tmp = await FS.writeFile({path:nomeArq, data:base64Data, directory:'CACHE'});
+      const tmp = await FS.writeFile({path:nomeArq, data:b64, directory:'CACHE'});
       if(salvouDoc) toast('✅ Salvo em Documentos/GymTracker');
-      await SH.share({title:'Meu Resumo no GymTracker', text:'💪 Mais um treino concluído no GymTracker!', files:[tmp.uri], dialogTitle:'Compartilhar ou Salvar Imagem'});
+      await SH.share({title:titulo, text:texto, files:[tmp.uri], dialogTitle:'Compartilhar ou Salvar'});
       return;
     }catch(e){
       if(e && String(e).toLowerCase().includes('cancel')) return;
@@ -1299,33 +1528,434 @@ async function compartilharCardPNG(){
       return;
     }
   }
-  if(nativo){
-    toast('Este APK não tem o recurso de compartilhar. Gere o APK novamente no GitHub.', 'bad');
-    return;
-  }
-
-  // 2. Compartilhamento Web Share API (Chrome Android)
+  if(nativo){ toast('Este APK não tem o recurso de compartilhar. Gere o APK novamente no GitHub.', 'bad'); return; }
+  // 2. Web Share API (Chrome Android)
   try{
-    const res = await fetch(dataUrl);
-    const blob = await res.blob();
-    const file = new File([blob], 'gymtracker-resumo.png', {type:'image/png'});
+    const u8 = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const file = new File([u8], nomeArq, {type:mime});
     if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-      await navigator.share({files:[file], title:'GymTracker', text:'💪 Meu resumo no GymTracker!'});
+      await navigator.share({files:[file], title:titulo, text:texto});
       return;
     }
-  }catch(e){
-    if(e && e.name === 'AbortError') return;
-  }
-
-  // 3. Fallback Download direto
+  }catch(e){ if(e && e.name === 'AbortError') return; }
+  // 3. Download direto
   try{
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'gymtracker-resumo.png';
-    document.body.appendChild(a); a.click(); a.remove();
-    toast('Imagem baixada (veja a pasta Downloads)');
-  }catch(e){
-    toast('Segure o dedo sobre a imagem para compartilhar!', 'neutro');
+    const a = document.createElement('a'); a.href = 'data:' + mime + ';base64,' + b64; a.download = nomeArq;
+    document.body.appendChild(a); a.click(); a.remove(); toast('Arquivo baixado (veja a pasta Downloads)');
+  }catch(e){ toast('Não foi possível salvar o arquivo', 'bad'); }
+}
+async function compartilharCardPNG(){
+  const dataUrl = window._cardDataUrl || $('canvasCard').toDataURL('image/png');
+  await compartilharArquivoB64(dataUrl.split(',')[1], 'gymtracker-resumo-' + Date.now() + '.png', 'image/png', 'Meu Resumo no GymTracker', '💪 Mais um treino concluído no GymTracker!');
+}
+function u8ToB64(u8){ let r = ''; for(let i = 0; i < u8.length; i += 0x8000) r += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(r); }
+
+// ============================ NOTIFICAÇÕES (locais, sem internet) ============================
+const LN = () => window.Capacitor?.Plugins?.LocalNotifications;
+let notifTmp = null, notifT = null, notifSeq = 0;
+const DIAS_SEM = ['D','S','T','Q','Q','S','S'], DIAS_LONGO = ['dom','seg','ter','qua','qui','sex','sáb'];
+
+async function notifPermitida(){ const L = LN(); if(!L) return false; try{ const p = await L.checkPermissions(); return p.display === 'granted'; }catch(e){ return false; } }
+async function iniciarNotificacoes(){
+  const L = LN();
+  atualizarResumoNotif();
+  if(!L) return;
+  try{
+    await L.createChannel({id:'lembretes', name:'Lembretes de treino', description:'Treino, pesagem e constância', importance:4, visibility:1, vibration:true});
+    await L.createChannel({id:'descanso', name:'Fim do descanso', description:'Aviso quando o descanso terminar', importance:5, visibility:1, vibration:true});
+  }catch(e){}
+  reagendarNotificacoes();
+}
+function agendarReagendar(){ clearTimeout(notifT); notifT = setTimeout(reagendarNotificacoes, 1500); }
+function hhmm(str){ const m = /^(\d{1,2}):(\d{2})$/.exec(str || ''); return m ? [Math.min(23, +m[1]), Math.min(59, +m[2])] : [18, 0]; }
+function noDia(base, add, hora){ const [h, mi] = hhmm(hora); return new Date(base.getFullYear(), base.getMonth(), base.getDate() + add, h, mi, 0, 0); }
+
+async function reagendarNotificacoes(){
+  const L = LN(); if(!L) return;
+  try{
+    const pend = await L.getPending();
+    const ids = (pend.notifications || []).map(x => x.id).filter(i => i >= 1000 && i < 4000);
+    if(ids.length) await L.cancel({notifications: ids.map(id => ({id}))});
+  }catch(e){}
+  const n = cfg.notif;
+  if(!n.ativo || !(await notifPermitida())) return;
+  const lista = [], agora = new Date(), hojeK = chave(Date.now()), st = diasSet();
+  // Lembrete de treino: alterna A/B a partir da sugestão atual
+  if(n.treino.ativo && n.treino.dias.length){
+    let letra = sugerido(), c = 0;
+    for(let d = 0; d < 28 && c < 20; d++){
+      const dt = noDia(agora, d, n.treino.hora);
+      if(!n.treino.dias.includes(dt.getDay()) || dt <= agora) continue;
+      if(d === 0 && st.has(hojeK)) continue;
+      lista.push({id:1000 + c, title:'Hoje é Treino ' + letra + ' 💪', body:(cfg.nomes[letra] || '') + ' • bora manter a sequência 🔥', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
+      letra = letra === 'A' ? 'B' : 'A'; c++;
+    }
+  }
+  // Dias sem treinar
+  if(n.inativo.ativo){
+    const dias = [...st].sort(), ult = dias.length ? new Date(dias[dias.length-1] + 'T12:00:00') : agora;
+    [n.inativo.dias, n.inativo.dias + 4].forEach((k, i) => {
+      const dt = noDia(ult, k, n.inativo.hora);
+      if(dt > agora) lista.push({id:2000 + i, title:'Faz ' + k + ' dias que você não treina 😅', body:'Hoje é Treino ' + sugerido() + '. Bora proteger a sua sequência!', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
+    });
+  }
+  // Pesar e medir
+  if(n.peso.ativo){
+    const ult = saude.length ? saude[saude.length-1].ts : 0;
+    let d0 = -1;
+    for(let d = 0; d < 8; d++){ const dt = noDia(agora, d, n.peso.hora); if(dt > agora && dt.getDay() === n.peso.dia){ d0 = d; break; } }
+    if(d0 >= 0) for(let k = 0; k < 8; k++){
+      const dt = noDia(agora, d0 + k * n.peso.freq, n.peso.hora);
+      if(ult && dt.getTime() - ult < 3 * 86400000) continue;
+      lista.push({id:3000 + k, title:'⚖️ Hora de pesar e medir', body:'Registre o peso e as medidas na aba Saúde.', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
+    }
+  }
+  if(lista.length) try{ await L.schedule({notifications: lista}); }catch(e){}
+}
+async function agendarDescanso(seg){
+  const L = LN(); if(!L || !cfg.notif.ativo || !cfg.notif.descanso) return;
+  try{
+    if(!(await notifPermitida())) return;
+    await L.schedule({notifications:[{id:1, title:'⏱ Descanso finalizado', body:'Hora da próxima série!', schedule:{at:new Date(Date.now() + seg * 1000), allowWhileIdle:true}, channelId:'descanso'}]});
+  }catch(e){}
+}
+function cancelarDescanso(){ const L = LN(); if(L){ try{ L.cancel({notifications:[{id:1}]}); }catch(e){} } }
+async function notificarAgora(titulo, corpo, canal, forcar){
+  const L = LN(); if(!L) return;
+  if(!forcar && (!cfg.notif.ativo || !cfg.notif.metas)) return;
+  try{
+    if(!(await notifPermitida())) return;
+    notifSeq = (notifSeq + 1) % 900;
+    await L.schedule({notifications:[{id:5000 + notifSeq, title:titulo, body:corpo, schedule:{at:new Date(Date.now() + 1000)}, channelId:canal || 'lembretes'}]});
+  }catch(e){}
+}
+function atualizarResumoNotif(){
+  const el = $('notif-resumo'); if(!el) return;
+  const n = cfg.notif;
+  if(!n.ativo){ el.textContent = 'Desligadas • toque em Configurar'; return; }
+  const p = [];
+  if(n.treino.ativo && n.treino.dias.length) p.push('Treino ' + n.treino.dias.map(i => DIAS_LONGO[i]).join('/') + ' ' + n.treino.hora);
+  if(n.inativo.ativo) p.push('Sem treinar ' + n.inativo.dias + 'd');
+  if(n.peso.ativo) p.push('Pesagem ' + (n.peso.freq === 14 ? 'quinzenal' : 'semanal'));
+  if(n.descanso) p.push('Descanso');
+  el.textContent = p.length ? p.join(' • ') : 'Ligadas, sem lembretes ativos';
+}
+function abrirModalNotif(){ notifTmp = JSON.parse(JSON.stringify(cfg.notif)); renderNotifModal(); abrirModal('modal-notif'); }
+function renderNotifModal(){
+  const t = notifTmp, tg = (id, on) => { const b = $(id); b.textContent = on ? 'Ligado' : 'Desligado'; b.className = 'tgl ' + (on ? 'on' : 'off'); };
+  tg('nt-ativo', t.ativo); tg('nt-descanso', t.descanso); tg('nt-metas', t.metas); tg('nt-treino', t.treino.ativo); tg('nt-inativo', t.inativo.ativo); tg('nt-peso', t.peso.ativo);
+  $('nt-dias').innerHTML = DIAS_SEM.map((l, i) => `<button class="dchip${t.treino.dias.includes(i) ? ' on' : ''}" onclick="tglDiaTreino(${i})">${l}</button>`).join('');
+  $('nt-treino-hora').value = t.treino.hora; $('nt-inativo-dias').value = String(t.inativo.dias); $('nt-inativo-hora').value = t.inativo.hora;
+  $('nt-peso-freq').value = String(t.peso.freq); $('nt-peso-dia').value = String(t.peso.dia); $('nt-peso-hora').value = t.peso.hora;
+  $('nt-aviso').textContent = LN() ? '' : 'As notificações só funcionam no app instalado (APK). Aqui no navegador as opções são salvas, mas nada é enviado.';
+}
+async function tglNotif(k){
+  const t = notifTmp;
+  if(k === 'treino' || k === 'inativo' || k === 'peso') t[k].ativo = !t[k].ativo; else t[k] = !t[k];
+  if(k === 'ativo' && t.ativo){
+    const L = LN();
+    if(L){
+      try{
+        let p = await L.checkPermissions();
+        if(p.display !== 'granted') p = await L.requestPermissions();
+        if(p.display !== 'granted'){ t.ativo = false; toast('Permissão negada. Libere as notificações nas configurações do app.', 'bad'); }
+      }catch(e){}
+    }
+  }
+  renderNotifModal();
+}
+function tglDiaTreino(i){ const a = notifTmp.treino.dias, j = a.indexOf(i); if(j >= 0) a.splice(j, 1); else a.push(i); a.sort(); renderNotifModal(); }
+function salvarNotif(){
+  const t = notifTmp, pd = parseInt($('nt-peso-dia').value, 10);
+  t.treino.hora = $('nt-treino-hora').value || '18:00';
+  t.inativo.dias = parseInt($('nt-inativo-dias').value, 10) || 3; t.inativo.hora = $('nt-inativo-hora').value || '19:00';
+  t.peso.freq = parseInt($('nt-peso-freq').value, 10) || 7; t.peso.dia = isNaN(pd) ? 1 : pd; t.peso.hora = $('nt-peso-hora').value || '08:00';
+  cfg.notif = t; salvarLS('gym_cfg_v4', cfg); fecharModal('modal-notif'); atualizarResumoNotif(); reagendarNotificacoes(); toast('Lembretes salvos ✅');
+}
+async function liberarAlarmes(){
+  const L = LN(); if(!L){ toast('Disponível só no app instalado', 'neutro'); return; }
+  try{
+    const r = await L.checkExactNotificationSetting();
+    if(r.exact_alarm === 'granted'){ toast('Alarmes exatos já liberados ✅'); return; }
+    await L.changeExactNotificationSetting();
+  }catch(e){ toast('Não foi possível abrir essa configuração', 'bad'); }
+}
+async function testarNotif(){
+  const L = LN(); if(!L){ toast('Disponível só no app instalado', 'neutro'); return; }
+  try{
+    let p = await L.checkPermissions();
+    if(p.display !== 'granted') p = await L.requestPermissions();
+    if(p.display !== 'granted'){ toast('Permissão negada. Libere nas configurações do app.', 'bad'); return; }
+  }catch(e){}
+  await notificarAgora('🔔 Teste do GymTracker', 'As notificações estão funcionando!', 'lembretes', true);
+  toast('Teste enviado: veja a barra de notificações');
+}
+
+// ============================ METAS ============================
+let metasTmp = null;
+function valoresAtuais(){
+  const ult = saude.length ? saude[saude.length-1] : null;
+  const comBF = [...saude].reverse().find(x => x.cintura && x.pescoco);
+  const bf = (comBF && cfg.altura) ? calcNavyBF(comBF.cintura, comBF.pescoco, cfg.altura) : null;
+  return {peso: ult ? ult.peso : null, bf};
+}
+function cargaMax(exId){ const v = historico.filter(h => h.exId === exId && valida(h)).map(h => h.peso); return v.length ? Math.max(...v) : null; }
+function progMeta(m, atual){
+  if(atual == null) return {pct:0, ok:false};
+  const ini = m.ini == null ? atual : m.ini;
+  const ok = m.alvo >= ini ? atual >= m.alvo : atual <= m.alvo;
+  const den = m.alvo - ini;
+  return {pct: ok ? 100 : (den === 0 ? 0 : Math.max(0, Math.min(100, (atual - ini) / den * 100))), ok};
+}
+function listaMetas(){
+  const v = valoresAtuais(), L = [], M = cfg.metas;
+  if(M.peso) L.push({ref:M.peso, nome:'Peso', un:'kg', atual:v.peso});
+  if(M.bf) L.push({ref:M.bf, nome:'% de gordura', un:'%', atual:v.bf});
+  M.cargas.forEach(m => L.push({ref:m, nome:'Carga: ' + nomeEx(m.exId), un:'kg', atual:cargaMax(m.exId)}));
+  return L;
+}
+function checarMetas(){
+  let mudou = false;
+  listaMetas().forEach(x => {
+    const m = x.ref;
+    if(m.ini == null && x.atual != null){ m.ini = x.atual; mudou = true; }
+    const p = progMeta(m, x.atual);
+    if(p.ok && !m.ok){
+      m.ok = true; mudou = true;
+      toast('🎯 Meta atingida: ' + x.nome + ' ' + fmt(m.alvo) + ' ' + x.un + '!', 'pr');
+      notificarAgora('🎯 Meta atingida!', x.nome + ': ' + fmt(m.alvo) + ' ' + x.un + '. Parabéns!');
+    }
+  });
+  if(mudou){ salvarLS('gym_cfg_v4', cfg); if(abaAtual === 'saude') renderizarMetas(); }
+}
+function renderizarMetas(){
+  const box = $('metas-lista'); if(!box) return;
+  const L = listaMetas();
+  if(!L.length){ box.innerHTML = '<div class="vazio" style="padding:10px">Defina metas de peso, % de gordura ou carga em <b>Editar</b>.</div>'; return; }
+  box.innerHTML = L.map(x => {
+    const p = progMeta(x.ref, x.atual), ini = x.ref.ini == null ? x.atual : x.ref.ini;
+    const atualTxt = x.atual == null ? '--' : fmt(x.atual) + ' ' + x.un;
+    return `<div class="meta-i"><div class="row"><b>${esc(x.nome)}</b><span class="mono" style="color:${p.ok ? '#34d399' : '#cbd5e1'}">${p.ok ? '✅ ' : ''}${atualTxt} → ${fmt(x.ref.alvo)} ${x.un}</span></div>
+      <div class="prog"><i style="width:${Math.round(p.pct)}%"></i></div>
+      <div class="t-sm" style="margin-top:3px">${Math.round(p.pct)}% • ${ini == null ? 'sem ponto de partida ainda' : 'início: ' + fmt(ini) + ' ' + x.un}</div></div>`;
+  }).join('');
+}
+function abrirModalMetas(){
+  metasTmp = JSON.parse(JSON.stringify(cfg.metas));
+  $('meta-peso').value = metasTmp.peso ? metasTmp.peso.alvo : ''; $('meta-bf').value = metasTmp.bf ? metasTmp.bf.alvo : '';
+  const forca = todosEx().filter(e => !e.modo);
+  $('meta-ex').innerHTML = forca.map(e => `<option value="${esc(e.id)}">${esc(e.nome)}</option>`).join(''); $('meta-carga').value = '';
+  renderMetasCargas(); abrirModal('modal-metas');
+}
+function renderMetasCargas(){
+  $('metas-cargas').innerHTML = metasTmp.cargas.length ? metasTmp.cargas.map((m, i) => `<div class="hrow"><span>${esc(nomeEx(m.exId))}</span><span class="mono">${fmt(m.alvo)} kg <button class="mini" style="color:#fda4af" onclick="remMetaCarga(${i})">✕</button></span></div>`).join('') : '<div class="t-sm">Nenhuma meta de carga.</div>';
+}
+function addMetaCarga(){
+  const id = $('meta-ex').value, alvo = num('meta-carga');
+  if(!id || alvo === null || alvo <= 0){ toast('Escolha o exercício e a carga alvo', 'bad'); return; }
+  metasTmp.cargas = metasTmp.cargas.filter(m => m.exId !== id);
+  metasTmp.cargas.push({exId:id, alvo, ini:cargaMax(id) || 0, ok:false}); $('meta-carga').value = ''; renderMetasCargas();
+}
+function remMetaCarga(i){ metasTmp.cargas.splice(i, 1); renderMetasCargas(); }
+function salvarMetas(){
+  const mk = (campo, id) => { const v = num(id), ant = cfg.metas[campo]; if(v === null || v <= 0) return null; return (ant && ant.alvo === v) ? ant : {alvo:v, ini:null, ok:false}; };
+  const novo = {peso:mk('peso', 'meta-peso'), bf:mk('bf', 'meta-bf'), cargas:metasTmp.cargas};
+  novo.cargas = novo.cargas.map(m => { const ant = cfg.metas.cargas.find(a => a.exId === m.exId); return (ant && ant.alvo === m.alvo) ? ant : m; });
+  cfg.metas = novo; salvarLS('gym_cfg_v4', cfg); fecharModal('modal-metas'); checarMetas(); renderizarMetas(); toast('Metas salvas ✅');
+}
+
+// ============================ FOTOS DE PROGRESSO (IndexedDB) ============================
+const DBF = {
+  _db:null,
+  abrir(){ return new Promise((ok, err) => { if(this._db) return ok(this._db); try{ const r = indexedDB.open('gymtracker', 1); r.onupgradeneeded = () => r.result.createObjectStore('fotos', {keyPath:'id'}); r.onsuccess = () => { this._db = r.result; ok(r.result); }; r.onerror = () => err(r.error); }catch(e){ err(e); } }); },
+  async tx(modo, fn){ const db = await this.abrir(); return new Promise((ok, err) => { const t = db.transaction('fotos', modo), q = fn(t.objectStore('fotos')); t.oncomplete = () => ok(q && q.result); t.onerror = () => err(t.error); }); },
+  todas(){ return this.tx('readonly', st => st.getAll()); },
+  salvar(f){ return this.tx('readwrite', st => st.put(f)); },
+  apagar(id){ return this.tx('readwrite', st => st.delete(id)); }
+};
+let fotosCache = [];
+async function carregarFotos(){ try{ fotosCache = ((await DBF.todas()) || []).sort((a, b) => a.ts - b.ts); }catch(e){ fotosCache = []; } renderizarFotos(); }
+function pesoNaData(ts){ const c = saude.filter(x => x.ts <= ts + 86400000); return c.length ? c[c.length-1].peso : null; }
+function reduzirImagem(file, max, q){
+  return new Promise((ok, err) => {
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onload = () => { const r = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * r); c.height = Math.round(im.height * r); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', q)); };
+    im.onerror = () => { URL.revokeObjectURL(url); err(new Error('imagem')); };
+    im.src = url;
+  });
+}
+async function adicionarFoto(ev){
+  const f = ev.target.files[0]; ev.target.value = ''; if(!f) return;
+  try{
+    const img = await reduzirImagem(f, 1080, 0.8);
+    const foto = {id:'f' + Date.now(), ts:Date.now(), ang:$('foto-ang').value, img};
+    await DBF.salvar(foto); await carregarFotos();
+    $('foto-depois').value = foto.id; renderizarComparacao(); toast('Foto salva 📸');
+  }catch(e){ toast('Não consegui salvar a foto', 'bad'); }
+}
+function rotuloFoto(f){ return dataLonga(f.ts) + ' • ' + f.ang; }
+function renderizarFotos(){
+  const g = $('fotos-grid'); if(!g) return;
+  g.innerHTML = fotosCache.length ? [...fotosCache].reverse().map(f => `<div class="fth" onclick="escolherDepois('${f.id}')"><img src="${f.img}" alt="${esc(rotuloFoto(f))}"><small>${esc(rotuloFoto(f))}</small><button onclick="event.stopPropagation();pedirApagarFoto('${f.id}')" aria-label="Apagar foto">✕</button></div>`).join('') : '<div class="vazio" style="grid-column:span 3">Nenhuma foto ainda.</div>';
+  const comp = $('foto-comparador');
+  if(fotosCache.length < 2){ comp.classList.add('hidden'); return; }
+  comp.classList.remove('hidden');
+  const ant = [$('foto-antes').value, $('foto-depois').value];
+  const opts = fotosCache.map(f => `<option value="${f.id}">${esc(rotuloFoto(f))}</option>`).join('');
+  $('foto-antes').innerHTML = opts; $('foto-depois').innerHTML = opts;
+  $('foto-antes').value = fotosCache.some(f => f.id === ant[0]) ? ant[0] : fotosCache[0].id;
+  $('foto-depois').value = fotosCache.some(f => f.id === ant[1]) ? ant[1] : fotosCache[fotosCache.length-1].id;
+  renderizarComparacao();
+}
+function escolherDepois(id){ if(fotosCache.length < 2) return; $('foto-depois').value = id; renderizarComparacao(); toast('Definida como "Depois"', 'neutro'); }
+function legendaFoto(f){ const p = pesoNaData(f.ts); return rotuloFoto(f) + (p ? ' • ' + fmt(p) + ' kg' : ''); }
+function renderizarComparacao(){
+  const a = fotosCache.find(f => f.id === $('foto-antes').value), b = fotosCache.find(f => f.id === $('foto-depois').value);
+  if(!a || !b) return;
+  $('foto-comp').innerHTML = `<figure><img src="${a.img}" alt="Antes"><figcaption>Antes<br>${esc(legendaFoto(a))}</figcaption></figure><figure><img src="${b.img}" alt="Depois"><figcaption>Depois<br>${esc(legendaFoto(b))}</figcaption></figure>`;
+  const pa = pesoNaData(a.ts), pb = pesoNaData(b.ts), dd = Math.round((b.ts - a.ts) / 86400000);
+  $('foto-dif').textContent = dd + ' dia(s) entre as fotos' + ((pa && pb) ? ' • ' + (pb - pa > 0 ? '+' : '') + fmt(pb - pa) + ' kg' : '');
+}
+function pedirApagarFoto(id){
+  $('confirm-titulo').textContent = 'Apagar esta foto?'; $('confirm-texto').textContent = 'A foto será removida deste aparelho.';
+  $('btn-confirm-yes').onclick = async () => { try{ await DBF.apagar(id); }catch(e){} fecharModal('modal-confirm'); await carregarFotos(); toast('Foto apagada', 'neutro'); };
+  abrirModal('modal-confirm');
+}
+function carregarImg(src){ return new Promise((ok, err) => { const im = new Image(); im.onload = () => ok(im); im.onerror = err; im.src = src; }); }
+async function compartilharComparacao(){
+  const a = fotosCache.find(f => f.id === $('foto-antes').value), b = fotosCache.find(f => f.id === $('foto-depois').value);
+  if(!a || !b){ toast('Escolha duas fotos', 'bad'); return; }
+  try{
+    const [ia, ib] = await Promise.all([carregarImg(a.img), carregarImg(b.img)]);
+    const cv = document.createElement('canvas'); cv.width = 1080; cv.height = 1350; const c = cv.getContext('2d');
+    const g = c.createLinearGradient(0, 0, 1080, 1350); g.addColorStop(0, '#0b1120'); g.addColorStop(1, '#060a12'); c.fillStyle = g; c.fillRect(0, 0, 1080, 1350);
+    c.fillStyle = '#34d399'; c.font = 'bold 32px system-ui,sans-serif'; c.textAlign = 'left'; c.fillText('● GYMTRACKER & SAÚDE', 60, 90);
+    c.fillStyle = '#f8fafc'; c.font = '800 54px system-ui,sans-serif'; c.fillText(cfg.nome || 'Meu progresso', 60, 160);
+    const desenha = (im, x, rot, leg) => {
+      const bw = 480, bh = 760, y = 220, r = Math.max(bw / im.width, bh / im.height), w = im.width * r, h = im.height * r;
+      c.save(); c.beginPath(); c.roundRect(x, y, bw, bh, 28); c.clip(); c.drawImage(im, x + (bw - w) / 2, y + (bh - h) / 2, w, h); c.restore();
+      c.strokeStyle = '#334155'; c.lineWidth = 3; c.beginPath(); c.roundRect(x, y, bw, bh, 28); c.stroke();
+      c.textAlign = 'center'; c.fillStyle = '#60a5fa'; c.font = 'bold 34px system-ui,sans-serif'; c.fillText(rot, x + bw / 2, y + bh + 56);
+      c.fillStyle = '#cbd5e1'; c.font = '600 26px system-ui,sans-serif'; c.fillText(leg, x + bw / 2, y + bh + 100);
+    };
+    desenha(ia, 60, 'ANTES', legendaFoto(a)); desenha(ib, 540, 'DEPOIS', legendaFoto(b));
+    const pa = pesoNaData(a.ts), pb = pesoNaData(b.ts), dd = Math.round((b.ts - a.ts) / 86400000);
+    c.fillStyle = '#34d399'; c.font = '800 40px system-ui,sans-serif'; c.textAlign = 'center';
+    c.fillText(dd + ' dias de evolução' + ((pa && pb) ? ' • ' + (pb - pa > 0 ? '+' : '') + fmt(pb - pa) + ' kg' : ''), 540, 1240);
+    c.fillStyle = '#94a3b8'; c.font = '600 24px system-ui,sans-serif'; c.fillText('App desenvolvido por Wanderson Mendes', 540, 1300);
+    await compartilharArquivoB64(cv.toDataURL('image/jpeg', 0.9).split(',')[1], 'gymtracker-antes-depois-' + Date.now() + '.jpg', 'image/jpeg', 'Meu progresso', '💪 Meu antes e depois no GymTracker!');
+  }catch(e){ toast('Não consegui gerar a comparação', 'bad'); }
+}
+
+// ============================ RELATÓRIO DO MÊS (imagem / PDF) ============================
+let relRef = new Date(); relRef.setDate(1);
+function maiorSeqMes(dias){
+  let best = 0, cur = 0, prev = null;
+  dias.forEach(k => { const t = new Date(k + 'T12:00:00').getTime(); cur = (prev && Math.round((t - prev) / 86400000) === 1) ? cur + 1 : 1; best = Math.max(best, cur); prev = t; });
+  return best;
+}
+function dadosRelatorio(ano, mes){
+  const pref = ano + '-' + pad2(mes + 1);
+  const dias = [...diasSet()].filter(k => k.startsWith(pref)).sort();
+  const hs = historico.filter(h => chave(h.ts).startsWith(pref)), val = hs.filter(valida), card = hs.filter(h => h.tipo === 'C');
+  const porEx = {}; val.forEach(h => (porEx[h.exId] = porEx[h.exId] || []).push(h));
+  const evol = Object.keys(porEx).map(id => {
+    const arr = porEx[id], dd = [...new Set(arr.map(h => chave(h.ts)))].sort(), best = d => Math.max(...arr.filter(h => chave(h.ts) === d).map(h => h.peso));
+    return {nome:nomeEx(id), de:best(dd[0]), para:best(dd[dd.length-1]), n:dd.length};
+  }).filter(e => e.n >= 2 && e.de > 0).sort((a, b) => (b.para - b.de) - (a.para - a.de)).slice(0, 6);
+  const sm = saude.filter(x => chave(x.ts).startsWith(pref));
+  const comBF = [...sm].reverse().find(x => x.cintura && x.pescoco);
+  return {dias, maiorSeq:maiorSeqMes(dias), series:val.length, volume:val.reduce((a, h) => a + h.peso * h.reps, 0), prs:hs.filter(h => h.pr).length,
+    km:card.reduce((a, h) => a + (h.km || 0), 0), min:card.reduce((a, h) => a + (h.min || 0), 0), alongs:hs.filter(h => h.tipo === 'A').length,
+    evol, saude:sm, bf:(comBF && cfg.altura) ? calcNavyBF(comBF.cintura, comBF.pescoco, cfg.altura) : null};
+}
+function desenharRelatorio(cv, ano, mes){
+  const W = 1240, H = 1754; cv.width = W; cv.height = H; const c = cv.getContext('2d'), d = dadosRelatorio(ano, mes);
+  const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#0b1120'); g.addColorStop(.5, '#151f32'); g.addColorStop(1, '#060a12'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.strokeStyle = '#1e293b'; c.lineWidth = 6; c.strokeRect(36, 36, W - 72, H - 72);
+  const SANS = 'system-ui,sans-serif', MONO = 'ui-monospace,monospace';
+  const T = (txt, x, y, font, cor, al) => { c.font = font; c.fillStyle = cor; c.textAlign = al || 'left'; c.fillText(txt, x, y); };
+  const box = (x, y, w, h) => { c.fillStyle = '#0f172a'; c.strokeStyle = '#334155'; c.lineWidth = 3; c.beginPath(); c.roundRect(x, y, w, h, 28); c.fill(); c.stroke(); };
+  const corta = (t, n) => t.length > n ? t.slice(0, n - 1) + '…' : t;
+  const nome = cfg.nome || 'Wanderson';
+  T('● GYMTRACKER & SAÚDE', 80, 120, 'bold 30px ' + SANS, '#34d399');
+  T(nome, 80, 200, '800 72px ' + SANS, '#f8fafc');
+  T('Relatório de ' + MESES[mes] + ' ' + ano, 80, 252, '600 36px ' + SANS, '#60a5fa');
+  const tiles = [
+    {l:'TREINOS NO MÊS', v:String(d.dias.length), s:'dias treinados', c:'#34d399'},
+    {l:'MAIOR SEQUÊNCIA', v:String(d.maiorSeq), s:'dias seguidos 🔥', c:'#fbbf24'},
+    {l:'RECORDES', v:String(d.prs), s:'PRs batidos 🏆', c:'#f43f5e'},
+    {l:'SÉRIES VÁLIDAS', v:String(d.series), s:'trabalho e falha', c:'#60a5fa'},
+    {l:'VOLUME TOTAL', v:fmt(d.volume / 1000, 1) + ' t', s:'kg × repetições', c:'#a78bfa'},
+    {l:'CARDIO', v:fmt(d.km, 1) + ' km', s:fmt(d.min, 0) + ' min • ' + d.alongs + ' along.', c:'#34d399'}];
+  tiles.forEach((t, i) => { const x = 80 + (i % 3) * 370, y = 300 + Math.floor(i / 3) * 210; box(x, y, 340, 180);
+    T(t.l, x + 28, y + 46, 'bold 21px ' + SANS, '#94a3b8'); T(t.v, x + 28, y + 118, '800 62px ' + MONO, t.c); T(t.s, x + 28, y + 160, '600 22px ' + SANS, '#cbd5e1'); });
+  // calendário
+  box(80, 730, 500, 520); T('📅 PRESENÇA', 108, 780, 'bold 26px ' + SANS, '#fbbf24');
+  const cell = 62, gap = 5, cx0 = 108, cy0 = 830, set = new Set(d.dias), prim = new Date(ano, mes, 1).getDay(), nd = new Date(ano, mes + 1, 0).getDate();
+  ['D','S','T','Q','Q','S','S'].forEach((l, i) => T(l, cx0 + i * (cell + gap) + cell / 2, cy0 - 8, 'bold 20px ' + SANS, '#94a3b8', 'center'));
+  for(let dia = 1; dia <= nd; dia++){
+    const pos = prim + dia - 1, x = cx0 + (pos % 7) * (cell + gap), y = cy0 + Math.floor(pos / 7) * (cell + gap), on = set.has(ano + '-' + pad2(mes + 1) + '-' + pad2(dia));
+    c.fillStyle = on ? '#10b981' : '#151f32'; c.strokeStyle = on ? '#10b981' : '#334155'; c.lineWidth = 2; c.beginPath(); c.roundRect(x, y, cell, cell, 14); c.fill(); c.stroke();
+    T(String(dia), x + cell / 2, y + 40, (on ? '800 ' : '600 ') + '24px ' + SANS, on ? '#ffffff' : '#94a3b8', 'center');
+  }
+  // saúde e metas
+  box(610, 730, 550, 520); T('❤️ SAÚDE & METAS', 638, 780, 'bold 26px ' + SANS, '#fbbf24');
+  let y = 835;
+  const linhaS = (rot, txt) => { T(rot, 638, y, '600 24px ' + SANS, '#94a3b8'); T(txt, 1132, y, 'bold 26px ' + MONO, '#f8fafc', 'right'); y += 46; };
+  const sm = d.saude;
+  if(sm.length){
+    const a = sm[0], b = sm[sm.length - 1];
+    linhaS('Peso', fmt(a.peso) + ' → ' + fmt(b.peso) + ' kg');
+    const cs = sm.filter(x => x.cintura); if(cs.length) linhaS('Cintura', fmt(cs[0].cintura) + ' → ' + fmt(cs[cs.length-1].cintura) + ' cm');
+    if(d.bf != null) linhaS('% de gordura', fmt(d.bf) + '%');
+  } else { T('Sem medidas registradas neste mês.', 638, y, '600 24px ' + SANS, '#64748b'); y += 46; }
+  y += 10;
+  const ms = (ano === new Date().getFullYear() && mes === new Date().getMonth()) ? listaMetas().slice(0, 4) : [];
+  ms.forEach(x => {
+    const p = progMeta(x.ref, x.atual);
+    T(corta(x.nome, 24), 638, y, '600 22px ' + SANS, '#cbd5e1'); T(Math.round(p.pct) + '%', 1132, y, 'bold 22px ' + MONO, p.ok ? '#34d399' : '#cbd5e1', 'right');
+    c.fillStyle = '#060a12'; c.beginPath(); c.roundRect(638, y + 12, 494, 14, 7); c.fill();
+    c.fillStyle = '#10b981'; c.beginPath(); c.roundRect(638, y + 12, Math.max(14, 494 * p.pct / 100), 14, 7); c.fill(); y += 64;
+  });
+  if(!ms.length && ano === new Date().getFullYear() && mes === new Date().getMonth()) T('Defina metas na aba Saúde.', 638, y, '600 22px ' + SANS, '#64748b');
+  // evolução de cargas
+  box(80, 1280, 1080, 370); T('📈 EVOLUÇÃO DAS CARGAS', 108, 1330, 'bold 26px ' + SANS, '#fbbf24');
+  if(d.evol.length) d.evol.forEach((e, i) => { const yy = 1385 + i * 42; T(corta(e.nome, 34), 108, yy, '600 24px ' + SANS, '#f8fafc');
+    const dif = e.para - e.de; T(fmt(e.de) + ' → ' + fmt(e.para) + ' kg  (' + (dif >= 0 ? '+' : '') + fmt(dif) + ')', 1132, yy, 'bold 24px ' + MONO, dif > 0 ? '#34d399' : '#cbd5e1', 'right'); });
+  else T('Treine o mesmo exercício em 2 ou mais dias do mês para ver a evolução.', 108, 1400, '600 24px ' + SANS, '#64748b');
+  T('Gerado em ' + dataLonga(Date.now()) + ' • App desenvolvido por Wanderson Mendes', W / 2, 1700, '600 22px ' + SANS, '#94a3b8', 'center');
+}
+function abrirRelatorio(){ relRef = new Date(); relRef.setDate(1); renderizarRelatorio(); abrirModal('modal-rel'); }
+function mudarMesRel(dm){ relRef.setMonth(relRef.getMonth() + dm); renderizarRelatorio(); }
+function renderizarRelatorio(){
+  const cv = $('canvasRel'); $('rel-titulo').textContent = MESES[relRef.getMonth()] + ' ' + relRef.getFullYear();
+  desenharRelatorio(cv, relRef.getFullYear(), relRef.getMonth()); $('imgRel').src = cv.toDataURL('image/jpeg', 0.85);
+}
+function montarPDF(jpg, w, h){
+  const enc = new TextEncoder(), parts = [], offs = []; let len = 0;
+  const push = x => { const u = typeof x === 'string' ? enc.encode(x) : x; parts.push(u); len += u.length; };
+  push('%PDF-1.4\n');
+  const obj = (n, body) => { offs[n] = len; push(n + ' 0 obj\n'); push(body); push('\nendobj\n'); };
+  obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+  obj(3, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>');
+  offs[4] = len; push('4 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + w + ' /Height ' + h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg.length + ' >>\nstream\n'); push(jpg); push('\nendstream\nendobj\n');
+  const cont = 'q 595 0 0 842 0 0 cm /Im0 Do Q';
+  obj(5, '<< /Length ' + cont.length + ' >>\nstream\n' + cont + '\nendstream');
+  const xref = len; push('xref\n0 6\n0000000000 65535 f \n');
+  for(let n = 1; n <= 5; n++) push(String(offs[n]).padStart(10, '0') + ' 00000 n \n');
+  push('trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF\n');
+  const out = new Uint8Array(len); let p = 0; parts.forEach(u => { out.set(u, p); p += u.length; }); return out;
+}
+async function compartilharRelatorio(tipo){
+  const cv = $('canvasRel'); desenharRelatorio(cv, relRef.getFullYear(), relRef.getMonth());
+  const jpg = cv.toDataURL('image/jpeg', 0.92).split(',')[1], base = 'gymtracker-relatorio-' + relRef.getFullYear() + '-' + pad2(relRef.getMonth() + 1);
+  if(tipo === 'pdf'){
+    const pdf = montarPDF(Uint8Array.from(atob(jpg), ch => ch.charCodeAt(0)), cv.width, cv.height);
+    await compartilharArquivoB64(u8ToB64(pdf), base + '.pdf', 'application/pdf', 'Relatório GymTracker', '📄 Meu relatório do mês no GymTracker');
+  } else {
+    await compartilharArquivoB64(jpg, base + '.jpg', 'image/jpeg', 'Relatório GymTracker', '📄 Meu relatório do mês no GymTracker');
   }
 }
 
@@ -1334,6 +1964,7 @@ async function compartilharCardPNG(){
   $('timer-display').textContent = fmtT(ultimoTimer);
   treinoAtual = sugerido();
   atualizarAbas(); renderizarExercicios(); popularSelect(); montarAjuda(); atualizarSubtitulo();
+  carregarFotos(); iniciarNotificacoes();
   window.addEventListener('resize', () => { if(abaAtual === 'evolucao') atualizarGrafico(); if(abaAtual === 'saude') renderizarSaude(); if(abaAtual === 'freq') renderizarFreq(); });
 })();
 </script>
