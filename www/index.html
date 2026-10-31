@@ -377,7 +377,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v5.9</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v6.0</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -717,7 +717,7 @@ const fichaV52 = {
     E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
     CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
 };
-const fichaPadrao = {
+const fichaV59 = {
   A:{exercicios:[
     ALONG('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',1,10),
     ALONG('a_along_delt','Alongamento de deltoide e tríceps',1,20),
@@ -746,6 +746,35 @@ const fichaPadrao = {
     E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
     CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
 };
+const fichaPadrao = {
+  A:{exercicios:[
+    ALONG('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',1,10,'','Mãos no espaldar, na altura do ombro, e gire o tronco para o lado oposto até sentir abrir o peito. Respire fundo e sem dor. Segure 10 segundos.'),
+    ALONG('a_along_delt','Alongamento de deltoide e tríceps',1,20,'','Leve um braço por cima do peito, com a outra mão puxando de leve, ou o cotovelo atrás da cabeça. Segure 20 segundos e troque de lado, sem deixar os ombros subirem.'),
+    E('a_supino','Supino reto com isometria de 4" perto do peito',3,10,15,'5 superlentas + 10 rápidas','Escápulas juntas e peito aberto. Nas 5 primeiras, desça bem devagar, pare 4 segundos com a barra perto do peito e suba firme. Nas 10 seguintes, repetições normais e rápidas na subida (15 reps por série).'),
+    E('a_voador_peito','Voador peitoral com pico de contração de 2"',3,10,10,'10 reps + 10" de isometria','Cotovelos levemente flexionados, mãos se encontrando à frente do peito. Faça 10 repetições, com 2 segundos de pausa no pico em cada uma. Na última, fique parado em isometria por 10 segundos com o peito contraído, e só então volte devagar. Não deixe os ombros subirem.'),
+    E('a_elev_frontal','Elevação frontal de costas para o cross-corda',3,12,15,'','De costas para o cross, puxe a corda à frente até a altura dos ombros, com os braços quase retos. Suba sem balançar o tronco e desça devagar, sem soltar o peso.'),
+    E('a_triceps_21','Tríceps barra reta 21',3,21,21,'Método 21','Cotovelos colados ao corpo. 7 repetições na metade de baixo do movimento, 7 na metade de cima e 7 completas, sem pausa. Mantenha o corpo parado.'),
+    E('a_arnold','Desenvolvimento Arnold sentado HBC',3,12,15,'','Comece com as palmas voltadas para você, na altura do peito, e gire as mãos enquanto sobe, terminando com as palmas para a frente. Desça fazendo o caminho inverso, com controle. Costas apoiadas no banco.'),
+    E('a_puxada_art','Puxada articulada com pico de contração 2"',3,10,10,'10 reps + 10" de isometria','Peito aberto, puxando com as costas e levando os cotovelos para baixo e para trás. Segure 2 segundos no pico em cada repetição. Na última, fique parado 10 segundos com as escápulas unidas, depois volte com controle.'),
+    E('a_serrote','Remada serrote HBC',3,12,15,'','Apoie uma mão e um joelho no banco, com a coluna reta. Puxe o halter em direção ao quadril, com o cotovelo rente ao corpo, e desça controlando. Sem girar o tronco.'),
+    E('a_voador_dorsal','Voador dorsal',3,12,15,'','Peito apoiado no aparelho. Abra os braços para trás, com os cotovelos levemente flexionados, e junte as escápulas no final. Volte sem soltar o peso.'),
+    E('a_biceps_maq','Bíceps máquina',3,12,15,'','Braços apoiados e cotovelos fixos. Suba contraindo o bíceps e desça devagar até quase esticar, sem tirar o ombro do lugar.'),
+    E('a_abd_inf','Abdominal inferior',3,20,20,'','Eleve os quadris enrolando a coluna, com os joelhos em direção ao peito, sem balançar as pernas. Faça devagar, sem usar impulso.'),
+    CARDIO('a_hiit',"HIIT no transport ou na bike (1' forte, 1' fraco)",10,15,"⏱ 10 a 15 minutos • 1' forte / 1' fraco",'Alterne 1 minuto forte com 1 minuto fraco. No forte, um ritmo em que fique difícil conversar. No fraco, recupere a respiração sem parar de pedalar. Anote o tempo total, a distância e a velocidade média.')]},
+  B:{exercicios:[
+    ALONG('b_along_post','Alongamento de posterior de coxa sentado',1,15,'','Sentado, com uma perna esticada, incline o tronco para a frente com as costas retas, até sentir a parte de trás da coxa. Segure 15 segundos e troque de perna.'),
+    ALONG('b_along_glut','Alongamento de glúteo e quadrado lombar sentado',1,15,'','Sentado, cruze uma perna sobre a outra e gire o tronco para o lado do joelho levantado. Segure 15 segundos e troque de lado, sem dor nas costas.'),
+    E('b_leg_press','Leg Press',3,12,15,'','Costas e quadril colados no banco. Desça até os joelhos formarem cerca de 90 graus e empurre sem esticar totalmente os joelhos. Joelhos alinhados com os pés.'),
+    FALHA('b_adutora_rp','Cadeira adutora em rest-pause',3,'Método rest-pause • até a falha','Faça a série até a falha, descanse uns 15 segundos e continue até a falha de novo, repetindo a pausa mais uma ou duas vezes. Movimento controlado, sem soltar o peso. Anote o total de repetições.'),
+    FALHA('b_extensora_rp','Cadeira extensora com pico de contração de 2" em rest-pause',3,'Rest-pause • pico de 2" • até a falha','Estenda os joelhos e segure 2 segundos no alto, com o quadríceps contraído, e desça devagar. Quando falhar, descanse uns 15 segundos e continue, como no rest-pause. Anote o total de repetições.'),
+    E('b_afundo','Afundo unilateral HBC',3,12,12,'','Dê um passo à frente e desça até o joelho de trás quase tocar o chão, com o tronco ereto. Empurre pelo calcanhar da perna da frente. Faça 12 de um lado e 12 do outro.'),
+    E('b_abdutora','Cadeira abdutora',3,12,15,'','Costas apoiadas e ombros relaxados. Abra as pernas com o glúteo e volte devagar, sem balançar o corpo.'),
+    E('b_donkey','Panturrilha donkey',3,15,15,'','Suba o mais alto que conseguir, segure um instante e desça alongando bem a panturrilha, sem bater o calcanhar no chão.'),
+    FALHA('b_abdutora_rp','Cadeira abdutora em rest-pause',3,'Método rest-pause • até a falha','Igual à abdutora normal, mas até a falha: descanse uns 15 segundos e continue até a falha de novo, mais uma ou duas vezes. Anote o total de repetições.'),
+    E('b_mesa_flexora','Mesa flexora com pico de contração de 2"',3,12,15,'Pico de contração de 2"','Quadril colado no aparelho. Flexione os joelhos e segure 2 segundos no alto em cada repetição, depois desça devagar. Sem levantar o quadril.'),
+    E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10 segundos na posição contraída e termine com mais 10 repetições. Queixo afastado do peito e a lombar no chão.'),
+    CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',10,12,'Cardio final • inclinação 12%','Inclinação de 12% e um ritmo que você consiga manter sem se segurar na esteira. Postura ereta, passadas firmes. Meta de 10 a 12 minutos. Anote o tempo, a distância e a velocidade.',12)]}
+};
 const nomesPadrao = {A:'Superiores', B:'Inferiores & Core'};
 
 function lerLS(k, p){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? p; }catch(e){ return p; } }
@@ -756,7 +785,7 @@ let ficha     = JSON.parse(JSON.stringify(fichaPadrao));
   const salva = lerLS('gym_ficha_v4', null);
   if(!salva || !salva.A || !salva.B) return;
   const js = JSON.stringify(salva);
-  if([fichaAntiga, fichaV51a, fichaV51b, fichaV52].some(f => JSON.stringify(f) === js)) salvarLS('gym_ficha_v4', ficha);
+  if([fichaAntiga, fichaV51a, fichaV51b, fichaV52, fichaV59].some(f => JSON.stringify(f) === js)) salvarLS('gym_ficha_v4', ficha);
   else ficha = salva;
 })();
 let historico = lerLS('gym_hist_v3', []);
