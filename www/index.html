@@ -124,10 +124,6 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 .opt{flex:1;padding:9px 0;border-radius:10px;background:var(--s2);border:1px solid var(--bd);font-size:18px;color:var(--t2)}
 .opt.on{background:var(--blue);border-color:transparent;color:#fff}
 .opt.txt{font-size:11.5px;font-weight:700}
-.agua-b{display:flex;align-items:flex-end;gap:5px;height:44px;margin-top:10px}
-.agua-b div{flex:1;background:var(--s1);border-radius:5px 5px 2px 2px;min-height:3px}
-.agua-b div.ok{background:var(--gr)}
-.agua-b div.az{background:var(--blue)}
 .card.atual{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
 .ocup{margin-top:10px;text-align:right}
 .ocup button{background:var(--s1);border:1px solid var(--bd);color:var(--t2);border-radius:10px;padding:6px 10px;font-size:11px;font-weight:700}
@@ -361,12 +357,21 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div class="row"><b style="font-size:14px">💧 Água de hoje <button class="help" onclick="abrirAjuda('agua')">?</button></b><span class="mono" id="agua-txt" style="font-weight:800">0 ml</span></div>
     <div class="prog"><i id="agua-barra" style="width:0%"></i></div>
     <div class="t-sm" id="agua-sub" style="margin-top:4px"></div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr) auto;gap:6px;margin-top:10px">
-      <button class="b" onclick="addAgua(150)">+150</button><button class="b" onclick="addAgua(250)">+250</button><button class="b" onclick="addAgua(500)">+500</button>
-      <button class="b" onclick="desfazerAgua()" aria-label="Desfazer">↩</button>
-    </div>
-    <div class="agua-b" id="agua-semana"></div>
-    <div class="t-sm" style="display:flex;justify-content:space-between;margin-top:4px"><span>últimos 7 dias</span><span>Meta (ml): <input type="number" inputmode="numeric" id="agua-meta" class="mono" style="width:80px;padding:4px 6px;display:inline-block" onchange="editarMetaAgua()"></span></div>
+    <div id="agua-atalhos" style="display:grid;grid-template-columns:repeat(3,1fr) auto;gap:6px;margin-top:10px"></div>
+    <div class="t-sm" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span id="agua-tit30">últimos 30 dias</span><span>Meta (ml): <input type="number" inputmode="numeric" id="agua-meta" class="mono" style="width:80px;padding:4px 6px;display:inline-block" onchange="editarMetaAgua()"></span></div>
+    <div class="chartbox" style="margin-top:6px"><canvas id="graficoAgua" style="width:100%;height:150px;display:block"></canvas></div>
+    <div class="t-sm" style="margin-top:4px"><span style="color:var(--gr)">■ meta batida</span> &nbsp; <span style="color:var(--blue)">■ abaixo da meta</span> &nbsp; <span style="color:var(--am)">┄ meta</span></div>
+    <div id="agua-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"></div>
+    <div class="t-sm" id="agua-insight" style="margin-top:8px;color:var(--t2)"></div>
+    <details style="margin-top:8px">
+      <summary>✏️ Ajustar um dia e atalhos</summary>
+      <p class="t-sm" style="margin:8px 0 4px">Esqueceu de anotar? Escolha o dia e digite o total bebido (0 apaga o dia).</p>
+      <div class="g2"><div><label class="l">Dia</label><input type="date" id="agua-ed-dia" onchange="carregarDiaAgua()"></div><div><label class="l">Total (ml)</label><input type="number" inputmode="numeric" id="agua-ed-ml" class="mono"></div></div>
+      <button class="b p" style="width:100%;margin-top:8px" onclick="salvarDiaAgua()">Salvar dia</button>
+      <p class="t-sm" style="margin:12px 0 4px">Tamanho dos botões rápidos (ml): copo, garrafa, garrafa grande.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><input type="number" inputmode="numeric" id="agua-c0" class="mono"><input type="number" inputmode="numeric" id="agua-c1" class="mono"><input type="number" inputmode="numeric" id="agua-c2" class="mono"></div>
+      <button class="b" style="width:100%;margin-top:8px" onclick="salvarAtalhosAgua()">Salvar atalhos</button>
+    </details>
   </div>
 
   <div class="card">
@@ -467,7 +472,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v6.3</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v6.4</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -731,10 +736,10 @@ const AJUDA = {
   fotos:{t:'📸 Fotos de progresso',x:'Tire ou escolha fotos de frente, de lado e de costas, sempre com a mesma luz e distância. Depois escolha uma foto Antes e uma Depois para ver lado a lado, com a data e o peso do dia.\n\nAs fotos ficam só neste aparelho e não entram no backup. Se for trocar de celular, compartilhe a comparação como imagem.'},
   relatorio:{t:'📄 Relatório do mês',x:'Gera uma página com os seus números do mês: dias treinados, sequência, séries, volume, cardio, recordes, evolução de cargas, medidas e metas. Use as setas para trocar de mês e compartilhe como imagem ou PDF.'},
   sessao:{t:'▶ Treino em andamento',x:'Toque em Iniciar treino ao chegar na academia. O app conta o tempo total, mostra em qual exercício você está (por exemplo 4 de 11) e uma barra com o quanto do treino já foi feito. O exercício da vez fica com a borda colorida.\n\nMáquina ocupada: toque em 🔁 no card e o exercício vai para o fim da fila, só no dia de hoje. A ordem da sua ficha não muda.\n\nAo tocar em Finalizar treino, o tempo é salvo. Durante o treino a tela tenta ficar ligada.'},
-  nivel:{t:'⭐ Nível e XP',x:'Tudo o que você faz rende XP:\n• Série de trabalho ou falha: 10 XP\n• Série de aquecimento: 2 XP\n• Cardio: 20 XP + 1 por minuto\n• Alongamento marcado: 3 XP\n• Recorde pessoal: +25 XP\n• Dia de treino: +30 XP\n• Treino iniciado e finalizado: +20 XP\n\nO nível sobe conforme o XP total, contando também o que você já treinou antes. O avatar muda de forma com o nível e ganha brilho com a sua sequência de dias seguidos.'},
+  nivel:{t:'⭐ Nível e XP',x:'Tudo o que você faz rende XP:\n• Série de trabalho ou falha: 10 XP\n• Série de aquecimento: 2 XP\n• Cardio: 20 XP + 1 por minuto\n• Alongamento marcado: 3 XP\n• Recorde pessoal: +25 XP\n• Dia de treino: +30 XP\n• Treino iniciado e finalizado: +20 XP\n• Dia com a meta de água batida: +5 XP\n\nO nível sobe conforme o XP total, contando também o que você já treinou antes. O avatar muda de forma com o nível e ganha brilho com a sua sequência de dias seguidos.'},
   mapa:{t:'🧍 Mapa muscular',x:'Pinta o corpo conforme as séries válidas (trabalho e falha) do período. Quanto mais forte a cor, mais o músculo foi trabalhado; sem cor, ainda não treinou.\n\nO app descobre o músculo pelo nome do exercício (supino = peito, com ajuda de tríceps e ombro). Se algum exercício ficar no lugar errado ou não for reconhecido, toque em ✎ no card e escolha o Músculo principal.\n\nToque em um músculo para ver quais exercícios e séries contaram para ele.\n\nComo referência, cerca de 10 séries por músculo por semana já é um bom volume.'},
   tendencia:{t:'📉 Tendência do peso',x:'O peso muda de um dia para o outro por água, comida e sono. A linha de média de 7 dias mostra o caminho real. O ritmo (kg por semana) vem das suas medições das últimas 4 semanas e precisa de pelo menos 3 registros em mais de 6 dias.\n\nPerdas ou ganhos muito rápidos, acima de 1 kg por semana, merecem conversa com um profissional de saúde.'},
-  agua:{t:'💧 Água',x:'Toque em +150, +250 ou +500 conforme o copo ou a garrafa. O botão ↩ desfaz o último toque. A meta padrão é 2500 ml e você muda no campo Meta. Para lembretes durante o dia, ligue Beber água em Config → Lembretes.'},
+  agua:{t:'💧 Água',x:'Toque num dos botões rápidos conforme o copo ou a garrafa (você muda os tamanhos em Ajustar um dia e atalhos). O botão ↩ desfaz o último toque. A meta padrão é 2500 ml e você muda no campo Meta. O gráfico mostra os últimos 30 dias com a linha da meta, e abaixo estão média, sequência, melhor dia e dias com meta no mês. Cada dia com a meta batida rende +5 XP, e sequências de 3, 7, 14 e 30 dias dão medalhas. Esqueceu de anotar? Use Ajustar um dia. Para lembretes durante o dia, ligue Beber água em Config → Lembretes.'},
   checkup:{t:'🩺 Check-up diário',x:'Em 10 segundos: horas de sono, energia, humor e dor. Depois de alguns dias, o app mostra se você tem mais energia nos dias em que dorme 7 horas ou mais. Dor com região anotada ajuda a lembrar o que poupar no treino.'},
   pressao:{t:'❤️ Pressão e batimentos',x:'Meça sentado, em repouso, de preferência na mesma hora. FC de repouso é o batimento por minuto logo ao acordar, antes de levantar. Com o condicionamento, ela costuma cair com o tempo.\n\nAs faixas mostradas são só uma referência. Pressão alta ou sintomas devem ser avaliados por um médico.'},
   lembsaude:{t:'🔔 Lembretes de saúde',x:'Crie lembretes de suplemento (nos dias e horário que escolher), de consulta e de exame. Consultas e exames avisam na véspera às 18h e no dia, no horário marcado. Precisa ligar as notificações em Config → Lembretes.'},
@@ -944,7 +949,7 @@ function normalizarCfg(){
   if(!Array.isArray(cfg.checkins)) cfg.checkins = [];
   if(!Array.isArray(cfg.vitais)) cfg.vitais = [];
   if(!Array.isArray(cfg.lembS)) cfg.lembS = [];
-  cfg.agua = {meta:(cfg.agua && cfg.agua.meta) || 2500, dias:(cfg.agua && cfg.agua.dias) || {}, ult:(cfg.agua && cfg.agua.ult) || null};
+  cfg.agua = {meta:(cfg.agua && cfg.agua.meta) || 2500, dias:(cfg.agua && cfg.agua.dias) || {}, ult:(cfg.agua && cfg.agua.ult) || null, copos:(cfg.agua && Array.isArray(cfg.agua.copos) && cfg.agua.copos.length === 3) ? cfg.agua.copos : [150, 250, 500]};
   const m = cfg.metas || {};
   cfg.metas = {peso: m.peso || null, bf: m.bf || null, cargas: Array.isArray(m.cargas) ? m.cargas : []};
 }
@@ -1275,7 +1280,7 @@ function xpDetalhe(desde){
   desde = desde || 0;
   const h = historico.filter(x => x.ts >= desde), kd = desde ? chave(desde) : '', st = [...diasSet()].filter(k => k >= kd);
   const t = {series:h.filter(valida).length * 10, aquec:h.filter(x => x.tipo === 'W').length * 2, along:h.filter(x => x.tipo === 'A').length * 3,
-    cardio:h.filter(x => x.tipo === 'C').reduce((a, x) => a + 20 + Math.round(x.min || 0), 0), prs:h.filter(x => x.pr).length * 25, dias:st.length * 30, sess:(cfg.sessoes || []).filter(x => x.ts >= desde).length * 20};
+    cardio:h.filter(x => x.tipo === 'C').reduce((a, x) => a + 20 + Math.round(x.min || 0), 0), prs:h.filter(x => x.pr).length * 25, dias:st.length * 30, sess:(cfg.sessoes || []).filter(x => x.ts >= desde).length * 20, agua:Object.keys((cfg.agua && cfg.agua.dias) || {}).filter(k => k >= kd && cfg.agua.dias[k] >= (cfg.agua.meta || 2500)).length * 5};
   t.total = Object.values(t).reduce((a, b) => a + b, 0); return t;
 }
 const nivelDe = xp => Math.floor(Math.sqrt(xp / 60)) + 1;
@@ -1319,13 +1324,14 @@ function renderizarNivel(){
   const el = $('nivel-card'); if(!el) return;
   const d = xpDetalhe(), nv = nivelDe(d.total), a = xpDoNivel(nv), b = xpDoNivel(nv + 1), pct = Math.round((d.total - a) / (b - a) * 100), seq = sequencia();
   const sem = xpDetalhe(Date.now() - 7 * 86400000).total, prox = FAIXAS.find(f => f[0] > nv);
-  const L = [['Séries de trabalho','series'],['Aquecimento','aquec'],['Cardio','cardio'],['Alongamento','along'],['Recordes','prs'],['Dias treinados','dias'],['Treinos cronometrados','sess']];
+  const L = [['Séries de trabalho','series'],['Aquecimento','aquec'],['Cardio','cardio'],['Alongamento','along'],['Recordes','prs'],['Dias treinados','dias'],['Treinos cronometrados','sess'],['Água (meta do dia)','agua']];
   el.innerHTML = `<div class="row" style="align-items:center;gap:12px;cursor:pointer" onclick="$('xp-det').classList.toggle('hidden')"><div style="flex-shrink:0">${avatarSVG(nv, seq)}</div>
     <div style="flex:1;min-width:0"><div class="t-sm">${esc(tituloNivel(nv)).toUpperCase()} <button class="help" onclick="event.stopPropagation();abrirAjuda('nivel')">?</button></div>
       <div class="mono" style="font-size:34px;font-weight:800;line-height:1.1;color:var(--am)">Nv ${nv}</div>
       <div class="prog" style="margin-top:6px"><i style="width:${pct}%"></i></div>
       <div class="t-sm" style="margin-top:4px">${d.total} XP • faltam ${b - d.total} para o nv ${nv + 1}</div>
       <div class="t-sm" style="margin-top:2px;color:var(--gr)">+${sem} XP nos últimos 7 dias</div></div></div>
+    ${aguaMelhorSeq() >= 3 ? `<div class="t-sm" style="margin-top:6px">${medalhaAgua(aguaMelhorSeq())} Medalha da água: ${aguaMelhorSeq()} dias seguidos com a meta${aguaSeqAtual() ? ' • agora: ' + aguaSeqAtual() : ''}</div>` : ''}
     <div class="t-sm" style="margin-top:8px">${seq >= 3 ? '🔥 Sequência de ' + seq + ' dias: avatar com brilho' + (seq < 7 ? ' verde (7 dias: laranja)' : seq < 30 ? ' laranja (30 dias: dourado)' : ' dourado') : 'Treine 3 dias seguidos para o avatar brilhar'}${prox ? ' • Próximo título: ' + prox[1] + ' no nv ' + prox[0] : ''}</div>
     <div id="xp-det" class="hidden" style="margin-top:10px;border-top:1px solid var(--line);padding-top:8px">${L.map(x => `<div class="hrow"><span>${x[0]}</span><span class="mono">${d[x[1]]} XP</span></div>`).join('')}<div class="t-sm" style="margin-top:6px">Toque no avatar para abrir ou fechar o detalhe.</div></div>`;
 }
@@ -1443,7 +1449,7 @@ function xpDoDia(k){
   const hs = historico.filter(h => chave(h.ts) === k);
   let t = hs.filter(valida).length * 10 + hs.filter(h => h.tipo === 'W').length * 2 + hs.filter(h => h.tipo === 'A').length * 3
     + hs.filter(h => h.tipo === 'C').reduce((a, x) => a + 20 + Math.round(x.min || 0), 0) + hs.filter(h => h.pr).length * 25 + (cfg.sessoes || []).filter(x => chave(x.ts) === k).length * 20;
-  if(diasSet().has(k)) t += 30; return t;
+  if(diasSet().has(k)) t += 30; if((cfg.agua.dias[k] || 0) >= aguaMeta()) t += 5; return t;
 }
 function abrirDia(k){
   const dt = new Date(k + 'T12:00:00'), hs = historico.filter(h => chave(h.ts) === k), st = diasSet();
@@ -1859,26 +1865,81 @@ function renderizarSaudeExtra(){
 
 // ---- água ----
 function aguaHoje(){ return (cfg.agua.dias[hojeK()] || 0); }
+function aguaMeta(){ return cfg.agua.meta || 2500; }
 function addAgua(ml){
   const k = hojeK(), antes = aguaHoje();
   cfg.agua.dias[k] = antes + ml; cfg.agua.ult = {k, ml};
-  Object.keys(cfg.agua.dias).filter(x => x < chave(Date.now() - 120 * 864e5)).forEach(x => delete cfg.agua.dias[x]);
-  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); agendarReagendar();
-  if(antes < cfg.agua.meta && aguaHoje() >= cfg.agua.meta) toast('💧 Meta de água do dia batida!', 'pr');
+  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); renderizarNivel(); agendarReagendar();
+  if(antes < aguaMeta() && aguaHoje() >= aguaMeta()){ toast('💧 Meta de água do dia batida! +5 XP', 'pr'); checarNivel(); }
 }
 function desfazerAgua(){
   const u = cfg.agua.ult; if(!u){ toast('Nada para desfazer', 'neutro'); return; }
-  cfg.agua.dias[u.k] = Math.max(0, (cfg.agua.dias[u.k] || 0) - u.ml); cfg.agua.ult = null;
-  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); agendarReagendar();
+  cfg.agua.dias[u.k] = Math.max(0, (cfg.agua.dias[u.k] || 0) - u.ml); if(!cfg.agua.dias[u.k]) delete cfg.agua.dias[u.k]; cfg.agua.ult = null;
+  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); renderizarNivel(); agendarReagendar();
 }
-function editarMetaAgua(){ const v = num('agua-meta'); if(v && v >= 500 && v <= 8000){ cfg.agua.meta = Math.round(v); salvarLS('gym_cfg_v4', cfg); agendarReagendar(); } renderizarAgua(); }
+function editarMetaAgua(){ const v = num('agua-meta'); if(v && v >= 500 && v <= 8000){ cfg.agua.meta = Math.round(v); salvarLS('gym_cfg_v4', cfg); agendarReagendar(); } renderizarAgua(); renderizarNivel(); }
+function diaDeslocado(n){ const d = new Date(); d.setDate(d.getDate() - n); return chave(d.getTime()); }
+function aguaDiasMeta(){ const m = aguaMeta(); return Object.keys(cfg.agua.dias).filter(k => cfg.agua.dias[k] >= m).sort(); }
+function aguaSeqAtual(){
+  const m = aguaMeta(); let n = 0, i = (cfg.agua.dias[hojeK()] || 0) >= m ? 0 : 1;
+  while((cfg.agua.dias[diaDeslocado(i)] || 0) >= m && n < 4000){ n++; i++; }
+  return n;
+}
+function aguaMelhorSeq(){
+  const ks = aguaDiasMeta(); let best = 0, cur = 0, prev = null;
+  ks.forEach(k => { if(prev && Math.round((new Date(k + 'T12:00:00') - new Date(prev + 'T12:00:00')) / 864e5) === 1) cur++; else cur = 1; best = Math.max(best, cur); prev = k; });
+  return best;
+}
+function medalhaAgua(n){ return n >= 30 ? '🏆' : n >= 14 ? '🥇' : n >= 7 ? '🥈' : n >= 3 ? '🥉' : ''; }
+function aguaEstat(){
+  const m = aguaMeta(), ks = Array.from({length:30}, (_, i) => diaDeslocado(29 - i)), v = ks.map(k => cfg.agua.dias[k] || 0), reg = v.filter(x => x > 0);
+  let melhor = null; ks.forEach((k, i) => { if(v[i] > 0 && (!melhor || v[i] > melhor.v)) melhor = {k, v:v[i]}; });
+  const hoje = new Date(), pref = hoje.getFullYear() + '-' + pad2(hoje.getMonth() + 1), noMes = aguaDiasMeta().filter(k => k.startsWith(pref)).length;
+  return {ks, v, media:reg.length ? Math.round(MEDIA(reg)) : null, melhor, seq:aguaSeqAtual(), melhorSeq:aguaMelhorSeq(), noMes, diaMes:hoje.getDate(), n30:aguaDiasMeta().filter(k => k >= ks[0]).length};
+}
+function desenharAgua(cv, ks, v, meta){
+  const p = prepararCanvas(cv); if(!p) return;
+  if(!v.some(x => x > 0)){ vazioCanvas(cv, 'Anote a água por alguns dias para ver o gráfico'); return; }
+  const {c, w, h} = p, pad = {l:36, r:8, t:12, b:20}, mx = Math.max(meta * 1.15, ...v) , W = w - pad.l - pad.r, H = h - pad.t - pad.b, bw = W / v.length;
+  const Y = x => pad.t + H - x / mx * H;
+  c.font = '10px ui-monospace,monospace'; c.textAlign = 'right'; c.fillStyle = COR('--t3'); c.strokeStyle = COR('--line'); c.lineWidth = 1;
+  [0, .5, 1].forEach(f => { const y = Y(mx * f); c.beginPath(); c.moveTo(pad.l, y); c.lineTo(w - pad.r, y); c.stroke(); c.fillText(Math.round(mx * f / 100) / 10 + 'L', pad.l - 4, y + 3); });
+  v.forEach((x, i) => { const hh = Math.max(x > 0 ? 2 : 0, x / mx * H); c.globalAlpha = x >= meta || i === v.length - 1 ? 1 : .55; c.fillStyle = x >= meta ? COR('--gr') : COR('--blue'); c.beginPath(); c.roundRect(pad.l + i * bw + 1.5, pad.t + H - hh, bw - 3, hh, 3); c.fill(); c.globalAlpha = 1; });
+  c.strokeStyle = COR('--am'); c.setLineDash([5, 4]); c.lineWidth = 1.5; c.beginPath(); c.moveTo(pad.l, Y(meta)); c.lineTo(w - pad.r, Y(meta)); c.stroke(); c.setLineDash([]);
+  c.fillStyle = COR('--t3'); c.textAlign = 'center';
+  [0, 10, 20, 29].forEach(i => { const d = new Date(ks[i] + 'T12:00:00'); c.fillText(pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1), Math.min(w - 18, Math.max(pad.l + 14, pad.l + i * bw + bw / 2)), h - 6); });
+}
 function renderizarAgua(){
-  const meta = cfg.agua.meta || 2500, hoje = aguaHoje(), pct = Math.min(100, Math.round(hoje / meta * 100));
+  const meta = aguaMeta(), hoje = aguaHoje(), pct = Math.min(100, Math.round(hoje / meta * 100));
   $('agua-txt').textContent = hoje + ' ml'; $('agua-barra').style.width = pct + '%';
   $('agua-sub').textContent = hoje >= meta ? '✅ Meta batida! (' + meta + ' ml)' : 'Faltam ' + (meta - hoje) + ' ml para a meta de ' + meta + ' ml';
   if(document.activeElement !== $('agua-meta')) $('agua-meta').value = meta;
-  const dias = Array.from({length:7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); return chave(d.getTime()); });
-  $('agua-semana').innerHTML = dias.map((k, i) => { const v = cfg.agua.dias[k] || 0, h = Math.max(3, Math.min(100, v / meta * 100)); return `<div class="${v >= meta ? 'ok' : (i === 6 ? 'az' : '')}" style="height:${h}%" title="${k}: ${v} ml"></div>`; }).join('');
+  $('agua-atalhos').innerHTML = cfg.agua.copos.map(x => `<button class="b" onclick="addAgua(${x})">+${x}</button>`).join('') + '<button class="b" onclick="desfazerAgua()" aria-label="Desfazer">↩</button>';
+  const e = aguaEstat();
+  desenharAgua($('graficoAgua'), e.ks, e.v, meta);
+  const tl = (r, v, cor) => `<div style="background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:8px 10px"><div class="t-sm">${r}</div><div class="mono" style="font-weight:800;font-size:16px;${cor ? 'color:' + cor : ''}">${v}</div></div>`;
+  const md = e.melhor ? new Date(e.melhor.k + 'T12:00:00') : null, med = medalhaAgua(e.melhorSeq);
+  $('agua-stats').innerHTML = tl('Média por dia (30 d)', e.media != null ? e.media + ' ml' : '--') + tl('Sequência com meta', (e.seq ? '🔥 ' : '') + e.seq + (e.seq === 1 ? ' dia' : ' dias'), e.seq >= 3 ? 'var(--gr)' : '')
+    + tl('Melhor dia', e.melhor ? e.melhor.v + ' ml <span class="t-sm">' + pad2(md.getDate()) + '/' + pad2(md.getMonth() + 1) + '</span>' : '--') + tl('Dias com meta no mês', e.noMes + ' de ' + e.diaMes + ' (' + Math.round(e.noMes / e.diaMes * 100) + '%)')
+    + `<div style="grid-column:1/-1;background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:8px 10px" class="t-sm">${med ? med + ' ' : ''}Melhor sequência: <b>${e.melhorSeq}</b> ${e.melhorSeq === 1 ? 'dia' : 'dias'} • meta batida rende +5 XP por dia${e.melhorSeq < 30 ? ' • próxima medalha: ' + (e.melhorSeq < 3 ? '🥉 3 dias' : e.melhorSeq < 7 ? '🥈 7 dias' : e.melhorSeq < 14 ? '🥇 14 dias' : '🏆 30 dias') : ''}</div>`;
+  const par = cfg.checkins.filter(c => c.energia && cfg.agua.dias[c.k] != null).map(c => ({en:c.energia, ok:cfg.agua.dias[c.k] >= meta})), com = par.filter(x => x.ok), sem = par.filter(x => !x.ok);
+  $('agua-insight').innerHTML = (com.length >= 3 && sem.length >= 3) ? `Nos dias em que você bate a meta de água, sua energia média é <b>${fmt(MEDIA(com.map(x => x.en)), 1)}</b>; nos outros, <b>${fmt(MEDIA(sem.map(x => x.en)), 1)}</b> (de 5).` : 'Com alguns dias de água e de check-up (pelo menos 3 dias com meta e 3 sem), aparece aqui a relação entre beber água e a sua energia.';
+  const ed = $('agua-ed-dia'); if(ed && !ed.value){ ed.value = hojeK(); carregarDiaAgua(); }
+  if(document.activeElement && !/^agua-c/.test(document.activeElement.id || '')) cfg.agua.copos.forEach((x, i) => { $('agua-c' + i).value = x; });
+}
+function carregarDiaAgua(){ const k = $('agua-ed-dia').value; $('agua-ed-ml').value = k ? (cfg.agua.dias[k] || '') : ''; }
+function salvarDiaAgua(){
+  const k = $('agua-ed-dia').value, v = num('agua-ed-ml');
+  if(!k || k > hojeK()){ toast('Escolha um dia até hoje', 'bad'); return; }
+  if(v == null && $('agua-ed-ml').value !== ''){ toast('Valor inválido', 'bad'); return; }
+  const ml = Math.max(0, Math.min(20000, Math.round(v || 0)));
+  if(ml) cfg.agua.dias[k] = ml; else delete cfg.agua.dias[k];
+  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); renderizarNivel(); agendarReagendar(); toast('Dia atualizado', 'ok');
+}
+function salvarAtalhosAgua(){
+  const v = [0, 1, 2].map(i => Math.round(num('agua-c' + i) || 0));
+  if(v.some(x => x < 50 || x > 3000)){ toast('Use valores entre 50 e 3000 ml', 'bad'); return; }
+  cfg.agua.copos = v; salvarLS('gym_cfg_v4', cfg); document.activeElement && document.activeElement.blur(); renderizarAgua(); toast('Atalhos salvos', 'ok');
 }
 
 // ---- check-up ----
@@ -2000,7 +2061,7 @@ async function desenharRelatorioSaude(cv){
   // vitais, check-up e água
   box(630, 980, 530, 340); T('❤️ PRESSÃO, SONO E ÁGUA', 658, 1026, 'bold 24px ' + SANS, '#fbbf24');
   const v30 = cfg.vitais.filter(x => x.ts >= Date.now() - 30 * 864e5), pa = v30.filter(x => x.sis != null), fcs = v30.filter(x => x.fc != null).map(x => x.fc), lastPA = [...cfg.vitais].reverse().find(x => x.sis != null);
-  const ck = cfg.checkins, dores = ck.filter(x => x.k >= chave(Date.now() - 30 * 864e5)), aguaD = Object.keys(cfg.agua.dias).filter(k => k >= chave(Date.now() - 30 * 864e5)).map(k => cfg.agua.dias[k]);
+  const ck = cfg.checkins, dores = ck.filter(x => x.k >= chave(Date.now() - 30 * 864e5)), aguaD = Object.keys(cfg.agua.dias).filter(k => k >= chave(Date.now() - 30 * 864e5) && cfg.agua.dias[k] > 0).map(k => cfg.agua.dias[k]);
   const L = [
     ['Pressão (média 30 d)', pa.length ? Math.round(MEDIA(pa.map(x => x.sis))) + '/' + Math.round(MEDIA(pa.map(x => x.dia))) : '--'],
     ['Última aferição', lastPA ? lastPA.sis + '/' + lastPA.dia + ' (' + dataCurta(lastPA.ts) + ')' : '--'],
@@ -2008,7 +2069,7 @@ async function desenharRelatorioSaude(cv){
     ['Sono médio', mediaDias(ck, 'sono', 30) != null ? fmt(mediaDias(ck, 'sono', 30), 1) + ' h' : '--'],
     ['Energia / humor (de 5)', (mediaDias(ck, 'energia', 30) != null ? fmt(mediaDias(ck, 'energia', 30), 1) : '--') + ' / ' + (mediaDias(ck, 'humor', 30) != null ? fmt(mediaDias(ck, 'humor', 30), 1) : '--')],
     ['Dias com dor (30 d)', dores.length ? dores.filter(x => x.dor > 0).length + ' de ' + dores.length : '--'],
-    ['Água média por dia', aguaD.length ? Math.round(MEDIA(aguaD)) + ' ml' : '--']];
+    ['Água média/dia', aguaD.length ? Math.round(MEDIA(aguaD)) + ' ml • ' + aguaDiasMeta().filter(k => k >= chave(Date.now() - 30 * 864e5)).length + ' d ✓' : '--']];
   yy = 1072; L.forEach(r => { T(r[0], 658, yy, '600 22px ' + SANS, '#cbd5e1'); T(r[1], 1132, yy, 'bold 23px ' + MONO, '#f8fafc', 'right'); yy += 38; });
   // metas
   const ms = listaMetas().slice(0, 3);
@@ -2746,6 +2807,7 @@ function dadosRelatorio(ano, mes){
   const comBF = [...sm].reverse().find(x => x.cintura && x.pescoco);
   return {dias, maiorSeq:maiorSeqMes(dias), series:val.length, volume:val.reduce((a, h) => a + h.peso * h.reps, 0), prs:hs.filter(h => h.pr).length,
     km:card.reduce((a, h) => a + (h.km || 0), 0), min:card.reduce((a, h) => a + (h.min || 0), 0), alongs:hs.filter(h => h.tipo === 'A').length,
+    agua:(() => { const m = aguaMeta(), ks = Object.keys(cfg.agua.dias).filter(k => k.startsWith(pref) && cfg.agua.dias[k] > 0); return {n:ks.length, media:ks.length ? Math.round(MEDIA(ks.map(k => cfg.agua.dias[k]))) : null, meta:ks.filter(k => cfg.agua.dias[k] >= m).length}; })(),
     evol, saude:sm, bf:(comBF && cfg.altura) ? calcNavyBF(comBF.cintura, comBF.pescoco, cfg.altura) : null};
 }
 function desenharRelatorio(cv, ano, mes){
@@ -2789,8 +2851,9 @@ function desenharRelatorio(cv, ano, mes){
     const cs = sm.filter(x => x.cintura); if(cs.length) linhaS('Cintura', fmt(cs[0].cintura) + ' → ' + fmt(cs[cs.length-1].cintura) + ' cm');
     if(d.bf != null) linhaS('% de gordura', fmt(d.bf) + '%');
   } else { T('Sem medidas registradas neste mês.', 638, y, '600 24px ' + SANS, '#64748b'); y += 46; }
+  if(d.agua.n) linhaS('💧 Água', d.agua.media + ' ml • ' + d.agua.meta + ' d meta');
   y += 10;
-  const ms = (ano === new Date().getFullYear() && mes === new Date().getMonth()) ? listaMetas().slice(0, 4) : [];
+  const ms = (ano === new Date().getFullYear() && mes === new Date().getMonth()) ? listaMetas().slice(0, 3) : [];
   ms.forEach(x => {
     const p = progMeta(x.ref, x.atual);
     T(corta(x.nome, 24), 638, y, '600 22px ' + SANS, '#cbd5e1'); T(Math.round(p.pct) + '%', 1132, y, 'bold 22px ' + MONO, p.ok ? '#34d399' : '#cbd5e1', 'right');
