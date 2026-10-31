@@ -454,7 +454,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v6.1</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v6.2</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -602,6 +602,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rels')">Fechar</button><button class="b gold" onclick="compartilharRelatorioSaude('img')">🖼️ Imagem</button><button class="b gold" onclick="compartilharRelatorioSaude('pdf')">📄 PDF</button></div>
 </div></div>
 
+<!-- Modal resumo -->
+<div id="modal-dia" class="modal" onclick="if(event.target===this)fecharModal('modal-dia')"><div class="box">
+  <h3 id="dia-titulo"></h3>
+  <div id="dia-corpo"></div>
+  <div class="acts" id="dia-acoes"></div>
+</div></div>
+
 <!-- Modal nível -->
 <div id="modal-nivel" class="modal" onclick="if(event.target===this)fecharModal('modal-nivel')"><div class="box" style="text-align:center;max-width:300px">
   <div id="nivelup-box"></div>
@@ -712,7 +719,7 @@ const AJUDA = {
   relatorio:{t:'📄 Relatório do mês',x:'Gera uma página com os seus números do mês: dias treinados, sequência, séries, volume, cardio, recordes, evolução de cargas, medidas e metas. Use as setas para trocar de mês e compartilhe como imagem ou PDF.'},
   sessao:{t:'▶ Treino em andamento',x:'Toque em Iniciar treino ao chegar na academia. O app conta o tempo total, mostra em qual exercício você está (por exemplo 4 de 11) e uma barra com o quanto do treino já foi feito. O exercício da vez fica com a borda colorida.\n\nMáquina ocupada: toque em 🔁 no card e o exercício vai para o fim da fila, só no dia de hoje. A ordem da sua ficha não muda.\n\nAo tocar em Finalizar treino, o tempo é salvo. Durante o treino a tela tenta ficar ligada.'},
   nivel:{t:'⭐ Nível e XP',x:'Tudo o que você faz rende XP:\n• Série de trabalho ou falha: 10 XP\n• Série de aquecimento: 2 XP\n• Cardio: 20 XP + 1 por minuto\n• Alongamento marcado: 3 XP\n• Recorde pessoal: +25 XP\n• Dia de treino: +30 XP\n• Treino iniciado e finalizado: +20 XP\n\nO nível sobe conforme o XP total, contando também o que você já treinou antes. O avatar muda de forma com o nível e ganha brilho com a sua sequência de dias seguidos.'},
-  mapa:{t:'🧍 Mapa muscular',x:'Pinta o corpo conforme as séries válidas (trabalho e falha) do período. Quanto mais forte a cor, mais o músculo foi trabalhado; sem cor, ainda não treinou.\n\nO app descobre o músculo pelo nome do exercício (supino = peito, com ajuda de tríceps e ombro). Se algum exercício ficar no lugar errado ou não for reconhecido, toque em ✎ no card e escolha o Músculo principal.\n\nComo referência, cerca de 10 séries por músculo por semana já é um bom volume.'},
+  mapa:{t:'🧍 Mapa muscular',x:'Pinta o corpo conforme as séries válidas (trabalho e falha) do período. Quanto mais forte a cor, mais o músculo foi trabalhado; sem cor, ainda não treinou.\n\nO app descobre o músculo pelo nome do exercício (supino = peito, com ajuda de tríceps e ombro). Se algum exercício ficar no lugar errado ou não for reconhecido, toque em ✎ no card e escolha o Músculo principal.\n\nToque em um músculo para ver quais exercícios e séries contaram para ele.\n\nComo referência, cerca de 10 séries por músculo por semana já é um bom volume.'},
   tendencia:{t:'📉 Tendência do peso',x:'O peso muda de um dia para o outro por água, comida e sono. A linha de média de 7 dias mostra o caminho real. O ritmo (kg por semana) vem das suas medições das últimas 4 semanas e precisa de pelo menos 3 registros em mais de 6 dias.\n\nPerdas ou ganhos muito rápidos, acima de 1 kg por semana, merecem conversa com um profissional de saúde.'},
   agua:{t:'💧 Água',x:'Toque em +150, +250 ou +500 conforme o copo ou a garrafa. O botão ↩ desfaz o último toque. A meta padrão é 2500 ml e você muda no campo Meta. Para lembretes durante o dia, ligue Beber água em Config → Lembretes.'},
   checkup:{t:'🩺 Check-up diário',x:'Em 10 segundos: horas de sono, energia, humor e dor. Depois de alguns dias, o app mostra se você tem mais energia nos dias em que dorme 7 horas ou mais. Dor com região anotada ajuda a lembrar o que poupar no treino.'},
@@ -1046,10 +1053,12 @@ function atualizarAbas(){
 function selecionarTreino(l){ treinoAtual = l; atualizarAbas(); renderizarExercicios(); }
 
 function moverExercicio(idx, dir){
-  const arr = ficha[treinoAtual].exercicios;
-  const novo = idx + dir;
-  if(novo < 0 || novo >= arr.length) return;
-  [arr[idx], arr[novo]] = [arr[novo], arr[idx]];
+  const ord = ordemExibida(treinoAtual), pos = ord.findIndex(o => o.idx === idx), alvo = pos + dir;
+  if(pos < 0 || alvo < 0 || alvo >= ord.length) return;
+  const arr = ficha[treinoAtual].exercicios, a = ord[pos].idx, b = ord[alvo].idx;
+  [arr[a], arr[b]] = [arr[b], arr[a]];
+  const d = diaEstado();
+  if(d.ordem[treinoAtual]){ const ids = ord.map(o => o.ex.id); [ids[pos], ids[alvo]] = [ids[alvo], ids[pos]]; d.ordem[treinoAtual] = ids; salvarDia(); }
   salvarLS('gym_ficha_v4', ficha);
   renderizarExercicios();
 }
@@ -1129,8 +1138,14 @@ function alternarAlong(id, i){
   for(let k = 0; k < alvo; k++) historico.push({exId:id, nome:nomeEx(id), ts:Date.now() + k, tipo:'A'});
   salvarLS('gym_hist_v3', historico); renderizarExercicios();
 }
+function parseMin(str){
+  str = String(str || '').trim().replace(',', '.'); if(!str) return null;
+  if(str.includes(':')){ const [m, sg] = str.split(':'), mm = parseFloat(m), ss = parseFloat(sg || 0); if(isNaN(mm) || isNaN(ss) || ss < 0 || ss >= 60) return null; return mm + ss / 60; }
+  const v = parseFloat(str); return isNaN(v) ? null : v;
+}
+function fmtMin(v){ if(v == null || isNaN(v)) return ''; const t = Math.round(v * 60), m = Math.floor(t / 60), sg = t % 60; return sg ? m + ':' + pad2(sg) : String(m); }
 function descCardio(h){
-  return [h.min ? fmt(h.min,1) + ' min' : null, h.km ? fmt(h.km,2) + ' km' : null, h.vel ? fmt(h.vel,1) + ' km/h' : null, h.incl ? 'inc ' + fmt(h.incl,1) + '%' : null].filter(Boolean).join(' • ');
+  return [h.min ? fmtMin(h.min) + ' min' : null, h.km ? fmt(h.km,2) + ' km' : null, h.vel ? fmt(h.vel,1) + ' km/h' : null, h.incl ? 'inc ' + fmt(h.incl,1) + '%' : null].filter(Boolean).join(' • ');
 }
 function renderCardio(ex, idx){
   const agora = Date.now();
@@ -1159,7 +1174,7 @@ function renderCardio(ex, idx){
     ${ultima}
     ${chips ? `<div class="chips">${chips}</div>` : ''}
     <div class="regc">
-      <div><label>Tempo (min)</label><input type="number" inputmode="decimal" step="0.5" min="0" class="mono" id="cmin-${ex.id}" value="${val('min')}"></div>
+      <div><label>Tempo (min ou mm:ss)</label><input type="text" inputmode="text" placeholder="10 ou 10:05" autocomplete="off" class="mono" id="cmin-${ex.id}" value="${fmtMin(parseFloat(val('min')))}"></div>
       <div><label>Dist. (km)</label><input type="number" inputmode="decimal" step="0.01" min="0" class="mono" id="cdist-${ex.id}" value="${val('km')}"></div>
       <div><label>Vel. (km/h)</label><input type="number" inputmode="decimal" step="0.1" min="0" class="mono" id="cvel-${ex.id}" value=""></div>
       <div><label>Inclin. (%)</label><input type="number" inputmode="decimal" step="0.5" min="0" class="mono" id="cinc-${ex.id}" value="${inc}"></div>
@@ -1169,8 +1184,8 @@ function renderCardio(ex, idx){
   </div>`;
 }
 function registrarCardio(id){
-  const mn = num('cmin-'+id); let km = num('cdist-'+id), vel = num('cvel-'+id); const inc = num('cinc-'+id);
-  if(mn === null || mn <= 0){ toast('Informe o tempo em minutos', 'bad'); return; }
+  const mn = parseMin($('cmin-'+id).value); let km = num('cdist-'+id), vel = num('cvel-'+id); const inc = num('cinc-'+id);
+  if(mn === null || mn <= 0){ toast('Informe o tempo em minutos (ex: 10 ou 10:05)', 'bad'); return; }
   if((km !== null && km < 0) || (vel !== null && vel < 0)){ toast('Distância e velocidade não podem ser negativas', 'bad'); return; }
   if(km && !vel) vel = km / (mn/60); else if(vel && !km) km = vel * mn / 60;
   const kd = chave(Date.now()); cfg.offDays = cfg.offDays.filter(x => x !== kd); salvarLS('gym_cfg_v4', cfg);
@@ -1356,9 +1371,10 @@ function corMusc(p, alvo){
 function mapaSVG(pts, alvo){
   const f = g => corMusc(pts[g], alvo), base = 'var(--s2)', ln = 'var(--bd)', zero = 'var(--s1)';
   const att = (fill, extra) => `fill="${fill}" stroke="${ln}" stroke-width="1.1" stroke-linejoin="round" ${extra || ''}`;
-  const E = (cx, cy, rx, ry, g, rot) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" ${att(g ? f(g) : base, rot ? `transform="rotate(${rot} ${cx} ${cy})"` : '')}/>`;
-  const P = (d, g) => `<path d="${d}" ${att(g ? f(g) : base)}/>`;
-  const R = (x, y, w, h, rx, g) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" ${att(g ? f(g) : base)}/>`;
+  const clk = g => g ? ` onclick="detalheMusculo('${g}')" style="cursor:pointer" role="button" aria-label="${GRUPOS[g]}"` : '';
+  const E = (cx, cy, rx, ry, g, rot) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" ${att(g ? f(g) : base, (rot ? `transform="rotate(${rot} ${cx} ${cy})"` : '') + clk(g))}/>`;
+  const P = (d, g) => `<path d="${d}" ${att(g ? f(g) : base, clk(g))}/>`;
+  const R = (x, y, w, h, rx, g) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" ${att(g ? f(g) : base, clk(g))}/>`;
   const comum = E(75, 18, 12, 14) + P('M69 30 L69 42 L81 42 L81 30Z')
     + E(33, 71, 8.5, 21, null, 8) + E(117, 71, 8.5, 21, null, -8) + E(28, 107, 6.5, 19, null, 5) + E(122, 107, 6.5, 19, null, -5) + E(25, 129, 5, 6) + E(125, 129, 5, 6)
     + P('M42 48 Q75 40 108 48 L103 100 Q101 114 96 122 L54 122 Q49 114 47 100Z')
@@ -1390,6 +1406,86 @@ function renderizarMapa(){
   $('mapa-lista').innerHTML = ordem.filter(x => x.p).map(x => `<div class="hrow"><span>${GRUPOS[x.g]}</span><span class="mono">${fmt(x.p, 1)} séries</span></div>`).join('')
     + (sem.length ? `<div class="t-sm" style="margin-top:14px;line-height:1.5">Sem treino neste período: <b style="color:var(--am)">${sem.join(', ')}</b></div>` : '<div class="t-sm" style="margin-top:8px;color:var(--gr)">✅ Todos os grupos foram trabalhados.</div>')
     + (nao.length ? `<div class="t-sm" style="margin-top:6px">Não reconheci o músculo de: ${nao.map(esc).join(', ')}. Escolha em ✎ do exercício.</div>` : '');
+}
+function recalcularPRs(){
+  const por = {};
+  historico.forEach(h => { if(valida(h)) (por[h.exId] = por[h.exId] || []).push(h); else if(h.pr) h.pr = false; });
+  Object.values(por).forEach(arr => {
+    arr.sort((a, b) => a.ts - b.ts);
+    let mp = -1, m1 = -1, dmp = -1, dm1 = -1, dia = '', jaDia = false;
+    arr.forEach(h => {
+      const k = chave(h.ts);
+      if(k !== dia){ mp = Math.max(mp, dmp); m1 = Math.max(m1, dm1); dmp = -1; dm1 = -1; dia = k; jaDia = false; }
+      const e = epley(h.peso, h.reps), pr = mp >= 0 && !jaDia && (h.peso > mp + 1e-9 || e > m1 + 1e-9);
+      h.pr = pr; if(pr) jaDia = true; dmp = Math.max(dmp, h.peso); dm1 = Math.max(dm1, e);
+    });
+  });
+}
+function migrarPRs(){
+  if(cfg.prV2) return;
+  recalcularPRs(); salvarLS('gym_hist_v3', historico);
+  cfg.prV2 = true; cfg.nivelVisto = nivelDe(xpDetalhe().total); salvarLS('gym_cfg_v4', cfg);
+}
+function xpDoDia(k){
+  const hs = historico.filter(h => chave(h.ts) === k);
+  let t = hs.filter(valida).length * 10 + hs.filter(h => h.tipo === 'W').length * 2 + hs.filter(h => h.tipo === 'A').length * 3
+    + hs.filter(h => h.tipo === 'C').reduce((a, x) => a + 20 + Math.round(x.min || 0), 0) + hs.filter(h => h.pr).length * 25 + (cfg.sessoes || []).filter(x => chave(x.ts) === k).length * 20;
+  if(diasSet().has(k)) t += 30; return t;
+}
+function abrirDia(k){
+  const dt = new Date(k + 'T12:00:00'), hs = historico.filter(h => chave(h.ts) === k), st = diasSet();
+  $('dia-titulo').textContent = dt.toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long'});
+  const sec = (t, corpo) => `<div style="margin-top:12px"><b style="font-size:13px">${t}</b><div style="margin-top:4px">${corpo}</div></div>`;
+  const linha = (a, b) => `<div class="hrow"><span>${a}</span><span class="mono">${b}</span></div>`;
+  // treino
+  const ordem = [], por = {};
+  hs.forEach(h => { if(!por[h.exId]){ por[h.exId] = []; ordem.push(h.exId); } por[h.exId].push(h); });
+  const sess = (cfg.sessoes || []).filter(x => chave(x.ts) === k), val = hs.filter(valida);
+  let t = '';
+  if(sess.length) t += linha('⏱ Treino ' + sess[0].letra + ' cronometrado', fmtDur(sess[0].dur));
+  if(hs.length){
+    t += linha('Séries válidas', val.length) + linha('Recordes', hs.filter(h => h.pr).length) + linha('XP do dia', '+' + xpDoDia(k));
+    t += ordem.map(id => {
+      const a = por[id], v = a.filter(valida), c = a.find(x => x.tipo === 'C'), al = a.filter(x => x.tipo === 'A').length;
+      let det = '';
+      if(c) det = descCardio(c);
+      else if(v.length){ const m = v.reduce((x, y) => y.peso * y.reps > x.peso * x.reps ? y : x); det = v.length + '× • melhor ' + fmt(m.peso) + ' kg × ' + m.reps + (a.some(x => x.pr) ? ' 🏆' : ''); }
+      else if(al) det = 'alongamento ✓';
+      else det = a.length + ' aquec.';
+      return `<div class="hrow" style="display:block"><b style="font-size:12px">${esc(nomeEx(id))}</b><div class="t-sm">${esc(det)}</div></div>`;
+    }).join('');
+  } else t += '<div class="t-sm">Sem treino registrado.</div>';
+  if(st.has(k) && !hs.length) t += '<div class="t-sm" style="margin-top:4px">Dia marcado como treinado manualmente.</div>';
+  // saúde
+  let h2 = '';
+  saude.filter(x => chave(x.ts) === k).forEach(x => {
+    const rot = {cintura:'cintura', pescoco:'pescoço', braco:'braço', peito:'peito', quadril:'quadril', coxa:'coxa', panturrilha:'panturrilha'};
+    h2 += linha('⚖️ Peso', fmt(x.peso) + ' kg'); Object.keys(rot).filter(q => x[q]).forEach(q => { h2 += linha('📏 ' + rot[q], fmt(x[q]) + ' cm'); });
+  });
+  cfg.vitais.filter(x => chave(x.ts) === k).forEach(x => { h2 += linha('❤️ Pressão e FC', (x.sis != null ? x.sis + '/' + x.dia : '') + (x.sis != null && x.fc != null ? ' • ' : '') + (x.fc != null ? x.fc + ' bpm' : '')); });
+  const ck = cfg.checkins.find(c => c.k === k);
+  if(ck){ h2 += linha('🩺 Sono', ck.sono != null ? fmt(ck.sono, 1) + ' h' : '--') + linha('Energia / humor', (ck.energia ? EMO[ck.energia - 1] : '--') + ' / ' + (ck.humor ? EMO[ck.humor - 1] : '--')) + linha('Dor', DORES[ck.dor || 0] + (ck.regiao ? ' • ' + ck.regiao : '')); }
+  const ag = cfg.agua.dias[k]; if(ag) h2 += linha('💧 Água', ag + ' ml' + (ag >= cfg.agua.meta ? ' ✅' : ''));
+  const fs = fotosCache.filter(f => chave(f.ts) === k);
+  if(fs.length) h2 += `<div style="display:flex;gap:6px;margin-top:6px">${fs.map(f => `<img src="${f.img}" alt="${esc(f.ang)}" style="width:64px;height:86px;object-fit:cover;border-radius:8px;border:1px solid var(--bd)">`).join('')}</div>`;
+  $('dia-corpo').innerHTML = sec('🏋️ Treino', t) + sec('❤️ Saúde', h2 || '<div class="t-sm">Sem registros de saúde.</div>');
+  const futuro = k > chave(Date.now());
+  $('dia-acoes').innerHTML = `${futuro ? '' : `<button class="b" onclick="toggleDiaCal('${k}');abrirDia('${k}')">${st.has(k) ? 'Desmarcar presença' : 'Marcar presença'}</button>`}<button class="b p" onclick="fecharModal('modal-dia')">Fechar</button>`;
+  abrirModal('modal-dia');
+}
+function detalheMusculo(g){
+  const dias = parseInt($('mapa-per').value, 10) || 7, desde = Date.now() - dias * 864e5, ex = {}; todosEx().forEach(e => ex[e.id] = e);
+  const por = {};
+  historico.filter(h => h.ts >= desde && valida(h)).forEach(h => {
+    const m = musculosDe(ex[h.exId], nomeEx(h.exId)); if(!m || !m[g]) return;
+    const o = por[h.exId] = por[h.exId] || {n:0, w:m[g], ult:0, melhor:null};
+    o.n++; o.ult = Math.max(o.ult, h.ts); if(!o.melhor || h.peso * h.reps > o.melhor.peso * o.melhor.reps) o.melhor = h;
+  });
+  const L = Object.keys(por).sort((a, b) => por[b].n * por[b].w - por[a].n * por[a].w), tot = L.reduce((a, id) => a + por[id].n * por[id].w, 0);
+  $('dia-titulo').textContent = GRUPOS[g] + ' • últimos ' + dias + ' dias';
+  $('dia-corpo').innerHTML = L.length ? `<div class="hrow"><span>Séries contadas</span><span class="mono">${fmt(tot, 1)}</span></div>` + L.map(id => { const o = por[id]; return `<div class="hrow" style="display:block"><b style="font-size:12px">${esc(nomeEx(id))}</b><div class="t-sm">${o.n} séries • ${o.w < 1 ? 'músculo de apoio (peso ' + fmt(o.w, 1) + ') • ' : ''}melhor ${fmt(o.melhor.peso)} kg × ${o.melhor.reps} • última ${dataCurta(o.ult)}</div></div>`; }).join('') : '<div class="vazio">Nenhuma série deste músculo no período.</div>';
+  $('dia-acoes').innerHTML = '<button class="b p" onclick="fecharModal(\'modal-dia\')">Fechar</button>';
+  abrirModal('modal-dia');
 }
 function renderizarExercicios(){
   const lista = $('lista-exercicios');
@@ -1462,8 +1558,9 @@ function registrarSerie(id){
   const tipo = tipoSel[id] || tipoPadrao(id);
   let pr = false;
   if(tipo !== 'W'){
-    const prev = historico.filter(h => h.exId === id && valida(h));
-    if(prev.length){
+    const prev = historico.filter(h => h.exId === id && valida(h) && !mesmoDia(h.ts, Date.now()));
+    const jaHoje = historico.some(h => h.exId === id && h.pr && mesmoDia(h.ts, Date.now()));
+    if(prev.length && !jaHoje){
       const mp = Math.max(...prev.map(h => h.peso)), m1 = Math.max(...prev.map(h => epley(h.peso, h.reps)));
       pr = peso > mp + 1e-9 || epley(peso, reps) > m1 + 1e-9;
     }
@@ -1610,7 +1707,8 @@ function desenharLinhas(cv, series){
 // ---- evolução ----
 function popularSelect(manter){
   const sel = $('select-grafico'), ant = manter || sel.value;
-  const along = new Set(todosEx().filter(e => e.modo === 'alongamento').map(e => e.id)); historico.forEach(h => { if(h.tipo === 'A') along.add(h.exId); });
+  const along = new Set(todosEx().filter(e => e.modo === 'alongamento').map(e => e.id)), naFicha = new Set(todosEx().map(e => e.id));
+  historico.forEach(h => { if(h.tipo === 'A' && !naFicha.has(h.exId) && !historico.some(x => x.exId === h.exId && x.tipo !== 'A')) along.add(h.exId); });
   const ids = new Set(todosEx().map(e => e.id).filter(i => !along.has(i))); historico.forEach(h => { if(!along.has(h.exId)) ids.add(h.exId); });
   sel.innerHTML = [...ids].map(id => `<option value="${esc(id)}">${esc(nomeEx(id))}</option>`).join('');
   if([...ids].includes(ant)) sel.value = ant;
@@ -1997,7 +2095,7 @@ function importarDados(ev){
       ficha = {A:d.ficha.A, B:d.ficha.B}; historico = d.historico; saude = Array.isArray(d.saude) ? d.saude : []; cfg = d.cfg || cfg; normalizarCfg();
       salvarLS('gym_ficha_v4', ficha); salvarLS('gym_hist_v3', historico); salvarLS('gym_saude_v4', saude); salvarLS('gym_cfg_v4', cfg);
       if(Array.isArray(d.fotos)) (async () => { for(const f of d.fotos) if(f && f.id && f.img) try{ await DBF.salvar(f); }catch(e){} await carregarFotos(); })();
-      atualizarAbas(); renderizarExercicios(); popularSelect(); atualizarSubtitulo(); atualizarBackupAuto(); toast('Backup importado ✅' + (Array.isArray(d.fotos) && d.fotos.length ? ' (com ' + d.fotos.length + ' foto(s))' : ''));
+      migrarPRs(); atualizarAbas(); renderizarExercicios(); popularSelect(); atualizarSubtitulo(); atualizarBackupAuto(); toast('Backup importado ✅' + (Array.isArray(d.fotos) && d.fotos.length ? ' (com ' + d.fotos.length + ' foto(s))' : ''));
     }catch(e){ toast('Arquivo de backup inválido', 'bad'); }
   };
   r.readAsText(f); ev.target.value = '';
@@ -2087,7 +2185,7 @@ function renderizarFreq(){
   for(let d = 1; d <= dias; d++){
     const k = a + '-' + pad2(m+1) + '-' + pad2(d);
     const ehDom = new Date(a, m, d).getDay() === 0;
-    h += `<div class="d${st.has(k) ? ' on' : ''}${k === hk ? ' hj' : ''}${ehDom && !cfg.treinaDomingo ? ' dom' : ''}" onclick="toggleDiaCal('${k}')">${d}</div>`;
+    h += `<div class="d${st.has(k) ? ' on' : ''}${k === hk ? ' hj' : ''}${ehDom && !cfg.treinaDomingo ? ' dom' : ''}" onclick="abrirDia('${k}')">${d}</div>`;
   }
   $('cal-grid').innerHTML = h;
   if(document.activeElement !== $('freq-nome')) $('freq-nome').value = cfg.nome;
@@ -2715,7 +2813,7 @@ async function compartilharRelatorio(tipo){
   $('timer-display').textContent = fmtT(ultimoTimer);
   treinoAtual = sugerido();
   atualizarAbas(); renderizarExercicios(); popularSelect(); montarAjuda(); atualizarSubtitulo();
-  pedirWake(); checarNivel(); carregarFotos(); iniciarNotificacoes(); atualizarBackupAuto(); setTimeout(() => backupAutomatico(false), 4000);
+  migrarPRs(); pedirWake(); checarNivel(); carregarFotos(); iniciarNotificacoes(); atualizarBackupAuto(); setTimeout(() => backupAutomatico(false), 4000);
   document.addEventListener('visibilitychange', () => { if(!document.hidden) backupAutomatico(false); });
   window.addEventListener('resize', () => { if(abaAtual === 'evolucao') atualizarGrafico(); if(abaAtual === 'saude') renderizarSaude(); if(abaAtual === 'freq') renderizarFreq(); });
 })();
