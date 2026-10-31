@@ -285,13 +285,26 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
       <div><label class="l" style="color:var(--am)">Pescoço (cm) [p/ %BF]</label><input type="number" inputmode="decimal" step="0.5" id="med-pescoco" placeholder="38" class="mono"></div>
     </div>
     <details>
-      <summary>💪 Braço, peito, quadril, coxa, panturrilha (opcional)</summary>
-      <div class="g2" style="margin-top:10px">
-        <div><label class="l">Braço (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-braco" class="mono"></div>
+      <summary>💪 Braço, coxa, panturrilha, peito, quadril (opcional)</summary>
+      <p class="t-sm" style="margin:8px 0 0">Meça os dois lados. Se medir só um, deixe o outro em branco ou toque em "igual".</p>
+      <div class="g2" style="margin-top:8px">
+        <div><label class="l">Braço esquerdo (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-bracoE" class="mono"></div>
+        <div><label class="l">Braço direito (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-bracoD" class="mono"></div>
+      </div>
+      <button class="link" style="margin-top:2px" onclick="igualLado('braco')">= copiar para o outro lado (braço)</button>
+      <div class="g2" style="margin-top:8px">
+        <div><label class="l">Coxa esquerdo (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-coxaE" class="mono"></div>
+        <div><label class="l">Coxa direito (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-coxaD" class="mono"></div>
+      </div>
+      <button class="link" style="margin-top:2px" onclick="igualLado('coxa')">= copiar para o outro lado (coxa)</button>
+      <div class="g2" style="margin-top:8px">
+        <div><label class="l">Panturrilha esquerdo (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-panturrilhaE" class="mono"></div>
+        <div><label class="l">Panturrilha direito (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-panturrilhaD" class="mono"></div>
+      </div>
+      <button class="link" style="margin-top:2px" onclick="igualLado('panturrilha')">= copiar para o outro lado (panturrilha)</button>
+      <div class="g2" style="margin-top:8px">
         <div><label class="l">Peito (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-peito" class="mono"></div>
         <div><label class="l">Quadril (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-quadril" class="mono"></div>
-        <div><label class="l">Coxa (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-coxa" class="mono"></div>
-        <div style="grid-column:span 2"><label class="l">Panturrilha (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-panturrilha" class="mono"></div>
       </div>
     </details>
     <button class="b full" onclick="salvarMedidasCorporais()">💾 Salvar peso e medidas de hoje</button>
@@ -305,7 +318,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
   <div class="card">
     <div class="row" style="margin-bottom:6px"><b style="font-size:14px">📐 Medidas ao longo do tempo</b>
-      <select id="medida-sel" style="width:auto" onchange="renderizarMedidas()"><option value="cintura">Cintura</option><option value="braco">Braço</option><option value="peito">Peito</option><option value="quadril">Quadril</option><option value="coxa">Coxa</option><option value="panturrilha">Panturrilha</option><option value="pescoco">Pescoço</option></select></div>
+      <select id="medida-sel" style="width:auto" onchange="renderizarMedidas()"><option value="cintura">Cintura</option><option value="braco">Braço (média)</option><option value="bracoD">Braço direito</option><option value="bracoE">Braço esquerdo</option><option value="peito">Peito</option><option value="quadril">Quadril</option><option value="coxa">Coxa (média)</option><option value="coxaD">Coxa direita</option><option value="coxaE">Coxa esquerda</option><option value="panturrilha">Panturrilha (média)</option><option value="panturrilhaD">Panturrilha direita</option><option value="panturrilhaE">Panturrilha esquerda</option><option value="pescoco">Pescoço</option></select></div>
     <div class="chartbox"><canvas id="graficoMedidas"></canvas></div>
     <div class="t-sm" id="medida-dif" style="margin-top:6px;text-align:center"></div>
   </div>
@@ -454,7 +467,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v6.2</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v6.3</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -1460,7 +1473,7 @@ function abrirDia(k){
   let h2 = '';
   saude.filter(x => chave(x.ts) === k).forEach(x => {
     const rot = {cintura:'cintura', pescoco:'pescoço', braco:'braço', peito:'peito', quadril:'quadril', coxa:'coxa', panturrilha:'panturrilha'};
-    h2 += linha('⚖️ Peso', fmt(x.peso) + ' kg'); Object.keys(rot).filter(q => x[q]).forEach(q => { h2 += linha('📏 ' + rot[q], fmt(x[q]) + ' cm'); });
+    h2 += linha('⚖️ Peso', fmt(x.peso) + ' kg'); Object.keys(rot).filter(q => medTxt(x, q)).forEach(q => { h2 += linha('📏 ' + rot[q], medTxt(x, q) + ' cm'); });
   });
   cfg.vitais.filter(x => chave(x.ts) === k).forEach(x => { h2 += linha('❤️ Pressão e FC', (x.sis != null ? x.sis + '/' + x.dia : '') + (x.sis != null && x.fc != null ? ' • ' : '') + (x.fc != null ? x.fc + ' bpm' : '')); });
   const ck = cfg.checkins.find(c => c.k === k);
@@ -1781,10 +1794,26 @@ function salvarMedidasCorporais(){
   const peso = num('med-peso'), alt = num('med-altura');
   if(alt !== null && alt > 0){ cfg.altura = alt; salvarLS('gym_cfg_v4', cfg); }
   if(peso === null || peso <= 0){ toast('Informe o peso de hoje', 'bad'); return; }
-  const r = {ts:Date.now(), peso, cintura:num('med-cintura'), pescoco:num('med-pescoco'), braco:num('med-braco'), peito:num('med-peito'), quadril:num('med-quadril'), coxa:num('med-coxa'), panturrilha:num('med-panturrilha')};
+  const lado = k => { const e = num('med-' + k + 'E'), d = num('med-' + k + 'D'); return {e, d, base:(e && d) ? Math.round((e + d) / 2 * 10) / 10 : (e || d || null)}; };
+  const br = lado('braco'), cx = lado('coxa'), pn = lado('panturrilha');
+  const r = {ts:Date.now(), peso, cintura:num('med-cintura'), pescoco:num('med-pescoco'), braco:br.base, bracoE:br.e, bracoD:br.d, peito:num('med-peito'), quadril:num('med-quadril'), coxa:cx.base, coxaE:cx.e, coxaD:cx.d, panturrilha:pn.base, panturrilhaE:pn.e, panturrilhaD:pn.d};
   saude.push(r); salvarLS('gym_saude_v4', saude);
-  ['med-peso','med-cintura','med-pescoco','med-braco','med-peito','med-quadril','med-coxa','med-panturrilha'].forEach(i => $(i).value = '');
+  ['med-peso','med-cintura','med-pescoco','med-bracoE','med-bracoD','med-peito','med-quadril','med-coxaE','med-coxaD','med-panturrilhaE','med-panturrilhaD'].forEach(i => $(i).value = '');
   renderizarSaude(); toast('Medidas salvas ✅'); checarMetas(); agendarReagendar();
+}
+function igualLado(k){
+  const e = $('med-' + k + 'E'), d = $('med-' + k + 'D');
+  if(e.value && !d.value) d.value = e.value; else if(d.value && !e.value) e.value = d.value; else toast('Preencha um dos lados primeiro', 'neutro');
+}
+function medTxt(x, k){
+  const e = x[k + 'E'], d = x[k + 'D'];
+  if(e || d){ if(e && d) return 'E ' + fmt(e) + ' • D ' + fmt(d) + ' (Δ ' + fmt(Math.abs(d - e)) + ')'; return (e ? 'E ' : 'D ') + fmt(e || d); }
+  return x[k] ? fmt(x[k]) : null;
+}
+function assimetria(x, k){
+  const e = x[k + 'E'], d = x[k + 'D']; if(!e || !d) return null;
+  const dif = d - e, pct = Math.abs(dif) / Math.max(e, d) * 100;
+  return Math.abs(dif) < 0.05 ? 'simétrico' : (dif > 0 ? 'direito' : 'esquerdo') + ' maior em ' + fmt(Math.abs(dif), 1) + ' cm (' + fmt(pct, 1) + '%)';
 }
 function apagarUltimaMedida(){
   if(!saude.length){ toast('Nada para apagar', 'neutro'); return; }
@@ -1966,7 +1995,7 @@ async function desenharRelatorioSaude(cv){
   box(80, 980, 520, 340); T('📏 MEDIDAS (cm)', 108, 1026, 'bold 24px ' + SANS, '#fbbf24');
   const rot = {cintura:'Cintura', pescoco:'Pescoço', braco:'Braço', peito:'Peito', quadril:'Quadril', coxa:'Coxa', panturrilha:'Panturrilha'};
   let yy = 1072, qtd = 0;
-  Object.keys(rot).forEach(k => { const a = saude.filter(x => x[k]); if(!a.length) return; const p = a[0][k], u = a[a.length - 1][k], d = u - p; T(rot[k], 108, yy, '600 23px ' + SANS, '#cbd5e1'); T(a.length > 1 ? fmt(p) + ' → ' + fmt(u) + ' (' + (d > 0 ? '+' : '') + fmt(d) + ')' : fmt(u), 572, yy, 'bold 23px ' + MONO, '#f8fafc', 'right'); yy += 38; qtd++; });
+  Object.keys(rot).forEach(k => { const a = saude.filter(x => x[k]); if(!a.length) return; const p = a[0][k], u = a[a.length - 1][k], d = u - p, ultS = a[a.length - 1], lados = (ultS[k + 'E'] || ultS[k + 'D']) ? medTxt(ultS, k) : null; T(rot[k], 108, yy, '600 23px ' + SANS, '#cbd5e1'); T(lados ? lados : a.length > 1 ? fmt(p) + ' → ' + fmt(u) + ' (' + (d > 0 ? '+' : '') + fmt(d) + ')' : fmt(u), 572, yy, 'bold 23px ' + MONO, '#f8fafc', 'right'); yy += 38; qtd++; });
   if(!qtd) T('Sem medidas registradas.', 108, 1080, '600 22px ' + SANS, '#64748b');
   // vitais, check-up e água
   box(630, 980, 530, 340); T('❤️ PRESSÃO, SONO E ÁGUA', 658, 1026, 'bold 24px ' + SANS, '#fbbf24');
@@ -2038,7 +2067,7 @@ function renderizarSaude(){
   const rot = {cintura:'Cintura', pescoco:'Pescoço', braco:'Braço', peito:'Peito', quadril:'Quadril', coxa:'Coxa', panturrilha:'Panturr.'};
   const box = $('lista-historico-saude');
   box.innerHTML = saude.length ? [...saude].reverse().slice(0,20).map(s => {
-    const extras = Object.keys(rot).filter(k => s[k]).map(k => `<span class="chip" style="color:var(--t2);border-color:var(--bd)">${rot[k]} ${fmt(s[k])}</span>`).join('');
+    const extras = Object.keys(rot).filter(k => medTxt(s, k)).map(k => `<span class="chip" style="color:var(--t2);border-color:var(--bd)">${rot[k]} ${medTxt(s, k)}</span>`).join('');
     return `<div class="hrow" style="display:block"><div class="row"><b>${dataLonga(s.ts)}</b><span class="mono" style="color:var(--gr)">${fmt(s.peso)} kg</span></div>${extras ? `<div class="chips">${extras}</div>` : ''}</div>`;
   }).join('') : '<div class="vazio">Nenhuma avaliação registrada ainda.</div>';
   renderizarMedidas(); renderizarMetas(); renderizarFotos(); renderizarSaudeExtra();
@@ -2046,10 +2075,11 @@ function renderizarSaude(){
 function renderizarMedidas(){
   const k = $('medida-sel').value, cv = $('graficoMedidas'), dif = $('medida-dif');
   const pts = saude.filter(x => x[k]).map(x => ({ts:x.ts, v:x[k]})).slice(-20);
-  if(pts.length < 2){ vazioCanvas(cv, pts.length ? 'Registre mais uma medição para ver a curva' : 'Sem medições de ' + $('medida-sel').selectedOptions[0].text.toLowerCase()); dif.textContent = ''; return; }
+  if(pts.length < 2){ vazioCanvas(cv, pts.length ? 'Registre mais uma medição para ver a curva' : 'Sem medições de ' + $('medida-sel').selectedOptions[0].text.toLowerCase()); const b0 = k.replace(/[DE]$/, ''), uA = [...saude].reverse().find(x => x[b0 + 'E'] && x[b0 + 'D']); dif.textContent = (['braco', 'coxa', 'panturrilha'].includes(b0) && uA) ? 'Assimetria: ' + assimetria(uA, b0) : ''; return; }
   desenharLinhas(cv, [{pts, cor:COR('--am'), lado:'l'}]);
   const d = pts[pts.length-1].v - pts[0].v;
-  dif.textContent = fmt(pts[0].v) + ' → ' + fmt(pts[pts.length-1].v) + ' cm (' + (d > 0 ? '+' : '') + fmt(d) + ' cm desde ' + dataLonga(pts[0].ts) + ')';
+  const base = k.replace(/[DE]$/, ''), ultA = [...saude].reverse().find(x => x[base + 'E'] && x[base + 'D']), as = (['braco', 'coxa', 'panturrilha'].includes(base) && ultA) ? assimetria(ultA, base) : null;
+  dif.textContent = fmt(pts[0].v) + ' → ' + fmt(pts[pts.length-1].v) + ' cm (' + (d > 0 ? '+' : '') + fmt(d) + ' cm desde ' + dataLonga(pts[0].ts) + ')' + (as ? ' • Assimetria: ' + as : '');
 }
 
 // ============================ AJUDA / BACKUP ============================
