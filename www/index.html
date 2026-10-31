@@ -116,6 +116,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 .regc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
 .regc label{display:block;font-size:9px;font-weight:700;color:var(--mut);margin:0 0 3px;text-transform:uppercase;white-space:nowrap}
 .regc input{text-align:center;padding:9px 2px}
+.aura{transform-origin:70px 82px;animation:pulso 2.6s ease-in-out infinite}
+@keyframes pulso{0%,100%{transform:scale(.97);opacity:.5}50%{transform:scale(1.03);opacity:1}}
+@media (prefers-reduced-motion:reduce){.aura{animation:none}}
+.card.atual{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.ocup{margin-top:10px;text-align:right}
+.ocup button{background:var(--s1);border:1px solid var(--bd);color:var(--t2);border-radius:10px;padding:6px 10px;font-size:11px;font-weight:700}
+.sess-t{font-size:30px;font-weight:800;line-height:1}
 .tgl{padding:6px 12px;border-radius:99px;font-size:11px;font-weight:800;flex-shrink:0}
 .tgl.on{background:rgba(16,185,129,.2);color:var(--gr2);border:1px solid rgba(16,185,129,.4)}
 .tgl.off{background:var(--s1);color:var(--mut);border:1px solid var(--bd)}
@@ -195,6 +202,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
       <button class="b p" onclick="abrirModalExercicio()">+ Exercício</button>
     </div>
   </div>
+  <div class="card" id="sess-card"></div>
   <div style="font-size:11px;color:var(--mut);margin:-4px 2px 12px">
     Tipo de série: <span class="tag tW">W</span> aquec. · <span class="tag tT">T</span> trabalho · <span class="tag tF">F</span> falha
     <button class="help" onclick="abrirAjuda('series')">?</button>
@@ -204,6 +212,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <!-- ========== ABA EVOLUÇÃO ========== -->
 <main id="screen-evolucao" class="hidden">
+  <div class="card">
+    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">🧍 Mapa muscular <button class="help" onclick="abrirAjuda('mapa')">?</button></b>
+      <select id="mapa-per" style="width:auto" onchange="renderizarMapa()"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select></div>
+    <div id="mapa-svg"></div>
+    <div class="t-sm" style="display:flex;align-items:center;gap:6px;justify-content:center;margin:2px 0 8px">menos <span style="display:inline-block;width:90px;height:8px;border-radius:9px;background:linear-gradient(90deg,hsl(40 90% 55%/.4),hsl(0 90% 55%))"></span> mais</div>
+    <div id="mapa-lista"></div>
+  </div>
   <div class="card">
     <b style="font-size:15px">Gráfico de Evolução <button class="help" onclick="abrirAjuda('grafico_evolucao')">?</button></b>
     <p class="t-sm" style="margin:3px 0 10px">Veja se as suas cargas estão subindo ao longo das semanas</p>
@@ -360,7 +375,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v5.4</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v5.8</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -368,6 +383,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <!-- ========== ABA FREQUÊNCIA ========== -->
 <main id="screen-freq" class="hidden">
+  <div class="card" id="nivel-card"></div>
   <div class="card">
     <div class="g3">
       <div class="ind"><small>No mês</small><b id="fq-mes" class="mono" style="color:var(--gr)">0</b><span>dias</span></div>
@@ -430,6 +446,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="ex-w-max"><label id="ex-l-max">Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" class="mono" style="text-align:center"></div>
   </div>
   <label style="color:var(--am)">⚙️ Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
+  <label>💪 Músculo principal</label><select id="ex-grupo"><option value="">Automático (pelo nome)</option><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="biceps">Bíceps</option><option value="triceps">Tríceps</option><option value="abdomen">Abdômen</option><option value="quadriceps">Quadríceps</option><option value="posteriores">Posterior de coxa</option><option value="gluteos">Glúteos</option><option value="panturrilhas">Panturrilhas</option></select>
   <label>📘 Guia de execução / notas</label><textarea id="ex-explicacao" rows="3" placeholder="Ex: escápulas retraídas, descida em 2 segundos."></textarea>
   <div class="acts"><button class="b" onclick="fecharModal('modal-ex')">Cancelar</button><button class="b p" onclick="salvarExercicioFicha()">Salvar</button></div>
 </div></div>
@@ -484,6 +501,12 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   <h3 id="ajuda-titulo"></h3>
   <p class="ap" id="ajuda-texto"></p>
   <div class="acts"><button class="b p" onclick="fecharModal('modal-ajuda')">Entendi</button></div>
+</div></div>
+
+<!-- Modal nível -->
+<div id="modal-nivel" class="modal" onclick="if(event.target===this)fecharModal('modal-nivel')"><div class="box" style="text-align:center;max-width:300px">
+  <div id="nivelup-box"></div>
+  <div class="acts" style="justify-content:center"><button class="b p" onclick="fecharModal('modal-nivel')">Bora! 💪</button></div>
 </div></div>
 
 <!-- Modal lembretes -->
@@ -576,6 +599,9 @@ const AJUDA = {
   metas:{t:'🎯 Metas',x:'Defina um peso alvo, um % de gordura alvo e metas de carga por exercício. A barra mostra o quanto você já andou do ponto de partida até o alvo.\n\nO ponto de partida é o seu valor no momento em que a meta foi criada (para peso e gordura, o primeiro registro que o app encontrar). Ao bater a meta, o app avisa e marca com ✅.'},
   fotos:{t:'📸 Fotos de progresso',x:'Tire ou escolha fotos de frente, de lado e de costas, sempre com a mesma luz e distância. Depois escolha uma foto Antes e uma Depois para ver lado a lado, com a data e o peso do dia.\n\nAs fotos ficam só neste aparelho e não entram no backup. Se for trocar de celular, compartilhe a comparação como imagem.'},
   relatorio:{t:'📄 Relatório do mês',x:'Gera uma página com os seus números do mês: dias treinados, sequência, séries, volume, cardio, recordes, evolução de cargas, medidas e metas. Use as setas para trocar de mês e compartilhe como imagem ou PDF.'},
+  sessao:{t:'▶ Treino em andamento',x:'Toque em Iniciar treino ao chegar na academia. O app conta o tempo total, mostra em qual exercício você está (por exemplo 4 de 11) e uma barra com o quanto do treino já foi feito. O exercício da vez fica com a borda colorida.\n\nMáquina ocupada: toque em 🔁 no card e o exercício vai para o fim da fila, só no dia de hoje. A ordem da sua ficha não muda.\n\nAo tocar em Finalizar treino, o tempo é salvo. Durante o treino a tela tenta ficar ligada.'},
+  nivel:{t:'⭐ Nível e XP',x:'Tudo o que você faz rende XP:\n• Série de trabalho ou falha: 10 XP\n• Série de aquecimento: 2 XP\n• Cardio: 20 XP + 1 por minuto\n• Alongamento marcado: 3 XP\n• Recorde pessoal: +25 XP\n• Dia de treino: +30 XP\n• Treino iniciado e finalizado: +20 XP\n\nO nível sobe conforme o XP total, contando também o que você já treinou antes. O avatar muda de forma com o nível e ganha brilho com a sua sequência de dias seguidos.'},
+  mapa:{t:'🧍 Mapa muscular',x:'Pinta o corpo conforme as séries válidas (trabalho e falha) do período. Quanto mais forte a cor, mais o músculo foi trabalhado; sem cor, ainda não treinou.\n\nO app descobre o músculo pelo nome do exercício (supino = peito, com ajuda de tríceps e ombro). Se algum exercício ficar no lugar errado ou não for reconhecido, toque em ✎ no card e escolha o Músculo principal.\n\nComo referência, cerca de 10 séries por músculo por semana já é um bom volume.'},
   along:{t:'🧘 Alongamento',x:'Alongamentos não têm kg nem repetições. Toque no quadrado para marcar como feito (um quadrado por série). Alongar sozinho não conta como dia de treino na Frequência.'},
   domingo:{t:'☀️ Domingos e Sequência (Streak)',x:'A maioria das academias fecha aos domingos. Quando a opção está em "Folga", o domingo é ignorado na cobrança: se você treinou no sábado e na segunda-feira, sua sequência continua intacta!\n\nE se você treinar em um domingo mesmo no modo Folga, ele ainda ganha +1 dia de bônus na sua sequência.\n\nSe você malha todo domingo obrigatoriamente, mude o botão para "Treino".'},
   ranking:{t:'🏆 Frequência, Calendário e Ranking',x:'Um dia conta como treinado quando você salva uma série válida ou toca em Finalizar Treino. Você também pode tocar diretamente em qualquer dia do calendário para marcar ou desmarcar presença!\n\nUse o botão "Card PNG (Stories)" para gerar uma imagem com seu resumo e recordes para postar no WhatsApp ou Instagram.'},
@@ -805,7 +831,7 @@ function mudarAba(a){
   $('header-title').textContent = TITULOS[a];
   atualizarSubtitulo();
   window.scrollTo(0,0);
-  if(a === 'evolucao') atualizarGrafico();
+  if(a === 'evolucao'){ atualizarGrafico(); renderizarMapa(); }
   if(a === 'config'){ atualizarResumoNotif(); atualizarBackupAuto(); aplicarTema(); }
   if(a === 'saude') renderizarSaude();
   if(a === 'freq') renderizarFreq();
@@ -1001,15 +1027,213 @@ function registrarCardio(id){
   const reg = {exId:id, nome:nomeEx(id), ts:Date.now(), tipo:'C', min:mn, km:r2(km), vel:r2(vel), incl:inc || 0};
   historico.push(reg); salvarLS('gym_hist_v3', historico);
   toast('🏃 Cardio salvo: ' + descCardio(reg));
-  renderizarExercicios(); popularSelect(id); agendarReagendar();
+  renderizarExercicios(); popularSelect(id); checarNivel(); agendarReagendar();
 }
 
+let diaCache = null, wakeLock = null;
+function diaEstado(){
+  const k = chave(Date.now());
+  if(!diaCache) diaCache = lerLS('gym_dia', null);
+  if(!diaCache || diaCache.k !== k){
+    const o = diaCache;
+    diaCache = {k, ordem:{}, sess:(o && o.sess && Date.now() - o.sess.ini < 8 * 3600000) ? o.sess : null};
+  }
+  return diaCache;
+}
+function salvarDia(){ salvarLS('gym_dia', diaCache); }
+function fmtDur(ms){ const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), sg = t % 60; return (h ? h + ':' + pad2(m) : pad2(m)) + ':' + pad2(sg); }
+function feito(ex){
+  const hoje = historico.filter(h => h.exId === ex.id && mesmoDia(h.ts, Date.now()));
+  if(ex.modo === 'cardio') return hoje.some(h => h.tipo === 'C');
+  if(ex.modo === 'alongamento') return hoje.filter(h => h.tipo === 'A').length >= Math.max(1, ex.numSeries || 1);
+  return hoje.filter(valida).length >= Math.max(1, ex.numSeries || 1);
+}
+function ordemExibida(letra){
+  const exs = ficha[letra].exercicios, lista = exs.map((ex, idx) => ({ex, idx})), o = diaEstado().ordem[letra];
+  if(!o) return lista;
+  const pos = id => { const i = o.indexOf(id); return i < 0 ? 9999 : i; };
+  return lista.map((x, i) => ({...x, i})).sort((a, b) => (pos(a.ex.id) - pos(b.ex.id)) || (a.i - b.i)).map(({ex, idx}) => ({ex, idx}));
+}
+function ocupada(id){
+  const d = diaEstado(), ids = ordemExibida(treinoAtual).map(o => o.ex.id).filter(x => x !== id);
+  ids.push(id); d.ordem[treinoAtual] = ids; salvarDia(); renderizarExercicios(); toast('🔁 Foi para o fim da fila de hoje', 'neutro');
+}
+function decorarCard(ex, html){
+  const ord = ordemExibida(treinoAtual).map(o => o.ex), pend = ord.filter(e => !feito(e));
+  if(diaEstado().sess && pend.length && pend[0].id === ex.id) html = html.replace('class="card"', 'class="card atual"');
+  if(pend.length >= 2 && pend.some(e => e.id === ex.id)) html = html.replace(/<\/div>\s*$/, `<div class="ocup"><button onclick="ocupada('${ex.id}')">🔁 Máquina ocupada</button></div></div>`);
+  return html;
+}
+function renderizarSessao(){
+  const el = $('sess-card'); if(!el) return;
+  const d = diaEstado();
+  if(!d.sess){
+    el.innerHTML = `<button class="b p" style="width:100%;padding:13px;font-size:14px" onclick="iniciarSessao()">▶ Iniciar treino ${treinoAtual}</button><div class="t-sm" style="margin-top:6px;text-align:center">Conta o tempo e mostra em qual exercício você está <button class="help" onclick="abrirAjuda('sessao')">?</button></div>`;
+    return;
+  }
+  const l = d.sess.letra, ord = ordemExibida(l).map(o => o.ex), tot = ord.length, fe = ord.filter(feito).length, i = ord.findIndex(e => !feito(e));
+  const pct = tot ? Math.round(fe / tot * 100) : 0;
+  const atual = i < 0 ? '🎉 Todos os exercícios concluídos!' : `Exercício ${fe + 1} de ${tot}: <b>${esc(ord[i].nome)}</b>`;
+  el.innerHTML = `<div class="row"><div><div class="t-sm">TREINO ${l} EM ANDAMENTO</div><div class="sess-t mono" id="sess-tempo" style="color:var(--gr)">${fmtDur(Date.now() - d.sess.ini)}</div></div>
+    <div style="text-align:right"><div class="mono" style="font-weight:800;font-size:18px">${fe}/${tot}</div><div class="t-sm">exercícios</div></div></div>
+    <div class="prog"><i style="width:${pct}%"></i></div>
+    <div class="t-sm" style="margin-top:8px;font-size:12px;color:var(--t2)">${atual}</div>
+    ${l !== treinoAtual ? `<div class="t-sm" style="margin-top:4px;color:var(--am)">Você está vendo o Treino ${treinoAtual}. <button class="link" onclick="selecionarTreino('${l}')">Voltar ao ${l}</button></div>` : ''}
+    <div class="acoes" style="margin-top:10px"><button class="b g" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar e salvar tempo</button><button class="link r" onclick="cancelarSessao()">Cancelar</button></div>`;
+}
+async function pedirWake(){ try{ if(navigator.wakeLock && diaEstado().sess && !wakeLock){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } }catch(e){} }
+function soltarWake(){ try{ if(wakeLock) wakeLock.release(); }catch(e){} wakeLock = null; }
+function iniciarSessao(){ const d = diaEstado(); d.sess = {letra:treinoAtual, ini:Date.now()}; salvarDia(); renderizarExercicios(); pedirWake(); toast('▶ Treino ' + treinoAtual + ' iniciado. Bom treino! 💪'); }
+function cancelarSessao(){
+  $('confirm-titulo').textContent = 'Cancelar o treino em andamento?'; $('confirm-texto').textContent = 'O tempo não será salvo. As séries já registradas continuam.';
+  $('btn-confirm-yes').onclick = () => { const d = diaEstado(); d.sess = null; salvarDia(); soltarWake(); fecharModal('modal-confirm'); renderizarExercicios(); };
+  abrirModal('modal-confirm');
+}
+setInterval(() => { const t = $('sess-tempo'), d = diaCache; if(t && d && d.sess) t.textContent = fmtDur(Date.now() - d.sess.ini); }, 1000);
+document.addEventListener('visibilitychange', () => { if(!document.hidden){ pedirWake(); if(abaAtual === 'treino') renderizarSessao(); } });
+function xpDetalhe(desde){
+  desde = desde || 0;
+  const h = historico.filter(x => x.ts >= desde), kd = desde ? chave(desde) : '', st = [...diasSet()].filter(k => k >= kd);
+  const t = {series:h.filter(valida).length * 10, aquec:h.filter(x => x.tipo === 'W').length * 2, along:h.filter(x => x.tipo === 'A').length * 3,
+    cardio:h.filter(x => x.tipo === 'C').reduce((a, x) => a + 20 + Math.round(x.min || 0), 0), prs:h.filter(x => x.pr).length * 25, dias:st.length * 30, sess:(cfg.sessoes || []).filter(x => x.ts >= desde).length * 20};
+  t.total = Object.values(t).reduce((a, b) => a + b, 0); return t;
+}
+const nivelDe = xp => Math.floor(Math.sqrt(xp / 60)) + 1;
+const xpDoNivel = n => Math.round(60 * (n - 1) * (n - 1));
+const TITULOS_NIVEL = [[1,'Novato'],[3,'Iniciante'],[5,'Frequentador'],[8,'Guerreiro'],[12,'Veterano'],[16,'Campeão'],[20,'Lenda'],[30,'Titã']];
+const tituloNivel = n => TITULOS_NIVEL.filter(x => n >= x[0]).pop()[1];
+const FAIXAS = [[0,'Novato'],[3,'Iniciante'],[5,'Frequentador'],[8,'Guerreiro'],[12,'Veterano'],[16,'Campeão'],[20,'Lenda'],[30,'Titã']];
+function tierDe(nv){ return nv >= 30 ? 6 : nv >= 20 ? 5 : nv >= 12 ? 4 : nv >= 8 ? 3 : nv >= 5 ? 2 : nv >= 3 ? 1 : 0; }
+function avatarSVG(nv, seq, tam){
+  const t = tierDe(nv), cores = ['#94a3b8','#10b981','#3b82f6','#8b5cf6','#f97316','#f43f5e','#f59e0b'], c = cores[t];
+  const w = 24 + t * 3.2, br = 6.5 + t * 1.5, aura = seq >= 30 ? '#fbbf24' : seq >= 7 ? '#f97316' : seq >= 3 ? '#34d399' : '', L = 70 - w, R = 70 + w;
+  const barra = t >= 2 ? `<g><rect x="${L - 22}" y="74" width="${2 * w + 44}" height="5" rx="2.5" fill="#cbd5e1"/><rect x="${L - 24}" y="64" width="8" height="25" rx="3" fill="#334155"/><rect x="${L - 30}" y="68" width="6" height="17" rx="2" fill="#475569"/><rect x="${R + 16}" y="64" width="8" height="25" rx="3" fill="#334155"/><rect x="${R + 24}" y="68" width="6" height="17" rx="2" fill="#475569"/></g>` : '';
+  return `<svg viewBox="0 0 140 160" width="${tam || 112}" height="${Math.round((tam || 112) * 160 / 140)}" role="img" aria-label="Avatar nível ${nv}">
+    <defs><linearGradient id="gP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde3c8"/><stop offset="1" stop-color="#e5b68b"/></linearGradient>
+    <linearGradient id="gC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".7"/></linearGradient></defs>
+    ${aura ? `<circle class="aura" cx="70" cy="82" r="64" fill="${aura}" opacity=".18"/><circle class="aura" cx="70" cy="82" r="54" fill="none" stroke="${aura}" stroke-width="2.5" opacity=".6"/>` : ''}
+    ${t >= 6 ? `<path d="M${L} 66 C${L - 40} 30 ${L - 44} 80 ${L - 6} 92Z M${R} 66 C${R + 40} 30 ${R + 44} 80 ${R + 6} 92Z" fill="#fde68a" opacity=".85"/>` : ''}
+    ${t >= 4 ? `<path d="M${L + 2} 58 L${L - 10} 138 Q70 126 ${R + 10} 138 L${R - 2} 58Z" fill="${c}" opacity=".5"/>` : ''}
+    <ellipse cx="70" cy="152" rx="${28 + t * 2}" ry="4.5" fill="#000" opacity=".25"/>
+    <rect x="52" y="100" width="15" height="44" rx="7" fill="url(#gP)"/><rect x="73" y="100" width="15" height="44" rx="7" fill="url(#gP)"/>
+    <rect x="49" y="140" width="21" height="9" rx="4" fill="#1e293b"/><rect x="70" y="140" width="21" height="9" rx="4" fill="#1e293b"/>
+    <path d="M${L + 6} 96 L${R - 6} 96 L${R - 3} 118 L72 112 L68 112 L${L + 3} 118Z" fill="#1e293b"/>
+    ${t >= 3 ? `<rect x="${L + 6}" y="92" width="${2 * w - 12}" height="6" rx="3" fill="#fbbf24"/>` : ''}
+    <path d="M${L} 56 Q70 48 ${R} 56 L${R - 6} 96 Q70 102 ${L + 6} 96Z" fill="${t >= 2 ? 'url(#gC)' : 'url(#gP)'}"/>
+    ${t >= 2 ? '' : `<path d="M${L + 4} 56 L${R - 4} 56 L${R - 8} 96 Q70 102 ${L + 8} 96Z" fill="${c}" opacity=".9"/>`}
+    ${t >= 3 ? `<path d="M70 58 V94 M${L + 8} 76 Q70 82 ${R - 8} 76 M${L + 10} 86 H${R - 10}" stroke="#fff" stroke-width="1.4" opacity=".28" fill="none"/>` : ''}
+    <circle cx="${L - 3}" cy="66" r="${br}" fill="url(#gP)"/><circle cx="${R + 3}" cy="66" r="${br}" fill="url(#gP)"/>
+    <rect x="${L - 8}" y="68" width="10" height="26" rx="5" fill="url(#gP)" ${t >= 2 ? `transform="rotate(-8 ${L} 72)"` : ''}/><rect x="${R - 2}" y="68" width="10" height="26" rx="5" fill="url(#gP)" ${t >= 2 ? `transform="rotate(8 ${R} 72)"` : ''}/>
+    ${barra}
+    ${t >= 3 ? `<circle cx="${L - 3}" cy="79" r="5" fill="#334155"/><circle cx="${R + 3}" cy="79" r="5" fill="#334155"/>` : ''}
+    <rect x="63" y="44" width="14" height="12" rx="5" fill="url(#gP)"/>
+    <circle cx="70" cy="34" r="15.5" fill="url(#gP)"/>
+    <path d="M54 32 Q56 17 70 17 Q84 17 86 32 Q80 24 70 24 Q60 24 54 32Z" fill="#3b2a20"/>
+    <circle cx="64" cy="35" r="2" fill="#0f172a"/><circle cx="76" cy="35" r="2" fill="#0f172a"/>
+    <path d="M63 42 Q70 ${t >= 1 ? 48 : 44} 77 42" stroke="#7c2d12" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    ${t >= 1 ? `<rect x="53" y="24" width="34" height="6" rx="3" fill="${c}"/><path d="M87 26 l9 -3 M87 28 l8 3" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>` : ''}
+    ${t >= 5 ? `<path d="M55 20 L59 6 L65 16 L70 3 L75 16 L81 6 L85 20Z" fill="#fbbf24" stroke="#b45309" stroke-width="1"/><circle cx="70" cy="9" r="2" fill="#f43f5e"/>` : ''}
+  </svg>`;
+}
+function renderizarNivel(){
+  const el = $('nivel-card'); if(!el) return;
+  const d = xpDetalhe(), nv = nivelDe(d.total), a = xpDoNivel(nv), b = xpDoNivel(nv + 1), pct = Math.round((d.total - a) / (b - a) * 100), seq = sequencia();
+  const sem = xpDetalhe(Date.now() - 7 * 86400000).total, prox = FAIXAS.find(f => f[0] > nv);
+  const L = [['Séries de trabalho','series'],['Aquecimento','aquec'],['Cardio','cardio'],['Alongamento','along'],['Recordes','prs'],['Dias treinados','dias'],['Treinos cronometrados','sess']];
+  el.innerHTML = `<div class="row" style="align-items:center;gap:12px;cursor:pointer" onclick="$('xp-det').classList.toggle('hidden')"><div style="flex-shrink:0">${avatarSVG(nv, seq)}</div>
+    <div style="flex:1;min-width:0"><div class="t-sm">${esc(tituloNivel(nv)).toUpperCase()} <button class="help" onclick="event.stopPropagation();abrirAjuda('nivel')">?</button></div>
+      <div class="mono" style="font-size:34px;font-weight:800;line-height:1.1;color:var(--am)">Nv ${nv}</div>
+      <div class="prog" style="margin-top:6px"><i style="width:${pct}%"></i></div>
+      <div class="t-sm" style="margin-top:4px">${d.total} XP • faltam ${b - d.total} para o nv ${nv + 1}</div>
+      <div class="t-sm" style="margin-top:2px;color:var(--gr)">+${sem} XP nos últimos 7 dias</div></div></div>
+    <div class="t-sm" style="margin-top:8px">${seq >= 3 ? '🔥 Sequência de ' + seq + ' dias: avatar com brilho' + (seq < 7 ? ' verde (7 dias: laranja)' : seq < 30 ? ' laranja (30 dias: dourado)' : ' dourado') : 'Treine 3 dias seguidos para o avatar brilhar'}${prox ? ' • Próximo título: ' + prox[1] + ' no nv ' + prox[0] : ''}</div>
+    <div id="xp-det" class="hidden" style="margin-top:10px;border-top:1px solid var(--line);padding-top:8px">${L.map(x => `<div class="hrow"><span>${x[0]}</span><span class="mono">${d[x[1]]} XP</span></div>`).join('')}<div class="t-sm" style="margin-top:6px">Toque no avatar para abrir ou fechar o detalhe.</div></div>`;
+}
+function mostrarNivelUp(nv){
+  const novo = TITULOS_NIVEL.some(x => x[0] === nv);
+  $('nivelup-box').innerHTML = `<div style="font-size:12px;color:var(--mut);letter-spacing:.1em">NOVO NÍVEL!</div><div style="display:flex;justify-content:center;margin:6px 0">${avatarSVG(nv, sequencia(), 150)}</div>
+    <div class="mono" style="font-size:40px;font-weight:800;color:var(--am)">Nv ${nv}</div><div style="font-weight:800;font-size:16px">${esc(tituloNivel(nv))}</div>
+    ${novo ? '<div class="t-sm" style="margin-top:6px;color:var(--gr)">✨ Novo título desbloqueado!</div>' : ''}`;
+  abrirModal('modal-nivel');
+}
+function checarNivel(){
+  const nv = nivelDe(xpDetalhe().total), visto = cfg.nivelVisto || 0;
+  if(!visto){ cfg.nivelVisto = nv; salvarLS('gym_cfg_v4', cfg); return; }
+  if(nv > visto){
+    cfg.nivelVisto = nv; salvarLS('gym_cfg_v4', cfg);
+    mostrarNivelUp(nv);
+    notificarAgora('🆙 Novo nível!', 'Você chegou ao nível ' + nv + ' (' + tituloNivel(nv) + ').');
+  }
+}
+const GRUPOS = {peito:'Peito', costas:'Costas', ombros:'Ombros', biceps:'Bíceps', triceps:'Tríceps', abdomen:'Abdômen', quadriceps:'Quadríceps', posteriores:'Posterior de coxa', gluteos:'Glúteos', panturrilhas:'Panturrilhas'};
+const REGRAS_MUSC = [
+  [/supino|peitoral|crucifixo|flexao de bra|fly\b/, {peito:1, triceps:.4, ombros:.3}],
+  [/dorsal|puxada|remada|serrote|barra fixa|pulldown|pull.?down|pullover/, {costas:1, biceps:.4}],
+  [/arnold|desenvolvimento|elevacao (frontal|lateral)|ombro|militar|crucifixo inverso/, {ombros:1, triceps:.3}],
+  [/triceps|testa|frances|paralela|mergulho|coice/, {triceps:1}],
+  [/biceps|rosca|martelo/, {biceps:1}],
+  [/abdominal|abdomen|prancha|infra|supra|obliquo|core/, {abdomen:1}],
+  [/mesa flexora|cadeira flexora|flexora|stiff|terra|good morning/, {posteriores:1, gluteos:.3}],
+  [/abdutora|gluteo|hip thrust|elevacao pelvica|coice|kickback/, {gluteos:1}],
+  [/adutora/, {quadriceps:.5, gluteos:.4}],
+  [/afundo|passada|avanco|bulgaro/, {quadriceps:1, gluteos:.6, posteriores:.3}],
+  [/leg press|agachamento|extensora|hack|sissy|squat/, {quadriceps:1, gluteos:.5}],
+  [/panturrilha|gemeos|donkey|soleo/, {panturrilhas:1}]];
+function semAcento(t){ return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function musculosDe(ex, nome){
+  if(ex && ex.grupo && GRUPOS[ex.grupo]) return {[ex.grupo]:1};
+  const n = semAcento(ex ? ex.nome : nome);
+  for(const [re, m] of REGRAS_MUSC) if(re.test(n)) return m;
+  return null;
+}
+function calcularMapa(dias){
+  const desde = Date.now() - dias * 86400000, pts = {}, nao = new Set(), ex = {};
+  todosEx().forEach(e => ex[e.id] = e);
+  historico.filter(h => h.ts >= desde && valida(h)).forEach(h => {
+    const e = ex[h.exId], m = musculosDe(e, nomeEx(h.exId));
+    if(!m){ nao.add(nomeEx(h.exId)); return; }
+    for(const g in m) pts[g] = (pts[g] || 0) + m[g];
+  });
+  return {pts, nao:[...nao]};
+}
+function corMusc(p, alvo){
+  const i = Math.min(1, (p || 0) / alvo);
+  if(!p) return 'var(--s1)';
+  return `hsl(${Math.round(40 - 40 * i)} 90% 55% / ${(0.4 + 0.6 * i).toFixed(2)})`;
+}
+function mapaSVG(pts, alvo){
+  const f = g => corMusc(pts[g], alvo), neutro = 'var(--s1)', ln = 'var(--bd)';
+  const P = (d, g, extra) => `<path d="${d}" fill="${g ? f(g) : neutro}" stroke="${ln}" stroke-width="1" ${extra || ''}/>`;
+  const E = (cx, cy, rx, ry, g) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${g ? f(g) : neutro}" stroke="${ln}" stroke-width="1"/>`;
+  const base = o => `<g transform="translate(${o} 0)">${E(70, 16, 11, 12)}<rect x="65" y="26" width="10" height="9" rx="4" fill="${neutro}" stroke="${ln}"/>`;
+  const fim = '</g>';
+  const frente = base(0) + E(42, 42, 11, 9, 'ombros') + E(98, 42, 11, 9, 'ombros')
+    + `<rect x="47" y="38" width="23" height="22" rx="9" fill="${f('peito')}" stroke="${ln}"/><rect x="71" y="38" width="23" height="22" rx="9" fill="${f('peito')}" stroke="${ln}"/>`
+    + `<rect x="55" y="62" width="30" height="36" rx="9" fill="${f('abdomen')}" stroke="${ln}"/><path d="M55 74H85M55 86H85M70 62V98" stroke="${ln}" stroke-width="1" opacity=".7"/>`
+    + E(33, 64, 8, 15, 'biceps') + E(107, 64, 8, 15, 'biceps') + E(29, 93, 6.5, 14) + E(111, 93, 6.5, 14)
+    + `<rect x="54" y="98" width="32" height="12" rx="6" fill="${neutro}" stroke="${ln}"/>`
+    + E(58, 132, 12, 26, 'quadriceps') + E(82, 132, 12, 26, 'quadriceps') + E(56, 168, 8, 15, 'panturrilhas') + E(84, 168, 8, 15, 'panturrilhas') + fim;
+  const costas = base(150) + E(42, 42, 11, 9, 'ombros') + E(98, 42, 11, 9, 'ombros')
+    + P('M50 40 Q70 34 90 40 L86 86 Q70 92 54 86Z', 'costas') + E(33, 64, 8, 15, 'triceps') + E(107, 64, 8, 15, 'triceps') + E(29, 93, 6.5, 14) + E(111, 93, 6.5, 14)
+    + E(60, 102, 13, 11, 'gluteos') + E(80, 102, 13, 11, 'gluteos') + E(58, 134, 11, 22, 'posteriores') + E(82, 134, 11, 22, 'posteriores') + E(56, 168, 8, 15, 'panturrilhas') + E(84, 168, 8, 15, 'panturrilhas') + fim;
+  return `<svg viewBox="0 0 300 188" style="width:100%;max-width:340px;display:block;margin:0 auto" role="img" aria-label="Mapa muscular">${frente}${costas}<text x="70" y="186" text-anchor="middle" font-size="9" fill="var(--mut)">FRENTE</text><text x="220" y="186" text-anchor="middle" font-size="9" fill="var(--mut)">COSTAS</text></svg>`;
+}
+function renderizarMapa(){
+  const el = $('mapa-svg'); if(!el) return;
+  const dias = parseInt($('mapa-per').value, 10) || 7, alvo = dias === 7 ? 10 : 36, {pts, nao} = calcularMapa(dias);
+  el.innerHTML = mapaSVG(pts, alvo);
+  const ordem = Object.keys(GRUPOS).map(g => ({g, p:pts[g] || 0})).sort((a, b) => b.p - a.p);
+  const sem = ordem.filter(x => !x.p).map(x => GRUPOS[x.g]);
+  $('mapa-lista').innerHTML = ordem.filter(x => x.p).map(x => `<div class="hrow"><span>${GRUPOS[x.g]}</span><span class="mono">${fmt(x.p, 1)} séries</span></div>`).join('')
+    + (sem.length ? `<div class="t-sm" style="margin-top:8px">Sem treino neste período: <b style="color:var(--am)">${sem.join(', ')}</b></div>` : '<div class="t-sm" style="margin-top:8px;color:var(--gr)">✅ Todos os grupos foram trabalhados.</div>')
+    + (nao.length ? `<div class="t-sm" style="margin-top:6px">Não reconheci o músculo de: ${nao.map(esc).join(', ')}. Escolha em ✎ do exercício.</div>` : '');
+}
 function renderizarExercicios(){
   const lista = $('lista-exercicios');
   const exs = ficha[treinoAtual].exercicios;
-  if(!exs.length){ lista.innerHTML = '<div class="vazio">Nenhum exercício nesta ficha.<br>Toque em “+ Exercício”.</div>'; return; }
+  if(!exs.length){ lista.innerHTML = '<div class="vazio">Nenhum exercício nesta ficha.<br>Toque em “+ Exercício”.</div>'; renderizarSessao(); return; }
   const agora = Date.now();
-  lista.innerHTML = exs.map((ex, idx) => {
+  const cartao = (ex, idx) => {
     if(ex.modo === 'cardio') return renderCardio(ex, idx);
     if(ex.modo === 'alongamento') return renderAlongamento(ex, idx);
     const tipo = tipoSel[ex.id] || (ex.falha ? 'F' : 'T');
@@ -1055,7 +1279,9 @@ function renderizarExercicios(){
         <input type="number" inputmode="numeric" min="1" placeholder="reps" class="mono" id="reps-${ex.id}">
         <button class="ok" onclick="registrarSerie('${ex.id}')">✓ Salvar</button>
       </div></div>`;
-  }).join('');
+  };
+  lista.innerHTML = ordemExibida(treinoAtual).map(({ex, idx}) => decorarCard(ex, cartao(ex, idx))).join('');
+  renderizarSessao();
 }
 function preservar(id, fn){
   const pf = ['peso-','reps-','cmin-','cdist-','cvel-','cinc-'];
@@ -1096,16 +1322,23 @@ function registrarSerie(id){
   }
   iniciarTimer(tipo === 'W' ? 60 : ultimoTimer);
   renderizarExercicios(); popularSelect(id);
-  checarMetas(); agendarReagendar();
+  checarMetas(); checarNivel(); agendarReagendar();
 }
 function marcarTreinoConcluidoHoje(){
-  const kd = chave(Date.now());
+  const kd = chave(Date.now()), dd = diaEstado();
+  let durTxt = '';
+  if(dd.sess){
+    const dur = Date.now() - dd.sess.ini;
+    cfg.sessoes = [...(cfg.sessoes || []), {ts:dd.sess.ini, dur, letra:dd.sess.letra}].slice(-500);
+    durTxt = ' ⏱ ' + fmtDur(dur); dd.sess = null; dd.ordem = {}; salvarDia(); soltarWake();
+  }
   cfg.ultimo = {letra:treinoAtual, ts:Date.now()};
   if(!cfg.dias.includes(kd)) cfg.dias.push(kd);
   cfg.offDays = cfg.offDays.filter(x => x !== kd);
   salvarLS('gym_cfg_v4', cfg);
   atualizarAbas(); atualizarSubtitulo();
-  toast(`Treino ${treinoAtual} finalizado! 💪 Próximo: ${sugerido()}`);
+  toast(`Treino ${treinoAtual} finalizado!${durTxt} 💪 Próximo: ${sugerido()}`);
+  renderizarExercicios(); checarNivel();
   agendarReagendar();
 }
 // ---- modal exercício ----
@@ -1123,7 +1356,7 @@ function abrirModalExercicio(id){
   $('edit-id').value = ex ? ex.id : '';
   $('ex-nome').value = ex?.nome || ''; $('ex-num-series').value = ex?.numSeries || '';
   $('ex-reps-min').value = ex?.repsMin || ''; $('ex-reps-max').value = ex?.repsMax || '';
-  $('ex-ajuste').value = ex?.ajuste || ''; $('ex-explicacao').value = ex?.explicacao || '';
+  $('ex-ajuste').value = ex?.ajuste || ''; $('ex-explicacao').value = ex?.explicacao || ''; $('ex-grupo').value = ex?.grupo || '';
   $('ex-modo').value = ex ? (ex.modo === 'cardio' ? 'cardio' : ex.modo === 'alongamento' ? 'along' : (ex.falha ? 'falha' : 'forca')) : 'forca'; ajustarModalModo();
   abrirModal('modal-ex');
 }
@@ -1137,7 +1370,7 @@ function salvarExercicioFicha(){
   else if(modo === 'along'){ mx = mn = parseInt($('ex-reps-max').value,10) || 20; ns = ns || 1; }
   else { mn = parseInt($('ex-reps-min').value,10) || 8; mx = parseInt($('ex-reps-max').value,10) || 12; }
   if(mn > mx) [mn, mx] = [mx, mn];
-  const d = {nome, numSeries: modo === 'cardio' ? 1 : (ns || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), modo: modo === 'cardio' ? 'cardio' : (modo === 'along' ? 'alongamento' : undefined), falha: modo === 'falha' ? true : undefined};
+  const d = {nome, numSeries: modo === 'cardio' ? 1 : (ns || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), grupo:$('ex-grupo').value || undefined, modo: modo === 'cardio' ? 'cardio' : (modo === 'along' ? 'alongamento' : undefined), falha: modo === 'falha' ? true : undefined};
   const eid = $('edit-id').value, lista = ficha[treinoAtual].exercicios;
   if(eid) Object.assign(lista.find(e => e.id === eid), d); else lista.push({id:'ex_'+Date.now().toString(36), ...d});
   salvarLS('gym_ficha_v4', ficha); fecharModal('modal-ex'); renderizarExercicios(); popularSelect();
@@ -1458,7 +1691,7 @@ function salvarNomeRank(){ cfg.nome = $('freq-nome').value.trim().slice(0,30); s
 
 function renderizarFreq(){
   const st = diasSet(), hk = chave(Date.now()), pref = hk.slice(0,7), r = resumo();
-  atualizarResumoNotif();
+  atualizarResumoNotif(); renderizarNivel();
   $('fq-mes').textContent = r.dm; $('fq-seq').textContent = r.s; $('fq-total').textContent = r.t;
 
   const btnDom = $('btn-domingo'), lblDom = $('lbl-domingo-desc');
@@ -2066,7 +2299,7 @@ async function compartilharRelatorio(tipo){
   $('timer-display').textContent = fmtT(ultimoTimer);
   treinoAtual = sugerido();
   atualizarAbas(); renderizarExercicios(); popularSelect(); montarAjuda(); atualizarSubtitulo();
-  carregarFotos(); iniciarNotificacoes(); atualizarBackupAuto(); setTimeout(() => backupAutomatico(false), 4000);
+  pedirWake(); checarNivel(); carregarFotos(); iniciarNotificacoes(); atualizarBackupAuto(); setTimeout(() => backupAutomatico(false), 4000);
   document.addEventListener('visibilitychange', () => { if(!document.hidden) backupAutomatico(false); });
   window.addEventListener('resize', () => { if(abaAtual === 'evolucao') atualizarGrafico(); if(abaAtual === 'saude') renderizarSaude(); if(abaAtual === 'freq') renderizarFreq(); });
 })();
