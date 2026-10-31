@@ -34,7 +34,8 @@ header h1:before{content:"";width:10px;height:10px;border-radius:99px;background
 #header-subtitle{margin:2px 0 0;font-size:11px;font-weight:500;color:var(--bl)}
 .timer{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--line);border-radius:16px;padding:6px 10px}
 .timer small{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-weight:700}
-#timer-display{display:block;font-size:15px;font-weight:800;color:var(--green);text-align:right}
+#timer-display{display:block;font-size:15px;font-weight:800;color:var(--green);text-align:left;margin-top:2px}
+.timer>div:first-child{display:flex;flex-direction:column;align-items:flex-start}
 #timer-display.fim{color:var(--rose)}
 .tb{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .tb button{font-size:10px;font-weight:700;padding:3px 7px;border-radius:7px;background:var(--s1);border:1px solid var(--bd);color:var(--t2)}
@@ -51,6 +52,7 @@ main{padding:14px 14px 0}
 .abtn small{display:block;font-size:11px;font-weight:500;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .abtn.on{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(37,99,235,.3)}
 .hoje{font-size:9px;background:var(--gr);color:#022c22;padding:1px 6px;border-radius:99px;font-weight:800;float:right}
+.acoes .b.p{margin-left:auto}
 .acoes{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
 .b{padding:9px 12px;border-radius:12px;font-weight:700;font-size:12px;background:var(--s1);color:var(--t2)}
 .b.g{background:rgba(16,185,129,.18);color:var(--gr2);border:1px solid rgba(16,185,129,.35)}
@@ -80,7 +82,7 @@ main{padding:14px 14px 0}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--s2);padding:4px;border-radius:12px;border:1px solid var(--line);margin:8px 0 12px}
 .seg button{padding:8px;border-radius:9px;font-size:12px;font-weight:700;background:transparent;color:var(--mut)}
 .seg button.on{background:var(--blue);color:#fff}
-.chartbox{background:rgba(2,6,15,.7);border:1px solid var(--line);border-radius:14px;padding:6px}
+.chartbox{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:6px}
 canvas{width:100%;height:200px;display:block}
 .hrow{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;padding:7px 10px;background:var(--s2);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
 .vazio{text-align:center;color:var(--mut);font-size:12px;padding:20px 8px}
@@ -186,25 +188,25 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 <!-- ========== ABA TREINO ========== -->
 <main id="screen-treino">
   <div class="card">
-    <div class="row">
-      <b style="font-size:12px;color:var(--t2)">Escolha a ficha de hoje <button class="help" onclick="abrirAjuda('divisao_ab')">?</button></b>
-      <div style="display:flex;gap:8px">
-        <button class="link" onclick="abrirModalAnilhas()">🏋️ Anilhas</button>
-        <button class="link" onclick="abrirModalNomeTreino()">✏️ Renomear A/B</button>
+    <div class="row" style="margin-bottom:10px">
+      <b style="font-size:13px;color:var(--t2);white-space:nowrap">Ficha de hoje <button class="help" onclick="abrirAjuda('divisao_ab')">?</button></b>
+      <div style="display:flex;gap:6px">
+        <button class="mini" style="padding:6px 9px;font-size:11px" onclick="abrirModalAnilhas()">🏋️ Anilhas</button>
+        <button class="mini" style="padding:6px 9px;font-size:11px" onclick="abrirModalNomeTreino()">✏️ Nomes</button>
       </div>
     </div>
-    <div class="ab">
+    <div class="ab" style="margin-top:0">
       <button class="abtn" id="tab-A" onclick="selecionarTreino('A')"><span id="badge-hoje-A" class="hoje hidden">HOJE</span>TREINO A<small id="sub-tab-A"></small></button>
       <button class="abtn" id="tab-B" onclick="selecionarTreino('B')"><span id="badge-hoje-B" class="hoje hidden">HOJE</span>TREINO B<small id="sub-tab-B"></small></button>
     </div>
+    <div id="sess-card" style="margin-top:12px"></div>
     <div class="acoes">
-      <button class="b g" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar Treino <span id="lbl-btn-concluir">A</span></button>
+      <button class="b g" id="btn-fin" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar Treino <span id="lbl-btn-concluir">A</span></button>
       <button class="b p" onclick="abrirModalExercicio()">+ Exercício</button>
     </div>
   </div>
-  <div class="card" id="sess-card"></div>
   <div style="font-size:11px;color:var(--mut);margin:-4px 2px 12px">
-    Tipo de série: <span class="tag tW">W</span> aquec. · <span class="tag tT">T</span> trabalho · <span class="tag tF">F</span> falha
+    Tipo de série: <span class="tag tW">W</span> aquecimento · <span class="tag tT">T</span> trabalho · <span class="tag tF">F</span> falha
     <button class="help" onclick="abrirAjuda('series')">?</button>
   </div>
   <div id="lista-exercicios"></div>
@@ -216,7 +218,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div class="row" style="margin-bottom:6px"><b style="font-size:14px">🧍 Mapa muscular <button class="help" onclick="abrirAjuda('mapa')">?</button></b>
       <select id="mapa-per" style="width:auto" onchange="renderizarMapa()"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select></div>
     <div id="mapa-svg"></div>
-    <div class="t-sm" style="display:flex;align-items:center;gap:6px;justify-content:center;margin:2px 0 8px">menos <span style="display:inline-block;width:90px;height:8px;border-radius:9px;background:linear-gradient(90deg,hsl(40 90% 55%/.4),hsl(0 90% 55%))"></span> mais</div>
+    <div class="t-sm" style="display:flex;align-items:center;gap:8px;justify-content:center;margin:14px 0 16px">menos <span style="display:inline-block;width:90px;height:8px;border-radius:9px;background:linear-gradient(90deg,hsl(40 90% 55%/.4),hsl(0 90% 55%))"></span> mais</div>
     <div id="mapa-lista"></div>
   </div>
   <div class="card">
@@ -375,7 +377,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v5.8</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v5.9</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -1067,6 +1069,7 @@ function decorarCard(ex, html){
 function renderizarSessao(){
   const el = $('sess-card'); if(!el) return;
   const d = diaEstado();
+  const bf = $('btn-fin'); if(bf) bf.classList.toggle('hidden', !!d.sess);
   if(!d.sess){
     el.innerHTML = `<button class="b p" style="width:100%;padding:13px;font-size:14px" onclick="iniciarSessao()">▶ Iniciar treino ${treinoAtual}</button><div class="t-sm" style="margin-top:6px;text-align:center">Conta o tempo e mostra em qual exercício você está <button class="help" onclick="abrirAjuda('sessao')">?</button></div>`;
     return;
@@ -1079,7 +1082,7 @@ function renderizarSessao(){
     <div class="prog"><i style="width:${pct}%"></i></div>
     <div class="t-sm" style="margin-top:8px;font-size:12px;color:var(--t2)">${atual}</div>
     ${l !== treinoAtual ? `<div class="t-sm" style="margin-top:4px;color:var(--am)">Você está vendo o Treino ${treinoAtual}. <button class="link" onclick="selecionarTreino('${l}')">Voltar ao ${l}</button></div>` : ''}
-    <div class="acoes" style="margin-top:10px"><button class="b g" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar e salvar tempo</button><button class="link r" onclick="cancelarSessao()">Cancelar</button></div>`;
+    <div class="acoes" style="margin-top:10px;border-top:0;padding-top:0"><button class="b g" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar e salvar tempo</button><button class="link r" onclick="cancelarSessao()">Cancelar</button></div>`;
 }
 async function pedirWake(){ try{ if(navigator.wakeLock && diaEstado().sess && !wakeLock){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } }catch(e){} }
 function soltarWake(){ try{ if(wakeLock) wakeLock.release(); }catch(e){} wakeLock = null; }
@@ -1202,21 +1205,31 @@ function corMusc(p, alvo){
   return `hsl(${Math.round(40 - 40 * i)} 90% 55% / ${(0.4 + 0.6 * i).toFixed(2)})`;
 }
 function mapaSVG(pts, alvo){
-  const f = g => corMusc(pts[g], alvo), neutro = 'var(--s1)', ln = 'var(--bd)';
-  const P = (d, g, extra) => `<path d="${d}" fill="${g ? f(g) : neutro}" stroke="${ln}" stroke-width="1" ${extra || ''}/>`;
-  const E = (cx, cy, rx, ry, g) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${g ? f(g) : neutro}" stroke="${ln}" stroke-width="1"/>`;
-  const base = o => `<g transform="translate(${o} 0)">${E(70, 16, 11, 12)}<rect x="65" y="26" width="10" height="9" rx="4" fill="${neutro}" stroke="${ln}"/>`;
-  const fim = '</g>';
-  const frente = base(0) + E(42, 42, 11, 9, 'ombros') + E(98, 42, 11, 9, 'ombros')
-    + `<rect x="47" y="38" width="23" height="22" rx="9" fill="${f('peito')}" stroke="${ln}"/><rect x="71" y="38" width="23" height="22" rx="9" fill="${f('peito')}" stroke="${ln}"/>`
-    + `<rect x="55" y="62" width="30" height="36" rx="9" fill="${f('abdomen')}" stroke="${ln}"/><path d="M55 74H85M55 86H85M70 62V98" stroke="${ln}" stroke-width="1" opacity=".7"/>`
-    + E(33, 64, 8, 15, 'biceps') + E(107, 64, 8, 15, 'biceps') + E(29, 93, 6.5, 14) + E(111, 93, 6.5, 14)
-    + `<rect x="54" y="98" width="32" height="12" rx="6" fill="${neutro}" stroke="${ln}"/>`
-    + E(58, 132, 12, 26, 'quadriceps') + E(82, 132, 12, 26, 'quadriceps') + E(56, 168, 8, 15, 'panturrilhas') + E(84, 168, 8, 15, 'panturrilhas') + fim;
-  const costas = base(150) + E(42, 42, 11, 9, 'ombros') + E(98, 42, 11, 9, 'ombros')
-    + P('M50 40 Q70 34 90 40 L86 86 Q70 92 54 86Z', 'costas') + E(33, 64, 8, 15, 'triceps') + E(107, 64, 8, 15, 'triceps') + E(29, 93, 6.5, 14) + E(111, 93, 6.5, 14)
-    + E(60, 102, 13, 11, 'gluteos') + E(80, 102, 13, 11, 'gluteos') + E(58, 134, 11, 22, 'posteriores') + E(82, 134, 11, 22, 'posteriores') + E(56, 168, 8, 15, 'panturrilhas') + E(84, 168, 8, 15, 'panturrilhas') + fim;
-  return `<svg viewBox="0 0 300 188" style="width:100%;max-width:340px;display:block;margin:0 auto" role="img" aria-label="Mapa muscular">${frente}${costas}<text x="70" y="186" text-anchor="middle" font-size="9" fill="var(--mut)">FRENTE</text><text x="220" y="186" text-anchor="middle" font-size="9" fill="var(--mut)">COSTAS</text></svg>`;
+  const f = g => corMusc(pts[g], alvo), base = 'var(--s2)', ln = 'var(--bd)', zero = 'var(--s1)';
+  const att = (fill, extra) => `fill="${fill}" stroke="${ln}" stroke-width="1.1" stroke-linejoin="round" ${extra || ''}`;
+  const E = (cx, cy, rx, ry, g, rot) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" ${att(g ? f(g) : base, rot ? `transform="rotate(${rot} ${cx} ${cy})"` : '')}/>`;
+  const P = (d, g) => `<path d="${d}" ${att(g ? f(g) : base)}/>`;
+  const R = (x, y, w, h, rx, g) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" ${att(g ? f(g) : base)}/>`;
+  const comum = E(75, 18, 12, 14) + P('M69 30 L69 42 L81 42 L81 30Z')
+    + E(33, 71, 8.5, 21, null, 8) + E(117, 71, 8.5, 21, null, -8) + E(28, 107, 6.5, 19, null, 5) + E(122, 107, 6.5, 19, null, -5) + E(25, 129, 5, 6) + E(125, 129, 5, 6)
+    + P('M42 48 Q75 40 108 48 L103 100 Q101 114 96 122 L54 122 Q49 114 47 100Z')
+    + E(61, 157, 14, 33, null, 2) + E(89, 157, 14, 33, null, -2);
+  const frente = comum
+    + E(61, 157, 13, 31, 'quadriceps', 2) + E(89, 157, 13, 31, 'quadriceps', -2)
+    + E(60, 207, 8.5, 20, 'panturrilhas', 1) + E(90, 207, 8.5, 20, 'panturrilhas', -1)
+    + E(38, 53, 11, 10, 'ombros') + E(112, 53, 11, 10, 'ombros')
+    + P('M47 54 Q61 47 74 55 L74 75 Q61 83 48 73Z', 'peito') + P('M103 54 Q89 47 76 55 L76 75 Q89 83 102 73Z', 'peito')
+    + E(32, 70, 7.5, 15, 'biceps', 8) + E(118, 70, 7.5, 15, 'biceps', -8)
+    + [0, 1, 2].map(r => R(60, 80 + r * 13, 14, 11, 4, 'abdomen') + R(76, 80 + r * 13, 14, 11, 4, 'abdomen')).join('');
+  const costas = comum
+    + E(61, 157, 13, 31, 'posteriores', 2) + E(89, 157, 13, 31, 'posteriores', -2)
+    + E(60, 207, 8.5, 20, 'panturrilhas', 1) + E(90, 207, 8.5, 20, 'panturrilhas', -1)
+    + P('M48 52 Q75 43 102 52 L98 84 Q92 102 82 108 L68 108 Q58 102 52 84Z', 'costas') + `<path d="M75 46 V106" stroke="${ln}" stroke-width="1" opacity=".6"/>`
+    + E(38, 53, 11, 10, 'ombros') + E(112, 53, 11, 10, 'ombros')
+    + E(32, 71, 7.5, 16, 'triceps', 8) + E(118, 71, 7.5, 16, 'triceps', -8)
+    + E(62, 125, 14, 12, 'gluteos') + E(88, 125, 14, 12, 'gluteos');
+  const t = (x, txt) => `<text x="${x}" y="14" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1" fill="var(--mut)">${txt}</text>`;
+  return `<svg viewBox="0 0 340 266" style="width:100%;max-width:380px;display:block;margin:0 auto 6px" role="img" aria-label="Mapa muscular">${t(85, 'FRENTE')}${t(255, 'COSTAS')}<g transform="translate(10 30)">${frente}</g><g transform="translate(180 30)">${costas}</g></svg>`;
 }
 function renderizarMapa(){
   const el = $('mapa-svg'); if(!el) return;
@@ -1224,8 +1237,9 @@ function renderizarMapa(){
   el.innerHTML = mapaSVG(pts, alvo);
   const ordem = Object.keys(GRUPOS).map(g => ({g, p:pts[g] || 0})).sort((a, b) => b.p - a.p);
   const sem = ordem.filter(x => !x.p).map(x => GRUPOS[x.g]);
+  $('mapa-lista').style.marginTop = '4px';
   $('mapa-lista').innerHTML = ordem.filter(x => x.p).map(x => `<div class="hrow"><span>${GRUPOS[x.g]}</span><span class="mono">${fmt(x.p, 1)} séries</span></div>`).join('')
-    + (sem.length ? `<div class="t-sm" style="margin-top:8px">Sem treino neste período: <b style="color:var(--am)">${sem.join(', ')}</b></div>` : '<div class="t-sm" style="margin-top:8px;color:var(--gr)">✅ Todos os grupos foram trabalhados.</div>')
+    + (sem.length ? `<div class="t-sm" style="margin-top:14px;line-height:1.5">Sem treino neste período: <b style="color:var(--am)">${sem.join(', ')}</b></div>` : '<div class="t-sm" style="margin-top:8px;color:var(--gr)">✅ Todos os grupos foram trabalhados.</div>')
     + (nao.length ? `<div class="t-sm" style="margin-top:6px">Não reconheci o músculo de: ${nao.map(esc).join(', ')}. Escolha em ✎ do exercício.</div>` : '');
 }
 function renderizarExercicios(){
