@@ -121,6 +121,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 .aura{transform-origin:70px 82px;animation:pulso 2.6s ease-in-out infinite}
 @keyframes pulso{0%,100%{transform:scale(.97);opacity:.5}50%{transform:scale(1.03);opacity:1}}
 @media (prefers-reduced-motion:reduce){.aura{animation:none}}
+.opt{flex:1;padding:9px 0;border-radius:10px;background:var(--s2);border:1px solid var(--bd);font-size:18px;color:var(--t2)}
+.opt.on{background:var(--blue);border-color:transparent;color:#fff}
+.opt.txt{font-size:11.5px;font-weight:700}
+.agua-b{display:flex;align-items:flex-end;gap:5px;height:44px;margin-top:10px}
+.agua-b div{flex:1;background:var(--s1);border-radius:5px 5px 2px 2px;min-height:3px}
+.agua-b div.ok{background:var(--gr)}
+.agua-b div.az{background:var(--blue)}
 .card.atual{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
 .ocup{margin-top:10px;text-align:right}
 .ocup button{background:var(--s1);border:1px solid var(--bd);color:var(--t2);border-radius:10px;padding:6px 10px;font-size:11px;font-weight:700}
@@ -258,6 +265,10 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
       <div class="ind"><small>IMC</small><b id="saude-imc-valor" class="mono" style="color:var(--bl)">--</b><span id="saude-imc-status">Informe a altura</span></div>
       <div class="ind"><small>Cintura/Alt.</small><b id="saude-rca-valor" class="mono" style="color:var(--gr)">--</b><span id="saude-rca-status">Meça a cintura</span></div>
     </div>
+    <div class="g2" style="margin-top:8px">
+      <div class="ind"><small>Cintura/Quadril</small><b id="saude-rcq-valor" class="mono" style="color:var(--bl)">--</b><span id="saude-rcq-status">Meça cintura e quadril</span></div>
+      <div class="ind"><small>Tendência</small><b id="saude-tend-valor" class="mono" style="color:var(--am)">--</b><span id="saude-tend-status">Registre por 1 semana</span></div>
+    </div>
   </div>
 
   <div class="card">
@@ -320,6 +331,72 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   </div>
 
   <div class="card">
+    <b style="font-size:14px">📉 Tendência do peso <button class="help" onclick="abrirAjuda('tendencia')">?</button></b>
+    <div class="t-sm" style="margin:3px 0 8px"><span style="color:var(--gr)">● peso</span> &nbsp; <span style="color:var(--am)">● média de 7 dias</span></div>
+    <div class="chartbox"><canvas id="graficoTend"></canvas></div>
+    <div class="t-sm" id="tend-txt" style="margin-top:8px;text-align:center"></div>
+  </div>
+
+  <div class="card">
+    <b style="font-size:14px">🧬 Gordura e massa magra</b>
+    <div class="t-sm" style="margin:3px 0 8px"><span style="color:var(--am)">● % de gordura (esq.)</span> &nbsp; <span style="color:var(--gr)">● massa magra kg (dir.)</span></div>
+    <div class="chartbox"><canvas id="graficoBF"></canvas></div>
+    <div class="t-sm" style="margin-top:6px">Precisa de altura, cintura e pescoço em pelo menos duas avaliações.</div>
+  </div>
+
+  <div class="card">
+    <div class="row"><b style="font-size:14px">💧 Água de hoje <button class="help" onclick="abrirAjuda('agua')">?</button></b><span class="mono" id="agua-txt" style="font-weight:800">0 ml</span></div>
+    <div class="prog"><i id="agua-barra" style="width:0%"></i></div>
+    <div class="t-sm" id="agua-sub" style="margin-top:4px"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr) auto;gap:6px;margin-top:10px">
+      <button class="b" onclick="addAgua(150)">+150</button><button class="b" onclick="addAgua(250)">+250</button><button class="b" onclick="addAgua(500)">+500</button>
+      <button class="b" onclick="desfazerAgua()" aria-label="Desfazer">↩</button>
+    </div>
+    <div class="agua-b" id="agua-semana"></div>
+    <div class="t-sm" style="display:flex;justify-content:space-between;margin-top:4px"><span>últimos 7 dias</span><span>Meta (ml): <input type="number" inputmode="numeric" id="agua-meta" class="mono" style="width:80px;padding:4px 6px;display:inline-block" onchange="editarMetaAgua()"></span></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><b style="font-size:14px">🩺 Check-up de hoje <button class="help" onclick="abrirAjuda('checkup')">?</button></b><span class="t-sm" id="ck-status"></span></div>
+    <label class="l" style="margin-top:8px">Sono (horas dormidas)</label><input type="number" inputmode="decimal" step="0.5" id="ck-sono" class="mono" placeholder="Ex: 7.5">
+    <label class="l" style="margin-top:8px">Energia</label><div style="display:flex;gap:6px" id="ck-energia"></div>
+    <label class="l" style="margin-top:8px">Humor</label><div style="display:flex;gap:6px" id="ck-humor"></div>
+    <label class="l" style="margin-top:8px">Dor muscular ou articular</label><div style="display:flex;gap:6px" id="ck-dor"></div>
+    <select id="ck-regiao" class="hidden" style="margin-top:6px"><option value="">Onde? (opcional)</option><option>Pescoço</option><option>Ombros</option><option>Costas</option><option>Lombar</option><option>Peito</option><option>Braços</option><option>Punhos</option><option>Quadril</option><option>Coxas</option><option>Joelhos</option><option>Panturrilhas</option><option>Tornozelos</option></select>
+    <button class="b full" style="margin-top:10px" onclick="salvarCheckup()">💾 Salvar check-up</button>
+    <div class="chartbox" style="margin-top:12px"><canvas id="graficoCk"></canvas></div>
+    <div class="t-sm" style="margin:6px 0 0"><span style="color:var(--gr)">● sono (h, esq.)</span> &nbsp; <span style="color:var(--am)">● energia (1 a 5, dir.)</span></div>
+    <div class="t-sm" id="ck-insight" style="margin-top:6px;color:var(--t2)"></div>
+  </div>
+
+  <div class="card">
+    <b style="font-size:14px">❤️ Pressão e batimentos <button class="help" onclick="abrirAjuda('pressao')">?</button></b>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div><label class="l">Sistólica</label><input type="number" inputmode="numeric" id="vit-sis" class="mono" placeholder="120"></div>
+      <div><label class="l">Diastólica</label><input type="number" inputmode="numeric" id="vit-dia" class="mono" placeholder="80"></div>
+      <div><label class="l">FC repouso</label><input type="number" inputmode="numeric" id="vit-fc" class="mono" placeholder="bpm"></div>
+    </div>
+    <button class="b full" style="margin-top:10px" onclick="salvarVitais()">💾 Salvar medição</button>
+    <div class="t-sm" id="vit-status" style="margin-top:8px"></div>
+    <div class="chartbox" style="margin-top:8px"><canvas id="graficoVit"></canvas></div>
+    <div class="t-sm" style="margin:6px 0 0"><span style="color:var(--gr)">● FC repouso (bpm, esq.)</span> &nbsp; <span style="color:var(--am)">● sistólica (dir.)</span></div>
+    <div id="vit-lista" style="margin-top:8px"></div>
+    <p class="t-sm" style="margin:8px 0 0">Registro informativo. Não substitui avaliação médica.</p>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">🔔 Lembretes de saúde <button class="help" onclick="abrirAjuda('lembsaude')">?</button></b><button class="b p" onclick="abrirModalLS()">➕ Novo</button></div>
+    <div id="ls-lista"></div>
+    <p class="t-sm" style="margin:6px 0 0">Consultas, exames e suplementos. Lembretes de água e check-up diário ficam em Config → Lembretes.</p>
+  </div>
+
+  <div class="card">
+    <b style="font-size:14px">📄 Relatório de saúde</b>
+    <p class="t-sm" style="margin:3px 0 8px">Uma página com peso, medidas, gordura, pressão, check-up e fotos, para levar ao médico, nutricionista ou personal.</p>
+    <button class="b gold" style="width:100%;padding:11px" onclick="abrirRelatorioSaude()">Gerar relatório (imagem ou PDF)</button>
+  </div>
+
+  <div class="card">
     <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📋 Histórico de avaliações</b><button class="link r" onclick="apagarUltimaMedida()">Apagar última</button></div>
     <div id="lista-historico-saude"></div>
   </div>
@@ -377,7 +454,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v6.0</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v6.1</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -505,6 +582,26 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   <div class="acts"><button class="b p" onclick="fecharModal('modal-ajuda')">Entendi</button></div>
 </div></div>
 
+<!-- Modal lembrete de saúde -->
+<div id="modal-ls" class="modal"><div class="box">
+  <h3>🔔 Novo lembrete de saúde</h3>
+  <label>Tipo</label><select id="ls-tipo" onchange="ajustarLS()"><option value="suplemento">💊 Suplemento ou remédio</option><option value="consulta">🩺 Consulta</option><option value="exame">🧪 Exame</option></select>
+  <label>Nome</label><input type="text" id="ls-titulo" maxlength="60" placeholder="Ex: Creatina">
+  <div id="ls-data-box"><label>Data</label><input type="date" id="ls-data"></div>
+  <label>Horário</label><input type="time" id="ls-hora" value="08:00">
+  <div id="ls-dias-box"><label>Dias da semana</label><div style="display:flex;gap:6px" id="ls-dias"></div></div>
+  <p class="t-sm" id="ls-dica" style="margin:8px 0 0"></p>
+  <div class="acts"><button class="b" onclick="fecharModal('modal-ls')">Cancelar</button><button class="b p" onclick="salvarLS2()">Salvar</button></div>
+</div></div>
+
+<!-- Modal relatório de saúde -->
+<div id="modal-rels" class="modal" onclick="if(event.target===this)fecharModal('modal-rels')"><div class="box" style="text-align:center">
+  <h3>📄 Relatório de saúde</h3>
+  <canvas id="canvasRelS" class="hidden"></canvas>
+  <img id="imgRelS" alt="Relatório de saúde" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--bd);display:block">
+  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rels')">Fechar</button><button class="b gold" onclick="compartilharRelatorioSaude('img')">🖼️ Imagem</button><button class="b gold" onclick="compartilharRelatorioSaude('pdf')">📄 PDF</button></div>
+</div></div>
+
 <!-- Modal nível -->
 <div id="modal-nivel" class="modal" onclick="if(event.target===this)fecharModal('modal-nivel')"><div class="box" style="text-align:center;max-width:300px">
   <div id="nivelup-box"></div>
@@ -536,6 +633,18 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
       <div><label class="l">Dia</label><select id="nt-peso-dia"><option value="0">Domingo</option><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option></select></div>
     </div>
     <label class="l" style="margin-top:8px">Horário</label><input type="time" id="nt-peso-hora">
+  </div>
+  <div class="nt">
+    <div class="row"><div><b>💧 Beber água</b><div class="t-sm">Pausa quando a meta do dia é batida</div></div><button id="nt-agua" class="tgl off" onclick="tglNotif('agua')">Desligado</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
+      <div><label class="l">Das</label><input type="time" id="nt-agua-ini"></div>
+      <div><label class="l">Até</label><input type="time" id="nt-agua-fim"></div>
+      <div><label class="l">A cada</label><select id="nt-agua-cada"><option value="1">1 h</option><option value="2">2 h</option><option value="3">3 h</option></select></div>
+    </div>
+  </div>
+  <div class="nt">
+    <div class="row"><div><b>🩺 Check-up diário</b><div class="t-sm">Sono, energia, humor e dor</div></div><button id="nt-checkin" class="tgl off" onclick="tglNotif('checkin')">Desligado</button></div>
+    <label class="l" style="margin-top:10px">Horário</label><input type="time" id="nt-checkin-hora">
   </div>
   <div class="nt"><div class="row"><div><b>🏆 Recordes e metas</b><div class="t-sm">Avisa quando você bater um recorde ou meta</div></div><button id="nt-metas" class="tgl off" onclick="tglNotif('metas')">Desligado</button></div></div>
   <div class="g2" style="margin-top:12px">
@@ -604,6 +713,11 @@ const AJUDA = {
   sessao:{t:'▶ Treino em andamento',x:'Toque em Iniciar treino ao chegar na academia. O app conta o tempo total, mostra em qual exercício você está (por exemplo 4 de 11) e uma barra com o quanto do treino já foi feito. O exercício da vez fica com a borda colorida.\n\nMáquina ocupada: toque em 🔁 no card e o exercício vai para o fim da fila, só no dia de hoje. A ordem da sua ficha não muda.\n\nAo tocar em Finalizar treino, o tempo é salvo. Durante o treino a tela tenta ficar ligada.'},
   nivel:{t:'⭐ Nível e XP',x:'Tudo o que você faz rende XP:\n• Série de trabalho ou falha: 10 XP\n• Série de aquecimento: 2 XP\n• Cardio: 20 XP + 1 por minuto\n• Alongamento marcado: 3 XP\n• Recorde pessoal: +25 XP\n• Dia de treino: +30 XP\n• Treino iniciado e finalizado: +20 XP\n\nO nível sobe conforme o XP total, contando também o que você já treinou antes. O avatar muda de forma com o nível e ganha brilho com a sua sequência de dias seguidos.'},
   mapa:{t:'🧍 Mapa muscular',x:'Pinta o corpo conforme as séries válidas (trabalho e falha) do período. Quanto mais forte a cor, mais o músculo foi trabalhado; sem cor, ainda não treinou.\n\nO app descobre o músculo pelo nome do exercício (supino = peito, com ajuda de tríceps e ombro). Se algum exercício ficar no lugar errado ou não for reconhecido, toque em ✎ no card e escolha o Músculo principal.\n\nComo referência, cerca de 10 séries por músculo por semana já é um bom volume.'},
+  tendencia:{t:'📉 Tendência do peso',x:'O peso muda de um dia para o outro por água, comida e sono. A linha de média de 7 dias mostra o caminho real. O ritmo (kg por semana) vem das suas medições das últimas 4 semanas e precisa de pelo menos 3 registros em mais de 6 dias.\n\nPerdas ou ganhos muito rápidos, acima de 1 kg por semana, merecem conversa com um profissional de saúde.'},
+  agua:{t:'💧 Água',x:'Toque em +150, +250 ou +500 conforme o copo ou a garrafa. O botão ↩ desfaz o último toque. A meta padrão é 2500 ml e você muda no campo Meta. Para lembretes durante o dia, ligue Beber água em Config → Lembretes.'},
+  checkup:{t:'🩺 Check-up diário',x:'Em 10 segundos: horas de sono, energia, humor e dor. Depois de alguns dias, o app mostra se você tem mais energia nos dias em que dorme 7 horas ou mais. Dor com região anotada ajuda a lembrar o que poupar no treino.'},
+  pressao:{t:'❤️ Pressão e batimentos',x:'Meça sentado, em repouso, de preferência na mesma hora. FC de repouso é o batimento por minuto logo ao acordar, antes de levantar. Com o condicionamento, ela costuma cair com o tempo.\n\nAs faixas mostradas são só uma referência. Pressão alta ou sintomas devem ser avaliados por um médico.'},
+  lembsaude:{t:'🔔 Lembretes de saúde',x:'Crie lembretes de suplemento (nos dias e horário que escolher), de consulta e de exame. Consultas e exames avisam na véspera às 18h e no dia, no horário marcado. Precisa ligar as notificações em Config → Lembretes.'},
   along:{t:'🧘 Alongamento',x:'Alongamentos não têm kg nem repetições. Toque no quadrado para marcar como feito (um quadrado por série). Alongar sozinho não conta como dia de treino na Frequência.'},
   domingo:{t:'☀️ Domingos e Sequência (Streak)',x:'A maioria das academias fecha aos domingos. Quando a opção está em "Folga", o domingo é ignorado na cobrança: se você treinou no sábado e na segunda-feira, sua sequência continua intacta!\n\nE se você treinar em um domingo mesmo no modo Folga, ele ainda ganha +1 dia de bônus na sua sequência.\n\nSe você malha todo domingo obrigatoriamente, mude o botão para "Treino".'},
   ranking:{t:'🏆 Frequência, Calendário e Ranking',x:'Um dia conta como treinado quando você salva uma série válida ou toca em Finalizar Treino. Você também pode tocar diretamente em qualquer dia do calendário para marcar ou desmarcar presença!\n\nUse o botão "Card PNG (Stories)" para gerar uma imagem com seu resumo e recordes para postar no WhatsApp ou Instagram.'},
@@ -794,7 +908,9 @@ let cfg       = lerLS('gym_cfg_v4', {nomes:{...nomesPadrao}, altura:null, ultimo
 const NOTIF_PADRAO = {ativo:false, descanso:true, metas:true,
   treino:{ativo:true, dias:[1,3,5], hora:'18:00'},
   inativo:{ativo:true, dias:3, hora:'19:00'},
-  peso:{ativo:true, freq:7, dia:1, hora:'08:00'}};
+  peso:{ativo:true, freq:7, dia:1, hora:'08:00'},
+  agua:{ativo:false, ini:'08:00', fim:'20:00', cada:2},
+  checkin:{ativo:false, hora:'21:00'}};
 function normalizarCfg(){
   if(!cfg.nomes) cfg.nomes = {...nomesPadrao};
   if(!Array.isArray(cfg.dias)) cfg.dias = [];
@@ -803,8 +919,12 @@ function normalizarCfg(){
   if(!cfg.nome) cfg.nome = 'Wanderson';
   if(typeof cfg.treinaDomingo !== 'boolean') cfg.treinaDomingo = false;
   const n = cfg.notif || {}, N = NOTIF_PADRAO;
-  cfg.notif = {...N, ...n, treino:{...N.treino, ...(n.treino||{})}, inativo:{...N.inativo, ...(n.inativo||{})}, peso:{...N.peso, ...(n.peso||{})}};
+  cfg.notif = {...N, ...n, treino:{...N.treino, ...(n.treino||{})}, inativo:{...N.inativo, ...(n.inativo||{})}, peso:{...N.peso, ...(n.peso||{})}, agua:{...N.agua, ...(n.agua||{})}, checkin:{...N.checkin, ...(n.checkin||{})}};
   if(!Array.isArray(cfg.notif.treino.dias)) cfg.notif.treino.dias = [...N.treino.dias];
+  if(!Array.isArray(cfg.checkins)) cfg.checkins = [];
+  if(!Array.isArray(cfg.vitais)) cfg.vitais = [];
+  if(!Array.isArray(cfg.lembS)) cfg.lembS = [];
+  cfg.agua = {meta:(cfg.agua && cfg.agua.meta) || 2500, dias:(cfg.agua && cfg.agua.dias) || {}, ult:(cfg.agua && cfg.agua.ult) || null};
   const m = cfg.metas || {};
   cfg.metas = {peso: m.peso || null, bf: m.bf || null, cargas: Array.isArray(m.cargas) ? m.cargas : []};
 }
@@ -1572,6 +1692,219 @@ function apagarUltimaMedida(){
   if(!saude.length){ toast('Nada para apagar', 'neutro'); return; }
   saude.pop(); salvarLS('gym_saude_v4', saude); renderizarSaude(); toast('Última avaliação apagada', 'neutro');
 }
+const hojeK = () => chave(Date.now());
+const MEDIA = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+function tendenciaPeso(){
+  const lim = Date.now() - 28 * 864e5, p = saude.filter(x => x.ts >= lim);
+  if(p.length < 3 || p[p.length - 1].ts - p[0].ts < 6 * 864e5) return null;
+  const n = p.length, xs = p.map(x => (x.ts - p[0].ts) / 864e5), ys = p.map(x => x.peso), mx = MEDIA(xs), my = MEDIA(ys);
+  let nu = 0, de = 0; xs.forEach((x, i) => { nu += (x - mx) * (ys[i] - my); de += (x - mx) * (x - mx); });
+  return de ? nu / de * 7 : null;
+}
+function mediaMovel(arr){ return arr.map(p => { const w = arr.filter(q => q.ts <= p.ts && q.ts > p.ts - 7 * 864e5); return {ts:p.ts, v:MEDIA(w.map(q => q.peso))}; }); }
+function serieBF(){ return saude.filter(x => x.cintura && x.pescoco && cfg.altura).map(x => { const bf = calcNavyBF(x.cintura, x.pescoco, cfg.altura); return bf == null ? null : {ts:x.ts, bf, mm:x.peso * (1 - bf / 100)}; }).filter(Boolean); }
+const EMO = ['😫','😕','😐','🙂','😄'], DORES = ['Nenhuma','Leve','Média','Forte'];
+let ckTmp = {k:'', energia:0, humor:0, dor:0};
+function classPA(s, d){
+  if(s >= 140 || d >= 90) return {t:'Alta: procure um médico', c:'var(--ro)'};
+  if(s >= 130 || d >= 85) return {t:'Limítrofe: vale acompanhar', c:'var(--am)'};
+  if(s < 90 || d < 60) return {t:'Baixa: se tiver sintomas, procure um médico', c:'var(--am)'};
+  return {t:'Dentro do esperado', c:'var(--gr)'};
+}
+function renderizarSaudeExtra(){
+  // tiles
+  const comQ = [...saude].reverse().find(x => x.cintura && x.quadril);
+  if(comQ){ const v = comQ.cintura / comQ.quadril; $('saude-rcq-valor').textContent = fmt(v, 2); $('saude-rcq-status').textContent = 'Ref.: H < 0,90 • M < 0,85'; }
+  else { $('saude-rcq-valor').textContent = '--'; $('saude-rcq-status').textContent = 'Meça cintura e quadril'; }
+  const tp = tendenciaPeso();
+  $('saude-tend-valor').textContent = tp == null ? '--' : (tp > 0 ? '+' : '') + fmt(tp, 2);
+  $('saude-tend-status').textContent = tp == null ? 'Registre por 1 semana' : 'kg por semana';
+  // tendência
+  const pp = saude.slice(-30).map(x => ({ts:x.ts, v:x.peso})), mm = mediaMovel(saude.slice(-30));
+  if(pp.length < 2) vazioCanvas($('graficoTend'), 'Registre o peso em 2 dias ou mais'); else desenharLinhas($('graficoTend'), [{pts:pp, cor:COR('--gr'), lado:'l'}, {pts:mm, cor:COR('--am'), lado:'l'}]);
+  $('tend-txt').innerHTML = tp == null ? 'Faltam registros: mínimo de 3 pesagens em mais de 6 dias.' : `Ritmo das últimas 4 semanas: <b>${tp > 0 ? '+' : ''}${fmt(tp, 2)} kg por semana</b>${Math.abs(tp) > 1 ? '<br><span style="color:var(--am)">Variação acima de 1 kg por semana: vale conversar com um profissional.</span>' : ''}`;
+  // gordura e massa magra
+  const bs = serieBF().slice(-12);
+  if(bs.length < 2) vazioCanvas($('graficoBF'), 'Precisa de 2 avaliações com cintura e pescoço');
+  else desenharLinhas($('graficoBF'), [{pts:bs.map(x => ({ts:x.ts, v:x.bf})), cor:COR('--am'), lado:'l'}, {pts:bs.map(x => ({ts:x.ts, v:x.mm})), cor:COR('--gr'), lado:'r'}]);
+  renderizarAgua(); renderizarCheckup(); renderizarVitais(); renderizarLS();
+}
+
+// ---- água ----
+function aguaHoje(){ return (cfg.agua.dias[hojeK()] || 0); }
+function addAgua(ml){
+  const k = hojeK(), antes = aguaHoje();
+  cfg.agua.dias[k] = antes + ml; cfg.agua.ult = {k, ml};
+  Object.keys(cfg.agua.dias).filter(x => x < chave(Date.now() - 120 * 864e5)).forEach(x => delete cfg.agua.dias[x]);
+  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); agendarReagendar();
+  if(antes < cfg.agua.meta && aguaHoje() >= cfg.agua.meta) toast('💧 Meta de água do dia batida!', 'pr');
+}
+function desfazerAgua(){
+  const u = cfg.agua.ult; if(!u){ toast('Nada para desfazer', 'neutro'); return; }
+  cfg.agua.dias[u.k] = Math.max(0, (cfg.agua.dias[u.k] || 0) - u.ml); cfg.agua.ult = null;
+  salvarLS('gym_cfg_v4', cfg); renderizarAgua(); agendarReagendar();
+}
+function editarMetaAgua(){ const v = num('agua-meta'); if(v && v >= 500 && v <= 8000){ cfg.agua.meta = Math.round(v); salvarLS('gym_cfg_v4', cfg); agendarReagendar(); } renderizarAgua(); }
+function renderizarAgua(){
+  const meta = cfg.agua.meta || 2500, hoje = aguaHoje(), pct = Math.min(100, Math.round(hoje / meta * 100));
+  $('agua-txt').textContent = hoje + ' ml'; $('agua-barra').style.width = pct + '%';
+  $('agua-sub').textContent = hoje >= meta ? '✅ Meta batida! (' + meta + ' ml)' : 'Faltam ' + (meta - hoje) + ' ml para a meta de ' + meta + ' ml';
+  if(document.activeElement !== $('agua-meta')) $('agua-meta').value = meta;
+  const dias = Array.from({length:7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); return chave(d.getTime()); });
+  $('agua-semana').innerHTML = dias.map((k, i) => { const v = cfg.agua.dias[k] || 0, h = Math.max(3, Math.min(100, v / meta * 100)); return `<div class="${v >= meta ? 'ok' : (i === 6 ? 'az' : '')}" style="height:${h}%" title="${k}: ${v} ml"></div>`; }).join('');
+}
+
+// ---- check-up ----
+function renderizarCheckup(){
+  const k = hojeK(), ex = cfg.checkins.find(c => c.k === k);
+  if(ckTmp.k !== k){ ckTmp = {k, energia:ex ? ex.energia || 0 : 0, humor:ex ? ex.humor || 0 : 0, dor:ex ? ex.dor || 0 : 0, regiao:ex ? ex.regiao || '' : ''}; if(document.activeElement !== $('ck-sono')) $('ck-sono').value = ex && ex.sono != null ? ex.sono : ''; $('ck-regiao').value = ckTmp.regiao; }
+  $('ck-status').textContent = ex ? '✅ feito hoje' : 'pendente';
+  const grupo = (id, campo, rot) => { $(id).innerHTML = rot.map((r, i) => { const v = campo === 'dor' ? i : i + 1; return `<button class="opt${campo === 'dor' ? ' txt' : ''}${ckTmp[campo] === v && (campo === 'dor' ? (ex || ckTmp.tocouDor) : true) ? ' on' : ''}" onclick="ckSet('${campo}',${v})" aria-label="${campo} ${v}">${r}</button>`; }).join(''); };
+  grupo('ck-energia', 'energia', EMO); grupo('ck-humor', 'humor', EMO); grupo('ck-dor', 'dor', DORES);
+  $('ck-regiao').classList.toggle('hidden', !(ckTmp.dor > 0));
+  const lista = cfg.checkins.slice(-14), sono = lista.filter(c => c.sono != null).map(c => ({ts:new Date(c.k + 'T12:00:00').getTime(), v:c.sono})), en = lista.filter(c => c.energia).map(c => ({ts:new Date(c.k + 'T12:00:00').getTime(), v:c.energia}));
+  if(sono.length < 2 && en.length < 2) vazioCanvas($('graficoCk'), 'Faça o check-up por 2 dias ou mais');
+  else desenharLinhas($('graficoCk'), [...(sono.length > 1 ? [{pts:sono, cor:COR('--gr'), lado:'l'}] : []), ...(en.length > 1 ? [{pts:en, cor:COR('--am'), lado:'r'}] : [])]);
+  const par = cfg.checkins.filter(c => c.sono != null && c.energia), bom = par.filter(c => c.sono >= 7), ruim = par.filter(c => c.sono < 7);
+  $('ck-insight').innerHTML = (bom.length >= 3 && ruim.length >= 3) ? `Com 7 h de sono ou mais, sua energia média é <b>${fmt(MEDIA(bom.map(c => c.energia)), 1)}</b>; com menos, <b>${fmt(MEDIA(ruim.map(c => c.energia)), 1)}</b> (de 5).` : 'Depois de alguns dias, aparece aqui a relação entre o seu sono e a sua energia.';
+}
+function ckSet(campo, v){ ckTmp[campo] = v; if(campo === 'dor') ckTmp.tocouDor = true; renderizarCheckup(); }
+function salvarCheckup(){
+  const sono = num('ck-sono'), k = hojeK();
+  if(sono == null && !ckTmp.energia && !ckTmp.humor && !ckTmp.tocouDor && !cfg.checkins.some(c => c.k === k && c.dor)){ toast('Preencha ao menos um item', 'bad'); return; }
+  if(sono != null && (sono < 0 || sono > 24)){ toast('Horas de sono inválidas', 'bad'); return; }
+  const reg = {k, sono, energia:ckTmp.energia || null, humor:ckTmp.humor || null, dor:ckTmp.dor || 0, regiao:ckTmp.dor > 0 ? ($('ck-regiao').value || '') : ''};
+  cfg.checkins = cfg.checkins.filter(c => c.k !== k).concat([reg]).sort((a, b) => a.k < b.k ? -1 : 1).slice(-400);
+  salvarLS('gym_cfg_v4', cfg); ckTmp.tocouDor = false; renderizarCheckup(); agendarReagendar(); toast('Check-up salvo ✅');
+}
+
+// ---- pressão e batimentos ----
+function salvarVitais(){
+  const sis = num('vit-sis'), dia = num('vit-dia'), fc = num('vit-fc');
+  if(sis == null && dia == null && fc == null){ toast('Preencha pressão ou batimentos', 'bad'); return; }
+  if((sis == null) !== (dia == null)){ toast('Preencha sistólica e diastólica juntas', 'bad'); return; }
+  if(sis != null && (sis < 60 || sis > 260 || dia < 30 || dia > 160 || dia >= sis)){ toast('Valores de pressão improváveis. Confira.', 'bad'); return; }
+  if(fc != null && (fc < 25 || fc > 220)){ toast('Batimentos improváveis. Confira.', 'bad'); return; }
+  cfg.vitais.push({ts:Date.now(), sis, dia, fc}); cfg.vitais = cfg.vitais.slice(-400);
+  salvarLS('gym_cfg_v4', cfg); ['vit-sis', 'vit-dia', 'vit-fc'].forEach(i => $(i).value = ''); renderizarVitais(); toast('Medição salva ✅');
+}
+function apagarVital(ts){ cfg.vitais = cfg.vitais.filter(v => v.ts !== ts); salvarLS('gym_cfg_v4', cfg); renderizarVitais(); }
+function renderizarVitais(){
+  const v = cfg.vitais, ult = [...v].reverse().find(x => x.sis != null);
+  const st = $('vit-status'); if(ult){ const c = classPA(ult.sis, ult.dia); st.innerHTML = `Última pressão: <b>${ult.sis}/${ult.dia}</b> • <span style="color:${c.c}">${c.t}</span>`; } else st.textContent = 'Nenhuma medição ainda.';
+  const fc = v.filter(x => x.fc != null).slice(-14).map(x => ({ts:x.ts, v:x.fc})), pa = v.filter(x => x.sis != null).slice(-14).map(x => ({ts:x.ts, v:x.sis}));
+  if(fc.length < 2 && pa.length < 2) vazioCanvas($('graficoVit'), 'Registre 2 medições ou mais'); else desenharLinhas($('graficoVit'), [...(fc.length > 1 ? [{pts:fc, cor:COR('--gr'), lado:'l'}] : []), ...(pa.length > 1 ? [{pts:pa, cor:COR('--am'), lado:'r'}] : [])]);
+  $('vit-lista').innerHTML = [...v].reverse().slice(0, 5).map(x => `<div class="hrow"><span>${dataLonga(x.ts)}</span><span class="mono">${x.sis != null ? x.sis + '/' + x.dia : ''}${x.sis != null && x.fc != null ? ' • ' : ''}${x.fc != null ? x.fc + ' bpm' : ''} <button class="mini" style="color:var(--ro)" onclick="apagarVital(${x.ts})" aria-label="Apagar">✕</button></span></div>`).join('');
+}
+
+// ---- lembretes de saúde ----
+let lsDias = [];
+function abrirModalLS(){
+  $('ls-tipo').value = 'suplemento'; $('ls-titulo').value = ''; $('ls-data').value = ''; $('ls-hora').value = '08:00'; lsDias = [0, 1, 2, 3, 4, 5, 6]; ajustarLS(); abrirModal('modal-ls');
+}
+function ajustarLS(){
+  const t = $('ls-tipo').value, sup = t === 'suplemento';
+  $('ls-data-box').classList.toggle('hidden', sup); $('ls-dias-box').classList.toggle('hidden', !sup);
+  $('ls-titulo').placeholder = sup ? 'Ex: Creatina' : (t === 'consulta' ? 'Ex: Cardiologista' : 'Ex: Exame de sangue');
+  $('ls-dica').textContent = sup ? 'Avisa nos dias marcados, no horário escolhido.' : 'Avisa na véspera às 18h e no dia, no horário escolhido.';
+  $('ls-dias').innerHTML = DIAS_SEM.map((l, i) => `<button class="dchip${lsDias.includes(i) ? ' on' : ''}" onclick="lsTglDia(${i})">${l}</button>`).join('');
+}
+function lsTglDia(i){ const j = lsDias.indexOf(i); if(j >= 0) lsDias.splice(j, 1); else lsDias.push(i); ajustarLS(); }
+function salvarLS2(){
+  const tipo = $('ls-tipo').value, titulo = $('ls-titulo').value.trim() || ({suplemento:'Suplemento', consulta:'Consulta', exame:'Exame'}[tipo]), data = $('ls-data').value, hora = $('ls-hora').value || '08:00';
+  if(tipo !== 'suplemento' && !data){ toast('Escolha a data', 'bad'); return; }
+  if(tipo === 'suplemento' && !lsDias.length){ toast('Escolha ao menos um dia', 'bad'); return; }
+  cfg.lembS.push({id:'l' + Date.now(), tipo, titulo, data:tipo === 'suplemento' ? '' : data, hora, dias:tipo === 'suplemento' ? [...lsDias].sort() : []});
+  salvarLS('gym_cfg_v4', cfg); fecharModal('modal-ls'); renderizarLS(); agendarReagendar();
+  toast(cfg.notif.ativo ? 'Lembrete salvo ✅' : 'Salvo. Ligue as notificações em Config para receber os avisos.', cfg.notif.ativo ? undefined : 'neutro');
+}
+function removerLS(id){ cfg.lembS = cfg.lembS.filter(l => l.id !== id); salvarLS('gym_cfg_v4', cfg); renderizarLS(); agendarReagendar(); }
+function renderizarLS(){
+  const box = $('ls-lista'); if(!box) return;
+  const ic = {suplemento:'💊', consulta:'🩺', exame:'🧪'}, hoje = hojeK();
+  const L = [...cfg.lembS].sort((a, b) => (a.data || '9999') < (b.data || '9999') ? -1 : 1);
+  box.innerHTML = L.length ? L.map(l => {
+    const passou = l.data && l.data < hoje, det = l.tipo === 'suplemento' ? (l.dias.length === 7 ? 'todos os dias' : l.dias.map(i => DIAS_LONGO[i]).join('/')) + ' às ' + l.hora : dataLonga(new Date(l.data + 'T12:00:00').getTime()) + ' às ' + l.hora;
+    return `<div class="hrow" style="${passou ? 'opacity:.5' : ''}"><span>${ic[l.tipo]} <b>${esc(l.titulo)}</b><br><span class="t-sm">${det}${passou ? ' • já passou' : ''}</span></span><button class="mini" style="color:var(--ro)" onclick="removerLS('${l.id}')" aria-label="Remover">✕</button></div>`;
+  }).join('') : '<div class="vazio" style="padding:10px">Nenhum lembrete. Toque em Novo.</div>';
+}
+
+// ---- relatório de saúde ----
+function mediaDias(arr, campo, dias){ const lim = chave(Date.now() - dias * 864e5); return MEDIA(arr.filter(c => c.k >= lim && c[campo] != null && c[campo] !== 0).map(c => c[campo])); }
+async function desenharRelatorioSaude(cv){
+  const W = 1240, H = 1754; cv.width = W; cv.height = H; const c = cv.getContext('2d');
+  const SANS = 'system-ui,sans-serif', MONO = 'ui-monospace,monospace';
+  const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#0b1120'); g.addColorStop(.5, '#151f32'); g.addColorStop(1, '#060a12'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.strokeStyle = '#1e293b'; c.lineWidth = 6; c.strokeRect(36, 36, W - 72, H - 72);
+  const T = (txt, x, y, font, cor, al) => { c.font = font; c.fillStyle = cor; c.textAlign = al || 'left'; c.fillText(txt, x, y); };
+  const box = (x, y, w, h) => { c.fillStyle = '#0f172a'; c.strokeStyle = '#334155'; c.lineWidth = 3; c.beginPath(); c.roundRect(x, y, w, h, 28); c.fill(); c.stroke(); };
+  const cut = (t, n) => t.length > n ? t.slice(0, n - 1) + '…' : t;
+  const ult = saude[saude.length - 1], altura = cfg.altura, bfs = serieBF(), bf = bfs.length ? bfs[bfs.length - 1] : null, tp = tendenciaPeso();
+  T('● GYMTRACKER & SAÚDE', 80, 118, 'bold 28px ' + SANS, '#34d399');
+  T('Relatório de saúde', 80, 192, '800 64px ' + SANS, '#f8fafc');
+  T((cfg.nome || 'Wanderson') + ' • ' + dataLonga(Date.now()) + (altura ? ' • ' + fmt(altura) + ' cm' : ''), 80, 242, '600 30px ' + SANS, '#60a5fa');
+  const comQ = [...saude].reverse().find(x => x.cintura && x.quadril), comC = [...saude].reverse().find(x => x.cintura);
+  const tiles = [
+    {l:'PESO', v:ult ? fmt(ult.peso) + ' kg' : '--', s:tp == null ? 'sem tendência' : (tp > 0 ? '+' : '') + fmt(tp, 2) + ' kg/semana', c:'#34d399'},
+    {l:'IMC', v:(ult && altura) ? fmt(ult.peso / Math.pow(altura / 100, 2), 1) : '--', s:(ult && altura) ? classIMC(ult.peso / Math.pow(altura / 100, 2)).t : 'informe a altura', c:'#60a5fa'},
+    {l:'% DE GORDURA', v:bf ? fmt(bf.bf, 1) + '%' : '--', s:'método da Marinha dos EUA', c:'#fbbf24'},
+    {l:'MASSA MAGRA', v:bf ? fmt(bf.mm, 1) + ' kg' : '--', s:'estimada', c:'#34d399'},
+    {l:'CINTURA / ALTURA', v:(comC && altura) ? fmt(comC.cintura / altura, 2) : '--', s:(comC && altura) ? classRCA(comC.cintura / altura).t : 'meça a cintura', c:'#60a5fa'},
+    {l:'CINTURA / QUADRIL', v:comQ ? fmt(comQ.cintura / comQ.quadril, 2) : '--', s:'ref.: H < 0,90 • M < 0,85', c:'#fbbf24'}];
+  tiles.forEach((t, i) => { const x = 80 + (i % 3) * 370, y = 285 + Math.floor(i / 3) * 175; box(x, y, 340, 150); T(t.l, x + 26, y + 40, 'bold 20px ' + SANS, '#94a3b8'); T(t.v, x + 26, y + 100, '800 52px ' + MONO, t.c); T(cut(t.s, 30), x + 26, y + 134, '600 20px ' + SANS, '#cbd5e1'); });
+  // gráfico de peso
+  box(80, 650, 1080, 300); T('📉 PESO E MÉDIA DE 7 DIAS', 108, 696, 'bold 24px ' + SANS, '#fbbf24');
+  const pts = saude.slice(-30), mm = mediaMovel(pts);
+  if(pts.length >= 2){
+    const gx = 120, gy = 720, gw = 1000, gh = 190, vals = pts.map(p => p.peso).concat(mm.map(m => m.v)), mn = Math.min(...vals) - .5, mx = Math.max(...vals) + .5, t0 = pts[0].ts, t1 = pts[pts.length - 1].ts || t0 + 1;
+    const X = ts => gx + (ts - t0) / ((t1 - t0) || 1) * gw, Y = v => gy + gh - (v - mn) / (mx - mn) * gh;
+    c.strokeStyle = '#1e293b'; c.lineWidth = 2; for(let i = 0; i <= 3; i++){ const yy = gy + gh * i / 3; c.beginPath(); c.moveTo(gx, yy); c.lineTo(gx + gw, yy); c.stroke(); T(fmt(mx - (mx - mn) * i / 3, 1), gx - 8, yy + 6, '18px ' + MONO, '#64748b', 'right'); }
+    const linha = (arr, f, cor) => { c.strokeStyle = cor; c.lineWidth = 4; c.lineJoin = 'round'; c.beginPath(); arr.forEach((p, i) => { const x = X(p.ts), y = Y(f(p)); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); };
+    linha(pts, p => p.peso, '#34d399'); linha(mm, m => m.v, '#fbbf24');
+    pts.forEach(p => { c.fillStyle = '#34d399'; c.beginPath(); c.arc(X(p.ts), Y(p.peso), 6, 0, 7); c.fill(); });
+    T(dataCurta(t0), gx, gy + gh + 28, '18px ' + SANS, '#64748b'); T(dataCurta(t1), gx + gw, gy + gh + 28, '18px ' + SANS, '#64748b', 'right');
+  } else T('Registre o peso em 2 dias ou mais.', 108, 800, '600 24px ' + SANS, '#64748b');
+  // medidas
+  box(80, 980, 520, 340); T('📏 MEDIDAS (cm)', 108, 1026, 'bold 24px ' + SANS, '#fbbf24');
+  const rot = {cintura:'Cintura', pescoco:'Pescoço', braco:'Braço', peito:'Peito', quadril:'Quadril', coxa:'Coxa', panturrilha:'Panturrilha'};
+  let yy = 1072, qtd = 0;
+  Object.keys(rot).forEach(k => { const a = saude.filter(x => x[k]); if(!a.length) return; const p = a[0][k], u = a[a.length - 1][k], d = u - p; T(rot[k], 108, yy, '600 23px ' + SANS, '#cbd5e1'); T(a.length > 1 ? fmt(p) + ' → ' + fmt(u) + ' (' + (d > 0 ? '+' : '') + fmt(d) + ')' : fmt(u), 572, yy, 'bold 23px ' + MONO, '#f8fafc', 'right'); yy += 38; qtd++; });
+  if(!qtd) T('Sem medidas registradas.', 108, 1080, '600 22px ' + SANS, '#64748b');
+  // vitais, check-up e água
+  box(630, 980, 530, 340); T('❤️ PRESSÃO, SONO E ÁGUA', 658, 1026, 'bold 24px ' + SANS, '#fbbf24');
+  const v30 = cfg.vitais.filter(x => x.ts >= Date.now() - 30 * 864e5), pa = v30.filter(x => x.sis != null), fcs = v30.filter(x => x.fc != null).map(x => x.fc), lastPA = [...cfg.vitais].reverse().find(x => x.sis != null);
+  const ck = cfg.checkins, dores = ck.filter(x => x.k >= chave(Date.now() - 30 * 864e5)), aguaD = Object.keys(cfg.agua.dias).filter(k => k >= chave(Date.now() - 30 * 864e5)).map(k => cfg.agua.dias[k]);
+  const L = [
+    ['Pressão (média 30 d)', pa.length ? Math.round(MEDIA(pa.map(x => x.sis))) + '/' + Math.round(MEDIA(pa.map(x => x.dia))) : '--'],
+    ['Última aferição', lastPA ? lastPA.sis + '/' + lastPA.dia + ' (' + dataCurta(lastPA.ts) + ')' : '--'],
+    ['FC de repouso (média)', fcs.length ? Math.round(MEDIA(fcs)) + ' bpm' : '--'],
+    ['Sono médio', mediaDias(ck, 'sono', 30) != null ? fmt(mediaDias(ck, 'sono', 30), 1) + ' h' : '--'],
+    ['Energia / humor (de 5)', (mediaDias(ck, 'energia', 30) != null ? fmt(mediaDias(ck, 'energia', 30), 1) : '--') + ' / ' + (mediaDias(ck, 'humor', 30) != null ? fmt(mediaDias(ck, 'humor', 30), 1) : '--')],
+    ['Dias com dor (30 d)', dores.length ? dores.filter(x => x.dor > 0).length + ' de ' + dores.length : '--'],
+    ['Água média por dia', aguaD.length ? Math.round(MEDIA(aguaD)) + ' ml' : '--']];
+  yy = 1072; L.forEach(r => { T(r[0], 658, yy, '600 22px ' + SANS, '#cbd5e1'); T(r[1], 1132, yy, 'bold 23px ' + MONO, '#f8fafc', 'right'); yy += 38; });
+  // metas
+  const ms = listaMetas().slice(0, 3);
+  // fotos
+  box(80, 1350, 1080, 300); T('📸 FOTOS: PRIMEIRA E MAIS RECENTE', 108, 1394, 'bold 24px ' + SANS, '#fbbf24');
+  if(fotosCache.length >= 2){
+    const a = fotosCache[0], b = fotosCache[fotosCache.length - 1];
+    try{
+      const [ia, ib] = await Promise.all([carregarImg(a.img), carregarImg(b.img)]);
+      [[ia, 108, a], [ib, 620, b]].forEach(([im, x, f]) => { const bw = 200, bh = 230, y = 1410, r = Math.max(bw / im.width, bh / im.height), w = im.width * r, h = im.height * r; c.save(); c.beginPath(); c.roundRect(x, y, bw, bh, 18); c.clip(); c.drawImage(im, x + (bw - w) / 2, y + (bh - h) / 2, w, h); c.restore();
+        T(dataLonga(f.ts) + ' • ' + f.ang, x + 218, y + 90, 'bold 24px ' + SANS, '#f8fafc'); const pw = pesoNaData(f.ts); T(pw ? fmt(pw) + ' kg' : '', x + 218, y + 130, 'bold 28px ' + MONO, '#34d399'); });
+    }catch(e){}
+  } else T('Adicione ao menos duas fotos de progresso na aba Saúde.', 108, 1470, '600 24px ' + SANS, '#64748b');
+  T('Registro informativo feito pelo próprio usuário. Não substitui avaliação médica.', W / 2, 1696, '600 21px ' + SANS, '#94a3b8', 'center');
+}
+async function abrirRelatorioSaude(){ abrirModal('modal-rels'); const cv = $('canvasRelS'); await desenharRelatorioSaude(cv); $('imgRelS').src = cv.toDataURL('image/jpeg', 0.85); }
+async function compartilharRelatorioSaude(tipo){
+  const cv = $('canvasRelS'); await desenharRelatorioSaude(cv);
+  const jpg = cv.toDataURL('image/jpeg', 0.92).split(',')[1], base = 'gymtracker-saude-' + chave(Date.now());
+  if(tipo === 'pdf') await compartilharArquivoB64(u8ToB64(montarPDF(Uint8Array.from(atob(jpg), ch => ch.charCodeAt(0)), cv.width, cv.height)), base + '.pdf', 'application/pdf', 'Relatório de saúde', '📄 Meu relatório de saúde');
+  else await compartilharArquivoB64(jpg, base + '.jpg', 'image/jpeg', 'Relatório de saúde', '📄 Meu relatório de saúde');
+}
+
 function renderizarSaude(){
   if(cfg.altura && !$('med-altura').value) $('med-altura').value = cfg.altura;
   const ult = saude[saude.length-1], pen = saude[saude.length-2];
@@ -1610,7 +1943,7 @@ function renderizarSaude(){
     const extras = Object.keys(rot).filter(k => s[k]).map(k => `<span class="chip" style="color:var(--t2);border-color:var(--bd)">${rot[k]} ${fmt(s[k])}</span>`).join('');
     return `<div class="hrow" style="display:block"><div class="row"><b>${dataLonga(s.ts)}</b><span class="mono" style="color:var(--gr)">${fmt(s.peso)} kg</span></div>${extras ? `<div class="chips">${extras}</div>` : ''}</div>`;
   }).join('') : '<div class="vazio">Nenhuma avaliação registrada ainda.</div>';
-  renderizarMedidas(); renderizarMetas(); renderizarFotos();
+  renderizarMedidas(); renderizarMetas(); renderizarFotos(); renderizarSaudeExtra();
 }
 function renderizarMedidas(){
   const k = $('medida-sel').value, cv = $('graficoMedidas'), dif = $('medida-dif');
@@ -1952,7 +2285,7 @@ async function reagendarNotificacoes(){
   const L = LN(); if(!L) return;
   try{
     const pend = await L.getPending();
-    const ids = (pend.notifications || []).map(x => x.id).filter(i => i >= 1000 && i < 4000);
+    const ids = (pend.notifications || []).map(x => x.id).filter(i => (i >= 1000 && i < 4000) || (i >= 6000 && i < 7500));
     if(ids.length) await L.cancel({notifications: ids.map(id => ({id}))});
   }catch(e){}
   const n = cfg.notif;
@@ -1988,6 +2321,42 @@ async function reagendarNotificacoes(){
       lista.push({id:3000 + k, title:'⚖️ Hora de pesar e medir', body:'Registre o peso e as medidas na aba Saúde.', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
     }
   }
+  // Saúde: suplementos, consultas, exames
+  let cs = 0, cc = 0;
+  (cfg.lembS || []).forEach(l => {
+    if(l.tipo === 'suplemento'){
+      for(let d = 0; d < 14 && cs < 450; d++){
+        const dt = noDia(agora, d, l.hora);
+        if(dt <= agora || !(l.dias || []).includes(dt.getDay())) continue;
+        lista.push({id:6000 + cs++, title:'💊 ' + l.titulo, body:'Hora do seu lembrete.', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
+      }
+    } else if(l.data && cc < 50){
+      const base = new Date(l.data + 'T12:00:00'), dia = noDia(base, 0, l.hora), antes = noDia(base, -1, '18:00'), ic = l.tipo === 'exame' ? '🧪 ' : '🩺 ';
+      if(antes > agora) lista.push({id:6500 + cc, title:ic + 'Amanhã: ' + l.titulo, body:'Lembrete de ' + l.tipo + '.', schedule:{at:antes, allowWhileIdle:true}, channelId:'lembretes'});
+      if(dia > agora) lista.push({id:6600 + cc, title:ic + 'Hoje: ' + l.titulo, body:'Lembrete de ' + l.tipo + '.', schedule:{at:dia, allowWhileIdle:true}, channelId:'lembretes'});
+      cc++;
+    }
+  });
+  if(n.checkin.ativo){
+    const feitoHoje = (cfg.checkins || []).some(c => c.k === hojeK);
+    for(let d = 0; d < 7; d++){
+      const dt = noDia(agora, d, n.checkin.hora);
+      if(dt <= agora || (d === 0 && feitoHoje)) continue;
+      lista.push({id:6900 + d, title:'🩺 Check-up do dia', body:'Como foram o sono, a energia e o humor hoje?', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
+    }
+  }
+  if(n.agua.ativo){
+    const bateu = aguaHoje() >= (cfg.agua.meta || 2500), h1 = hhmm(n.agua.ini)[0], h2 = hhmm(n.agua.fim)[0];
+    let c = 0;
+    for(let d = 0; d < 3; d++){
+      if(d === 0 && bateu) continue;
+      for(let h = h1; h <= h2 && c < 100; h += (n.agua.cada || 2)){
+        const dt = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + d, h, 0, 0, 0);
+        if(dt <= agora) continue;
+        lista.push({id:7000 + c++, title:'💧 Hora de beber água', body:'Um copo agora ajuda a bater a meta do dia.', schedule:{at:dt, allowWhileIdle:true}, channelId:'lembretes'});
+      }
+    }
+  }
   if(lista.length) try{ await L.schedule({notifications: lista}); }catch(e){}
 }
 async function agendarDescanso(seg){
@@ -2015,13 +2384,16 @@ function atualizarResumoNotif(){
   if(n.treino.ativo && n.treino.dias.length) p.push('Treino ' + n.treino.dias.map(i => DIAS_LONGO[i]).join('/') + ' ' + n.treino.hora);
   if(n.inativo.ativo) p.push('Sem treinar ' + n.inativo.dias + 'd');
   if(n.peso.ativo) p.push('Pesagem ' + (n.peso.freq === 14 ? 'quinzenal' : 'semanal'));
+  if(n.agua.ativo) p.push('Água');
+  if(n.checkin.ativo) p.push('Check-up');
   if(n.descanso) p.push('Descanso');
   el.textContent = p.length ? p.join(' • ') : 'Ligadas, sem lembretes ativos';
 }
 function abrirModalNotif(){ notifTmp = JSON.parse(JSON.stringify(cfg.notif)); renderNotifModal(); abrirModal('modal-notif'); }
 function renderNotifModal(){
   const t = notifTmp, tg = (id, on) => { const b = $(id); b.textContent = on ? 'Ligado' : 'Desligado'; b.className = 'tgl ' + (on ? 'on' : 'off'); };
-  tg('nt-ativo', t.ativo); tg('nt-descanso', t.descanso); tg('nt-metas', t.metas); tg('nt-treino', t.treino.ativo); tg('nt-inativo', t.inativo.ativo); tg('nt-peso', t.peso.ativo);
+  tg('nt-ativo', t.ativo); tg('nt-descanso', t.descanso); tg('nt-metas', t.metas); tg('nt-treino', t.treino.ativo); tg('nt-inativo', t.inativo.ativo); tg('nt-peso', t.peso.ativo); tg('nt-agua', t.agua.ativo); tg('nt-checkin', t.checkin.ativo);
+  $('nt-agua-ini').value = t.agua.ini; $('nt-agua-fim').value = t.agua.fim; $('nt-agua-cada').value = String(t.agua.cada); $('nt-checkin-hora').value = t.checkin.hora;
   $('nt-dias').innerHTML = DIAS_SEM.map((l, i) => `<button class="dchip${t.treino.dias.includes(i) ? ' on' : ''}" onclick="tglDiaTreino(${i})">${l}</button>`).join('');
   $('nt-treino-hora').value = t.treino.hora; $('nt-inativo-dias').value = String(t.inativo.dias); $('nt-inativo-hora').value = t.inativo.hora;
   $('nt-peso-freq').value = String(t.peso.freq); $('nt-peso-dia').value = String(t.peso.dia); $('nt-peso-hora').value = t.peso.hora;
@@ -2029,7 +2401,7 @@ function renderNotifModal(){
 }
 async function tglNotif(k){
   const t = notifTmp;
-  if(k === 'treino' || k === 'inativo' || k === 'peso') t[k].ativo = !t[k].ativo; else t[k] = !t[k];
+  if(k === 'treino' || k === 'inativo' || k === 'peso' || k === 'agua' || k === 'checkin') t[k].ativo = !t[k].ativo; else t[k] = !t[k];
   if(k === 'ativo' && t.ativo){
     const L = LN();
     if(L){
@@ -2047,6 +2419,7 @@ function salvarNotif(){
   const t = notifTmp, pd = parseInt($('nt-peso-dia').value, 10);
   t.treino.hora = $('nt-treino-hora').value || '18:00';
   t.inativo.dias = parseInt($('nt-inativo-dias').value, 10) || 3; t.inativo.hora = $('nt-inativo-hora').value || '19:00';
+  t.agua.ini = $('nt-agua-ini').value || '08:00'; t.agua.fim = $('nt-agua-fim').value || '20:00'; t.agua.cada = parseInt($('nt-agua-cada').value, 10) || 2; t.checkin.hora = $('nt-checkin-hora').value || '21:00';
   t.peso.freq = parseInt($('nt-peso-freq').value, 10) || 7; t.peso.dia = isNaN(pd) ? 1 : pd; t.peso.hora = $('nt-peso-hora').value || '08:00';
   cfg.notif = t; salvarLS('gym_cfg_v4', cfg); fecharModal('modal-notif'); atualizarResumoNotif(); reagendarNotificacoes(); toast('Lembretes salvos ✅');
 }
