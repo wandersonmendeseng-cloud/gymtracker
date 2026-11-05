@@ -39,6 +39,7 @@ header h1:before{content:"";width:10px;height:10px;border-radius:99px;background
 #timer-display.fim{color:var(--rose)}
 .tb{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .tb button{font-size:10px;font-weight:700;padding:3px 7px;border-radius:7px;background:var(--s1);border:1px solid var(--bd);color:var(--t2)}
+.tb button.padrao{border-color:var(--blue);color:var(--blue)}
 .tb .x{background:rgba(76,5,25,.7);border-color:#9f1239;color:var(--ro)}
 .help{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:99px;background:rgba(59,130,246,.2);color:var(--bl);border:1px solid rgba(59,130,246,.4);font-size:11px;font-weight:800;padding:0;vertical-align:middle}
 main{padding:14px 14px 0}
@@ -104,7 +105,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
 .cal .h{font-size:10px;font-weight:700;color:var(--mut);padding:2px 0}
 .cal .d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:12px;background:var(--s2);border:1px solid var(--line);color:var(--mut);cursor:pointer;position:relative}
-.cal .d.dom{border-style:dashed;opacity:.85}
+.cal .d.dom{border-style:dashed;border-color:var(--am);background:rgba(245,158,11,.14);color:var(--am);opacity:1}
 .cal .d.on{background:var(--green);color:#fff;font-weight:800;border:0;opacity:1}
 .cal .d.hj{outline:2px solid var(--bl);outline-offset:1px}
 .cal .d.v{background:transparent;border-color:transparent;cursor:default}
@@ -164,6 +165,94 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 .dev-card{background:linear-gradient(135deg,var(--s2),var(--s1));border:1px solid var(--bd);border-radius:20px;padding:16px;text-align:center;margin-bottom:14px}
 .dev-badge{display:inline-block;background:rgba(52,211,153,.15);color:var(--gr);border:1px solid rgba(52,211,153,.35);padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
 #toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:70;display:none;color:#fff;font-size:12px;font-weight:700;padding:10px 16px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.45);width:max-content;max-width:90%;text-align:center}
+
+/* ===== Acabamento visual (v6.6) ===== */
+:root{--bg:#0a0e14;--card:#111821;--s2:#0d141c;--s1:#19222d;--line:#1b2531;--bd:#2a3644;--inp:#0b1118;--txt:#eaf0f6;--t2:#c2cbd6;--mut:#8896a7;--t3:#5e6c7c;--hdr:rgba(10,14,20,.88);--r1:16px;--r2:12px}
+html[data-tema=preto]{--bg:#000;--card:#0a0d12;--s2:#06080c;--s1:#131a22;--line:#171f29;--bd:#262f3b;--inp:#000;--hdr:rgba(0,0,0,.88)}
+html[data-tema=claro]{--bg:#f4f6f9;--card:#fff;--s2:#f6f8fa;--s1:#eceff3;--line:#e4e8ee;--bd:#cdd5df;--inp:#fff;--txt:#0e1621;--t2:#374454;--mut:#617083;--t3:#95a1b0;--hdr:rgba(255,255,255,.9)}
+body{font-size:14px;line-height:1.4;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.mono{font-family:inherit;font-variant-numeric:tabular-nums}
+main{padding:14px 16px 0}
+.t-sm{font-size:12px;line-height:1.45}
+/* cabeçalho */
+header{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px;row-gap:2px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+header>div:first-child{display:contents}
+header h1{grid-area:1/1;margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header h1:before{display:none}
+#header-subtitle{grid-area:2/1/3/3;margin:0;font-size:12px;font-weight:400;color:var(--mut)}
+#header-subtitle:empty{display:none}
+.timer{grid-area:1/2;gap:6px;padding:3px 3px 3px 12px;border-radius:99px;background:var(--s2);border:1px solid var(--line)}
+.timer small{display:none}
+#timer-display{font-size:15px;font-weight:600;color:var(--txt);margin:0;min-width:40px}
+#timer-display.fim{color:var(--ro)}
+.tb{display:flex;gap:2px}
+.tb button,html[data-tema=claro] .tb .x,.tb .x{font-size:11.5px;font-weight:600;padding:6px 8px;border-radius:99px;background:transparent;border:0;color:var(--mut)}
+.tb button.padrao{background:var(--s1);color:var(--txt)}
+/* cartões */
+.card{border-radius:var(--r1);box-shadow:none;padding:16px;margin-bottom:12px}
+html[data-tema=claro] .card{box-shadow:0 1px 2px rgba(14,22,33,.05)}
+.card b[style*="font-size:14px"],.card b[style*="font-size:15px"]{font-size:15px!important;font-weight:650;letter-spacing:-.01em}
+.help,html[data-tema=claro] .help{width:17px;height:17px;margin-left:4px;background:transparent;color:var(--t3);border:1px solid var(--bd);font-size:10px;font-weight:600}
+label.l,.regc label,.box label{font-size:12px;font-weight:500;color:var(--mut)!important;text-transform:none;letter-spacing:0}
+.box label{margin:12px 0 4px}
+/* botões e campos */
+.b{padding:10px 14px;border-radius:var(--r2);font-weight:600;font-size:13px;background:var(--s1);color:var(--txt);border:1px solid var(--bd)}
+.b.p,.b.full{background:var(--blue);color:#fff;border-color:transparent}
+.b.full{padding:13px}
+.b.g{background:transparent;color:var(--gr);border:1px solid color-mix(in srgb,var(--gr) 40%,transparent)}
+.b.gold{background:transparent;color:var(--am);border:1px solid color-mix(in srgb,var(--am) 45%,transparent)}
+.mini{background:transparent;border-radius:9px;color:var(--mut);padding:5px 8px}
+input,textarea,select{font-size:14px;border-radius:var(--r2);padding:11px 12px}
+input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+.ok{background:var(--blue);border-radius:var(--r2);font-size:13px;font-weight:600}
+.tipo{border-radius:var(--r2);font-size:14px}
+/* seletor de treino */
+.abtn{border-radius:var(--r2);padding:12px;font-weight:650;background:transparent}
+.abtn.on{background:color-mix(in srgb,var(--blue) 14%,var(--card));color:var(--txt);border-color:var(--blue);box-shadow:none}
+.hoje{background:transparent;color:var(--gr);border:1px solid color-mix(in srgb,var(--gr) 50%,transparent);padding:0 6px;font-weight:600}
+.card.atual{box-shadow:none}
+/* exercício */
+.ex-nome{font-size:15px;font-weight:650;letter-spacing:-.01em}
+.ajuste{background:transparent;border:0;border-left:2px solid var(--am);border-radius:0;padding:1px 0 1px 10px;color:var(--t2);font-size:12px}
+.overload{border-radius:var(--r2);font-size:12px}
+.guia{border-radius:var(--r2);background:var(--s2);font-size:12.5px}
+.chk{width:40px;height:40px;border-radius:11px;border:1.5px solid var(--bd);font-size:20px}
+.ocup button{background:transparent;border-radius:9px;color:var(--mut);font-weight:600}
+.prog{height:4px}
+.prog i{background:var(--blue)}
+/* tabelas e listas sem caixas dentro de caixas */
+.ind{background:var(--s2);border:0;border-radius:var(--r2);padding:12px;text-align:left}
+.ind small{font-size:12px;font-weight:500;text-transform:none;color:var(--mut)}
+.ind b{font-size:22px;font-weight:650;margin-top:4px;color:var(--txt)!important}
+.ind span{font-size:12px;font-weight:500;margin-top:2px}
+.hrow{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 2px;margin:0;font-size:13px}
+.rk{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;margin:0}
+.rk.eu{background:color-mix(in srgb,var(--blue) 10%,transparent);border-radius:var(--r2);border-bottom-color:transparent}
+details{background:transparent;border-radius:var(--r2);padding:12px}
+summary{font-weight:600;font-size:13px}
+.nt,.sw{background:transparent;border-radius:var(--r2)}
+.chartbox{border-radius:var(--r2);border:0;background:var(--s2)}
+.seg{border-radius:var(--r2)}
+.seg button{border-radius:9px}
+.seg button.on{background:var(--s1);color:var(--txt);box-shadow:0 0 0 1px var(--bd) inset}
+/* calendário */
+.cal{gap:5px}
+.cal .d{background:transparent;border:0;color:var(--t2);border-radius:11px}
+.cal .d.dom{background:color-mix(in srgb,var(--am) 13%,transparent);border:0;color:var(--am)}
+.cal .d.on{background:var(--green);color:#fff}
+.cal .d.hj{outline:1.5px solid var(--blue)}
+/* menu inferior */
+nav{padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav button{position:relative;border-radius:10px;font-size:10.5px;font-weight:600;gap:3px;padding:7px 2px}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{background:none;color:var(--blue)}
+nav button.on:before{content:"";position:absolute;top:-7px;left:32%;right:32%;height:2px;border-radius:2px;background:var(--blue)}
+/* janelas */
+.modal{background:rgba(4,7,11,.7)}
+.box{background:var(--card);border-radius:20px}
+.box h3{font-size:17px;letter-spacing:-.01em}
+.dev-card{border-radius:var(--r1);background:var(--card)}
+.tgl,.sw-btn{font-weight:600}
 </style>
 </head>
 <body>
@@ -171,18 +260,18 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <header>
   <div>
-    <h1 id="header-title">Meu Treino (A / B)</h1>
+    <h1 id="header-title">Treino</h1>
     <p id="header-subtitle"></p>
   </div>
   <div class="timer">
     <div>
       <small>Descanso <button class="help" onclick="abrirAjuda('timer')">?</button></small>
-      <span id="timer-display" class="mono">01:30</span>
+      <span id="timer-display" class="mono">00:30</span>
     </div>
     <div class="tb">
-      <button onclick="iniciarTimer(60)">60s</button>
-      <button onclick="iniciarTimer(90)">90s</button>
-      <button onclick="iniciarTimer(120)">120s</button>
+      <button onclick="timerBtn(30)" data-s="30">30s</button>
+      <button onclick="timerBtn(60)" data-s="60">60s</button>
+      <button onclick="timerBtn(90)" data-s="90">90s</button>
       <button class="x" onclick="pararTimer()">✕</button>
     </div>
   </div>
@@ -194,8 +283,8 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div class="row" style="margin-bottom:10px">
       <b style="font-size:13px;color:var(--t2);white-space:nowrap">Ficha de hoje <button class="help" onclick="abrirAjuda('divisao_ab')">?</button></b>
       <div style="display:flex;gap:6px">
-        <button class="mini" style="padding:6px 9px;font-size:11px" onclick="abrirModalAnilhas()">🏋️ Anilhas</button>
-        <button class="mini" style="padding:6px 9px;font-size:11px" onclick="abrirModalNomeTreino()">✏️ Nomes</button>
+        <button class="mini" style="padding:6px 9px;font-size:11px" onclick="abrirModalAnilhas()">Anilhas</button>
+        <button class="mini" style="padding:6px 9px;font-size:11px" onclick="abrirModalNomeTreino()">Nomes</button>
       </div>
     </div>
     <div class="ab" style="margin-top:0">
@@ -204,7 +293,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     </div>
     <div id="sess-card" style="margin-top:12px"></div>
     <div class="acoes">
-      <button class="b g" id="btn-fin" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar Treino <span id="lbl-btn-concluir">A</span></button>
+      <button class="b g" id="btn-fin" onclick="marcarTreinoConcluidoHoje()">Finalizar Treino <span id="lbl-btn-concluir">A</span></button>
       <button class="b p" onclick="abrirModalExercicio()">+ Exercício</button>
     </div>
   </div>
@@ -218,7 +307,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 <!-- ========== ABA EVOLUÇÃO ========== -->
 <main id="screen-evolucao" class="hidden">
   <div class="card">
-    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">🧍 Mapa muscular <button class="help" onclick="abrirAjuda('mapa')">?</button></b>
+    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">Mapa muscular <button class="help" onclick="abrirAjuda('mapa')">?</button></b>
       <select id="mapa-per" style="width:auto" onchange="renderizarMapa()"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select></div>
     <div id="mapa-svg"></div>
     <div class="t-sm" style="display:flex;align-items:center;gap:8px;justify-content:center;margin:14px 0 16px">menos <span style="display:inline-block;width:90px;height:8px;border-radius:9px;background:linear-gradient(90deg,hsl(40 90% 55%/.4),hsl(0 90% 55%))"></span> mais</div>
@@ -231,8 +320,8 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <select id="select-grafico" onchange="atualizarGrafico()"></select>
     <div class="row" style="margin-top:10px"><span class="t-sm" style="font-weight:700">O que mostrar?</span><button class="link" onclick="abrirAjuda('1rm')">O que é 1RM? ?</button></div>
     <div class="seg">
-      <button id="btn-metric-carga" class="on" onclick="mudarMetricaGrafico('carga')">🏋️ Peso usado (kg)</button>
-      <button id="btn-metric-rm" onclick="mudarMetricaGrafico('1rm')">⚡ Força 1RM</button>
+      <button id="btn-metric-carga" class="on" onclick="mudarMetricaGrafico('carga')">Peso usado (kg)</button>
+      <button id="btn-metric-rm" onclick="mudarMetricaGrafico('1rm')">Força 1RM</button>
     </div>
     <div class="chartbox"><canvas id="graficoProgressao"></canvas></div>
     <div id="recorde-ex" class="t-sm" style="margin-top:10px;line-height:1.5"></div>
@@ -240,7 +329,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   <div class="card">
     <div class="row" style="margin-bottom:10px">
       <div><b style="font-size:14px">Histórico de séries</b><div class="t-sm">Do exercício selecionado acima</div></div>
-      <button class="b" style="color:var(--ro)" onclick="limparUltimoRegistroExercicio()">🗑️ Apagar última</button>
+      <button class="b" style="color:var(--ro)" onclick="limparUltimoRegistroExercicio()">Apagar última</button>
     </div>
     <div id="tabela-historico-exercicio" style="max-height:300px;overflow-y:auto"></div>
   </div>
@@ -268,12 +357,12 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   </div>
 
   <div class="card">
-    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">🎯 Metas <button class="help" onclick="abrirAjuda('metas')">?</button></b><button class="b" onclick="abrirModalMetas()">✎ Editar</button></div>
+    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">Metas <button class="help" onclick="abrirAjuda('metas')">?</button></b><button class="b" onclick="abrirModalMetas()">✎ Editar</button></div>
     <div id="metas-lista"></div>
   </div>
 
   <div class="card">
-    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📏 Registrar peso e medidas</b><button class="link" onclick="abrirAjuda('como_medir')">Como medir? ?</button></div>
+    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">Registrar peso e medidas</b><button class="link" onclick="abrirAjuda('como_medir')">Como medir? ?</button></div>
     <div class="g2" style="margin-bottom:10px">
       <div><label class="l">Altura (cm)</label><input type="number" inputmode="decimal" id="med-altura" placeholder="175" class="mono"></div>
       <div><label class="l" style="color:var(--gr)">Peso (kg) *</label><input type="number" inputmode="decimal" step="0.1" id="med-peso" placeholder="78.5" class="mono"></div>
@@ -281,7 +370,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
       <div><label class="l" style="color:var(--am)">Pescoço (cm) [p/ %BF]</label><input type="number" inputmode="decimal" step="0.5" id="med-pescoco" placeholder="38" class="mono"></div>
     </div>
     <details>
-      <summary>💪 Braço, coxa, panturrilha, peito, quadril (opcional)</summary>
+      <summary>Braço, coxa, panturrilha, peito, quadril (opcional)</summary>
       <p class="t-sm" style="margin:8px 0 0">Meça os dois lados. Se medir só um, deixe o outro em branco ou toque em "igual".</p>
       <div class="g2" style="margin-top:8px">
         <div><label class="l">Braço esquerdo (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-bracoE" class="mono"></div>
@@ -303,28 +392,28 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
         <div><label class="l">Quadril (cm)</label><input type="number" inputmode="decimal" step="0.5" id="med-quadril" class="mono"></div>
       </div>
     </details>
-    <button class="b full" onclick="salvarMedidasCorporais()">💾 Salvar peso e medidas de hoje</button>
+    <button class="b full" onclick="salvarMedidasCorporais()">Salvar peso e medidas de hoje</button>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">📉 Curva de peso &amp; cintura</b>
+    <b style="font-size:14px">Curva de peso &amp; cintura</b>
     <div class="t-sm" style="margin:3px 0 8px"><span style="color:var(--gr)">● peso (kg, eixo esq.)</span> &nbsp; <span style="color:var(--am)">● cintura (cm, eixo dir.)</span></div>
     <div class="chartbox"><canvas id="graficoSaude"></canvas></div>
   </div>
 
   <div class="card">
-    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">📐 Medidas ao longo do tempo</b>
+    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">Medidas ao longo do tempo</b>
       <select id="medida-sel" style="width:auto" onchange="renderizarMedidas()"><option value="cintura">Cintura</option><option value="braco">Braço (média)</option><option value="bracoD">Braço direito</option><option value="bracoE">Braço esquerdo</option><option value="peito">Peito</option><option value="quadril">Quadril</option><option value="coxa">Coxa (média)</option><option value="coxaD">Coxa direita</option><option value="coxaE">Coxa esquerda</option><option value="panturrilha">Panturrilha (média)</option><option value="panturrilhaD">Panturrilha direita</option><option value="panturrilhaE">Panturrilha esquerda</option><option value="pescoco">Pescoço</option></select></div>
     <div class="chartbox"><canvas id="graficoMedidas"></canvas></div>
     <div class="t-sm" id="medida-dif" style="margin-top:6px;text-align:center"></div>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">📸 Fotos de progresso <button class="help" onclick="abrirAjuda('fotos')">?</button></b>
+    <b style="font-size:14px">Fotos de progresso <button class="help" onclick="abrirAjuda('fotos')">?</button></b>
     <p class="t-sm" style="margin:4px 0 10px">As fotos ficam neste aparelho e entram no backup exportado.</p>
     <div class="g2">
       <select id="foto-ang"><option>Frente</option><option>Lado</option><option>Costas</option></select>
-      <button class="b p" onclick="$('foto-arq').click()">➕ Adicionar foto</button>
+      <button class="b p" onclick="$('foto-arq').click()">Adicionar foto</button>
     </div>
     <input type="file" id="foto-arq" accept="image/*" style="display:none" onchange="adicionarFoto(event)">
     <div class="fgrid" id="fotos-grid"></div>
@@ -335,26 +424,26 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
       </div>
       <div class="fcomp" id="foto-comp"></div>
       <div class="t-sm" id="foto-dif" style="margin-top:8px;text-align:center"></div>
-      <button class="b gold" style="width:100%;margin-top:10px;padding:11px" onclick="compartilharComparacao()">📤 Compartilhar comparação</button>
+      <button class="b gold" style="width:100%;margin-top:10px;padding:11px" onclick="compartilharComparacao()">Compartilhar comparação</button>
     </div>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">📉 Tendência do peso <button class="help" onclick="abrirAjuda('tendencia')">?</button></b>
+    <b style="font-size:14px">Tendência do peso <button class="help" onclick="abrirAjuda('tendencia')">?</button></b>
     <div class="t-sm" style="margin:3px 0 8px"><span style="color:var(--gr)">● peso</span> &nbsp; <span style="color:var(--am)">● média de 7 dias</span></div>
     <div class="chartbox"><canvas id="graficoTend"></canvas></div>
     <div class="t-sm" id="tend-txt" style="margin-top:8px;text-align:center"></div>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">🧬 Gordura e massa magra</b>
+    <b style="font-size:14px">Gordura e massa magra</b>
     <div class="t-sm" style="margin:3px 0 8px"><span style="color:var(--am)">● % de gordura (esq.)</span> &nbsp; <span style="color:var(--gr)">● massa magra kg (dir.)</span></div>
     <div class="chartbox"><canvas id="graficoBF"></canvas></div>
     <div class="t-sm" style="margin-top:6px">Precisa de altura, cintura e pescoço em pelo menos duas avaliações.</div>
   </div>
 
   <div class="card">
-    <div class="row"><b style="font-size:14px">💧 Água de hoje <button class="help" onclick="abrirAjuda('agua')">?</button></b><span class="mono" id="agua-txt" style="font-weight:800">0 ml</span></div>
+    <div class="row"><b style="font-size:14px">Água de hoje <button class="help" onclick="abrirAjuda('agua')">?</button></b><span class="mono" id="agua-txt" style="font-weight:800">0 ml</span></div>
     <div class="prog"><i id="agua-barra" style="width:0%"></i></div>
     <div class="t-sm" id="agua-sub" style="margin-top:4px"></div>
     <div id="agua-atalhos" style="display:grid;grid-template-columns:repeat(3,1fr) auto;gap:6px;margin-top:10px"></div>
@@ -364,7 +453,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="agua-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"></div>
     <div class="t-sm" id="agua-insight" style="margin-top:8px;color:var(--t2)"></div>
     <details style="margin-top:8px">
-      <summary>✏️ Ajustar um dia e atalhos</summary>
+      <summary>Ajustar um dia e atalhos</summary>
       <p class="t-sm" style="margin:8px 0 4px">Esqueceu de anotar? Escolha o dia e digite o total bebido (0 apaga o dia).</p>
       <div class="g2"><div><label class="l">Dia</label><input type="date" id="agua-ed-dia" onchange="carregarDiaAgua()"></div><div><label class="l">Total (ml)</label><input type="number" inputmode="numeric" id="agua-ed-ml" class="mono"></div></div>
       <button class="b p" style="width:100%;margin-top:8px" onclick="salvarDiaAgua()">Salvar dia</button>
@@ -375,26 +464,26 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   </div>
 
   <div class="card">
-    <div class="row"><b style="font-size:14px">🩺 Check-up de hoje <button class="help" onclick="abrirAjuda('checkup')">?</button></b><span class="t-sm" id="ck-status"></span></div>
+    <div class="row"><b style="font-size:14px">Check-up de hoje <button class="help" onclick="abrirAjuda('checkup')">?</button></b><span class="t-sm" id="ck-status"></span></div>
     <label class="l" style="margin-top:8px">Sono (horas dormidas)</label><input type="number" inputmode="decimal" step="0.5" id="ck-sono" class="mono" placeholder="Ex: 7.5">
     <label class="l" style="margin-top:8px">Energia</label><div style="display:flex;gap:6px" id="ck-energia"></div>
     <label class="l" style="margin-top:8px">Humor</label><div style="display:flex;gap:6px" id="ck-humor"></div>
     <label class="l" style="margin-top:8px">Dor muscular ou articular</label><div style="display:flex;gap:6px" id="ck-dor"></div>
     <select id="ck-regiao" class="hidden" style="margin-top:6px"><option value="">Onde? (opcional)</option><option>Pescoço</option><option>Ombros</option><option>Costas</option><option>Lombar</option><option>Peito</option><option>Braços</option><option>Punhos</option><option>Quadril</option><option>Coxas</option><option>Joelhos</option><option>Panturrilhas</option><option>Tornozelos</option></select>
-    <button class="b full" style="margin-top:10px" onclick="salvarCheckup()">💾 Salvar check-up</button>
+    <button class="b full" style="margin-top:10px" onclick="salvarCheckup()">Salvar check-up</button>
     <div class="chartbox" style="margin-top:12px"><canvas id="graficoCk"></canvas></div>
     <div class="t-sm" style="margin:6px 0 0"><span style="color:var(--gr)">● sono (h, esq.)</span> &nbsp; <span style="color:var(--am)">● energia (1 a 5, dir.)</span></div>
     <div class="t-sm" id="ck-insight" style="margin-top:6px;color:var(--t2)"></div>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">❤️ Pressão e batimentos <button class="help" onclick="abrirAjuda('pressao')">?</button></b>
+    <b style="font-size:14px">Pressão e batimentos <button class="help" onclick="abrirAjuda('pressao')">?</button></b>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
       <div><label class="l">Sistólica</label><input type="number" inputmode="numeric" id="vit-sis" class="mono" placeholder="120"></div>
       <div><label class="l">Diastólica</label><input type="number" inputmode="numeric" id="vit-dia" class="mono" placeholder="80"></div>
       <div><label class="l">FC repouso</label><input type="number" inputmode="numeric" id="vit-fc" class="mono" placeholder="bpm"></div>
     </div>
-    <button class="b full" style="margin-top:10px" onclick="salvarVitais()">💾 Salvar medição</button>
+    <button class="b full" style="margin-top:10px" onclick="salvarVitais()">Salvar medição</button>
     <div class="t-sm" id="vit-status" style="margin-top:8px"></div>
     <div class="chartbox" style="margin-top:8px"><canvas id="graficoVit"></canvas></div>
     <div class="t-sm" style="margin:6px 0 0"><span style="color:var(--gr)">● FC repouso (bpm, esq.)</span> &nbsp; <span style="color:var(--am)">● sistólica (dir.)</span></div>
@@ -403,19 +492,19 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   </div>
 
   <div class="card">
-    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">🔔 Lembretes de saúde <button class="help" onclick="abrirAjuda('lembsaude')">?</button></b><button class="b p" onclick="abrirModalLS()">➕ Novo</button></div>
+    <div class="row" style="margin-bottom:6px"><b style="font-size:14px">Lembretes de saúde <button class="help" onclick="abrirAjuda('lembsaude')">?</button></b><button class="b p" onclick="abrirModalLS()">Novo</button></div>
     <div id="ls-lista"></div>
     <p class="t-sm" style="margin:6px 0 0">Consultas, exames e suplementos. Lembretes de água e check-up diário ficam em Config → Lembretes.</p>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">📄 Relatório de saúde</b>
+    <b style="font-size:14px">Relatório de saúde</b>
     <p class="t-sm" style="margin:3px 0 8px">Uma página com peso, medidas, gordura, pressão, check-up e fotos, para levar ao médico, nutricionista ou personal.</p>
     <button class="b gold" style="width:100%;padding:11px" onclick="abrirRelatorioSaude()">Gerar relatório (imagem ou PDF)</button>
   </div>
 
   <div class="card">
-    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">📋 Histórico de avaliações</b><button class="link r" onclick="apagarUltimaMedida()">Apagar última</button></div>
+    <div class="row" style="margin-bottom:10px"><b style="font-size:14px">Histórico de avaliações</b><button class="link r" onclick="apagarUltimaMedida()">Apagar última</button></div>
     <div id="lista-historico-saude"></div>
   </div>
 </main>
@@ -423,13 +512,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 <!-- ========== ABA CONFIG ========== -->
 <main id="screen-config" class="hidden">
   <div class="card">
-    <b style="font-size:14px">🎨 Aparência</b>
+    <b style="font-size:14px">Aparência</b>
     <label class="l" style="margin-top:10px">Tema</label>
     <div class="seg" id="seg-tema">
-      <button data-v="auto" onclick="escolherTema('auto')">🌓 Auto</button>
-      <button data-v="escuro" onclick="escolherTema('escuro')">🌙 Escuro</button>
-      <button data-v="preto" onclick="escolherTema('preto')">⚫ Preto</button>
-      <button data-v="claro" onclick="escolherTema('claro')">☀️ Claro</button>
+      <button data-v="auto" onclick="escolherTema('auto')">Auto</button>
+      <button data-v="escuro" onclick="escolherTema('escuro')">Escuro</button>
+      <button data-v="preto" onclick="escolherTema('preto')">Preto</button>
+      <button data-v="claro" onclick="escolherTema('claro')">Claro</button>
     </div>
     <p class="t-sm" style="margin:6px 0 0">Auto segue o tema do celular. Preto economiza bateria em telas AMOLED.</p>
     <label class="l" style="margin-top:12px">Cor de destaque</label>
@@ -444,20 +533,20 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
   <div class="card">
     <div class="row">
-      <div style="min-width:0"><b style="font-size:14px">🔔 Lembretes e notificações <button class="help" onclick="abrirAjuda('lembretes')">?</button></b><div class="t-sm" id="notif-resumo" style="margin-top:2px">Desligadas</div></div>
+      <div style="min-width:0"><b style="font-size:14px">Lembretes e notificações <button class="help" onclick="abrirAjuda('lembretes')">?</button></b><div class="t-sm" id="notif-resumo" style="margin-top:2px">Desligadas</div></div>
       <button class="b p" onclick="abrirModalNotif()">Configurar</button>
     </div>
   </div>
 
   <div class="card">
-    <b style="font-size:14px">💾 Backup dos dados</b>
+    <b style="font-size:14px">Backup dos dados</b>
     <p class="t-sm" style="margin:3px 0 10px">Seus dados ficam salvos 100% offline neste aparelho. Exporte uma cópia de segurança quando quiser.</p>
     <div style="display:flex;gap:8px">
-      <button class="b g" style="flex:1" onclick="exportarDados()">📤 Exportar Backup</button>
-      <button class="b p" style="flex:1" onclick="document.getElementById('arq-import').click()">📥 Importar Backup</button>
+      <button class="b g" style="flex:1" onclick="exportarDados()">Exportar Backup</button>
+      <button class="b p" style="flex:1" onclick="document.getElementById('arq-import').click()">Importar Backup</button>
       <input type="file" id="arq-import" accept="application/json" style="display:none" onchange="importarDados(event)">
     </div>
-    <div class="nt"><div class="row"><div style="min-width:0"><b>🗓 Backup automático semanal</b><div class="t-sm" id="bkp-auto-txt"></div></div><button id="bkp-auto-btn" class="tgl on" onclick="tglBackupAuto()">Ligado</button></div>
+    <div class="nt"><div class="row"><div style="min-width:0"><b>Backup automático semanal</b><div class="t-sm" id="bkp-auto-txt"></div></div><button id="bkp-auto-btn" class="tgl on" onclick="tglBackupAuto()">Ligado</button></div>
       <button class="b" style="width:100%;margin-top:8px" onclick="backupAutomatico(true)">Fazer backup agora</button>
     </div>
     <button class="b" style="width:100%;margin-top:8px" onclick="pedirRestaurarFicha()">↺ Restaurar minha ficha padrão (A/B)</button>
@@ -472,7 +561,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <div id="lista-ajuda"></div>
   </div>
   <div class="dev-card">
-    <span class="dev-badge">GymTracker &amp; Saúde v6.4</span>
+    <span class="dev-badge">GymTracker &amp; Saúde v6.6</span>
     <div style="font-size:15px;font-weight:800;color:var(--txt)">Desenvolvido por Wanderson Mendes dos Santos</div>
     <p class="t-sm" style="margin:6px 0 0;line-height:1.45">Aplicativo de monitoramento de cargas, periodização A/B, análise de 1RM (Epley) e biometria corporal.<br>100% Offline • Privacidade Total</p>
   </div>
@@ -499,36 +588,36 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   <div class="card">
     <div class="row" style="margin-bottom:10px"><button class="b" onclick="mudarMesCal(-1)">‹</button><b id="cal-titulo"></b><button class="b" onclick="mudarMesCal(1)">›</button></div>
     <div class="cal" id="cal-grid"></div>
-    <p class="t-sm" style="margin:10px 0 0">💡 <b>Toque em qualquer dia</b> do calendário para marcar ou desmarcar presença manualmente.</p>
+    <p class="t-sm" style="margin:10px 0 0"><b>Toque em qualquer dia</b> do calendário para marcar ou desmarcar presença manualmente.</p>
   </div>
 
   <div class="card">
-    <div class="row"><b style="font-size:15px">🏆 Ranking do grupo <button class="help" onclick="abrirAjuda('ranking')">?</button></b></div>
+    <div class="row"><b style="font-size:15px">Ranking do grupo <button class="help" onclick="abrirAjuda('ranking')">?</button></b></div>
     <div class="seg">
-      <button id="rk-mes" class="on" onclick="mudarRank('mes')">📅 Este mês</button>
-      <button id="rk-total" onclick="mudarRank('total')">♾️ Total</button>
+      <button id="rk-mes" class="on" onclick="mudarRank('mes')">Este mês</button>
+      <button id="rk-total" onclick="mudarRank('total')">Total</button>
     </div>
     <div id="ranking-lista"></div>
     <label class="l" style="margin-top:14px">Seu nome no ranking e no card</label>
     <input type="text" id="freq-nome" maxlength="30" placeholder="Ex: Wanderson" onchange="salvarNomeRank()">
     <div class="g2" style="margin-top:10px">
-      <button class="b g" style="padding:11px" onclick="compartilharResumo()">📤 Enviar Código</button>
-      <button class="b gold" style="padding:11px" onclick="gerarCardPNG()">🖼️ Card PNG (Stories)</button>
+      <button class="b g" style="padding:11px" onclick="compartilharResumo()">Enviar Código</button>
+      <button class="b gold" style="padding:11px" onclick="gerarCardPNG()">Card PNG (Stories)</button>
     </div>
-    <button class="b p" style="width:100%;margin-top:8px;padding:11px" onclick="abrirRelatorio()">📄 Relatório do mês (imagem ou PDF)</button>
+    <button class="b p" style="width:100%;margin-top:8px;padding:11px" onclick="abrirRelatorio()">Relatório do mês (imagem ou PDF)</button>
     <label class="l" style="margin-top:16px">Resumo recebido de um amigo</label>
     <textarea id="freq-cola" rows="3" placeholder="Cole aqui a mensagem (#GT1:...) que seu amigo enviou"></textarea>
-    <button class="b p" style="width:100%;margin-top:8px;padding:11px" onclick="importarAmigo()">➕ Adicionar ao ranking</button>
+    <button class="b p" style="width:100%;margin-top:8px;padding:11px" onclick="importarAmigo()">Adicionar ao ranking</button>
   </div>
 </main>
 
 <nav>
-  <button id="nav-treino" class="on" onclick="mudarAba('treino')"><span>🏋️</span>Treino</button>
-  <button id="nav-evolucao" onclick="mudarAba('evolucao')"><span>📈</span>Evolução</button>
-  <button id="nav-saude" onclick="mudarAba('saude')"><span>❤️</span>Saúde</button>
-  <button id="nav-freq" onclick="mudarAba('freq')"><span>🔥</span>Frequência</button>
-  <button id="nav-config" onclick="mudarAba('config')"><span>⚙️</span>Config</button>
-  <button id="nav-ajuda" onclick="mudarAba('ajuda')"><span>❓</span>Ajuda</button>
+  <button id="nav-treino" class="on" onclick="mudarAba('treino')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7v10M3.5 9.5v5M18 7v10M20.5 9.5v5M6 12h12"/></svg>Treino</button>
+  <button id="nav-evolucao" onclick="mudarAba('evolucao')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/></svg>Evolução</button>
+  <button id="nav-saude" onclick="mudarAba('saude')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Saúde</button>
+  <button id="nav-freq" onclick="mudarAba('freq')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Frequência</button>
+  <button id="nav-config" onclick="mudarAba('config')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Config</button>
+  <button id="nav-ajuda" onclick="mudarAba('ajuda')"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1.1 1-1.1 1.8M12 17h.01"/></svg>Ajuda</button>
 </nav>
 
 <!-- Modal exercício -->
@@ -536,21 +625,21 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
   <h3 id="modal-titulo">Novo exercício</h3>
   <input type="hidden" id="edit-id">
   <label>Nome do exercício *</label><input type="text" id="ex-nome" placeholder="Ex: Supino inclinado no Smith">
-  <label>Tipo</label><select id="ex-modo" onchange="ajustarModalModo()"><option value="forca">Musculação (com meta de repetições)</option><option value="falha">Musculação até a falha</option><option value="cardio">Cardio (tempo, distância, velocidade)</option><option value="along">Alongamento (só marcar como feito)</option></select>
+  <label>Tipo</label><select id="ex-modo" onchange="ajustarModalModo()"><option value="forca">Musculação (com meta de repetições)</option><option value="falha">Musculação até a falha</option><option value="corpo">Peso do corpo (carga extra opcional)</option><option value="cardio">Cardio (tempo, distância, velocidade)</option><option value="along">Alongamento (só marcar como feito)</option></select>
   <div class="g3">
     <div id="ex-w-series"><label>Nº séries</label><input type="number" inputmode="numeric" id="ex-num-series" placeholder="4" class="mono" style="text-align:center"></div>
     <div id="ex-w-min"><label id="ex-l-min">Reps mín</label><input type="number" inputmode="numeric" id="ex-reps-min" placeholder="8" class="mono" style="text-align:center"></div>
     <div id="ex-w-max"><label id="ex-l-max">Reps máx</label><input type="number" inputmode="numeric" id="ex-reps-max" placeholder="12" class="mono" style="text-align:center"></div>
   </div>
-  <label style="color:var(--am)">⚙️ Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
-  <label>💪 Músculo principal</label><select id="ex-grupo"><option value="">Automático (pelo nome)</option><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="biceps">Bíceps</option><option value="triceps">Tríceps</option><option value="abdomen">Abdômen</option><option value="quadriceps">Quadríceps</option><option value="posteriores">Posterior de coxa</option><option value="gluteos">Glúteos</option><option value="panturrilhas">Panturrilhas</option></select>
-  <label>📘 Guia de execução / notas</label><textarea id="ex-explicacao" rows="3" placeholder="Ex: escápulas retraídas, descida em 2 segundos."></textarea>
+  <label style="color:var(--am)">Ajuste do aparelho</label><input type="text" id="ex-ajuste" placeholder="Ex: banco furo 4, pegada pronada">
+  <label>Músculo principal</label><select id="ex-grupo"><option value="">Automático (pelo nome)</option><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="biceps">Bíceps</option><option value="triceps">Tríceps</option><option value="abdomen">Abdômen</option><option value="quadriceps">Quadríceps</option><option value="posteriores">Posterior de coxa</option><option value="gluteos">Glúteos</option><option value="panturrilhas">Panturrilhas</option></select>
+  <label>Guia de execução / notas</label><textarea id="ex-explicacao" rows="3" placeholder="Ex: escápulas retraídas, descida em 2 segundos."></textarea>
   <div class="acts"><button class="b" onclick="fecharModal('modal-ex')">Cancelar</button><button class="b p" onclick="salvarExercicioFicha()">Salvar</button></div>
 </div></div>
 
 <!-- Modal calculadora de anilhas -->
 <div id="modal-anilhas" class="modal" onclick="if(event.target===this)fecharModal('modal-anilhas')"><div class="box">
-  <h3>🏋️ Calculadora de Anilhas</h3>
+  <h3>Calculadora de Anilhas</h3>
   <p class="t-sm" style="margin:0 0 10px">Descubra exatamente quais anilhas colocar em <b>cada lado</b> da barra.</p>
   <div class="g2">
     <div><label>Peso Total (kg)</label><input type="number" inputmode="decimal" step="0.5" id="anilha-total" placeholder="70" class="mono" oninput="calcularAnilhas()"></div>
@@ -568,13 +657,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <!-- Modal Card PNG -->
 <div id="modal-png" class="modal" onclick="if(event.target===this)fecharModal('modal-png')"><div class="box" style="text-align:center">
-  <h3>🖼️ Seu Card de Treino</h3>
+  <h3>Seu Card de Treino</h3>
   <p class="t-sm" style="margin:-4px 0 8px;color:var(--gr)">Toque em <b>Compartilhar / Salvar</b> para enviar no WhatsApp, Instagram ou salvar na Galeria</p>
   <canvas id="canvasCard" class="hidden"></canvas>
   <img id="imgCardPreview" alt="Card de Treino" style="width:100%;height:auto;border-radius:14px;border:1px solid var(--bd);display:block" />
   <div class="acts" style="justify-content:center">
     <button class="b" onclick="fecharModal('modal-png')">Fechar</button>
-    <button class="b gold" style="flex:1;padding:12px" onclick="compartilharCardPNG()">📤 Compartilhar / Salvar</button>
+    <button class="b gold" style="flex:1;padding:12px" onclick="compartilharCardPNG()">Compartilhar / Salvar</button>
   </div>
 </div></div>
 
@@ -602,8 +691,8 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <!-- Modal lembrete de saúde -->
 <div id="modal-ls" class="modal"><div class="box">
-  <h3>🔔 Novo lembrete de saúde</h3>
-  <label>Tipo</label><select id="ls-tipo" onchange="ajustarLS()"><option value="suplemento">💊 Suplemento ou remédio</option><option value="consulta">🩺 Consulta</option><option value="exame">🧪 Exame</option></select>
+  <h3>Novo lembrete de saúde</h3>
+  <label>Tipo</label><select id="ls-tipo" onchange="ajustarLS()"><option value="suplemento">Suplemento ou remédio</option><option value="consulta">Consulta</option><option value="exame">Exame</option></select>
   <label>Nome</label><input type="text" id="ls-titulo" maxlength="60" placeholder="Ex: Creatina">
   <div id="ls-data-box"><label>Data</label><input type="date" id="ls-data"></div>
   <label>Horário</label><input type="time" id="ls-hora" value="08:00">
@@ -614,10 +703,10 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <!-- Modal relatório de saúde -->
 <div id="modal-rels" class="modal" onclick="if(event.target===this)fecharModal('modal-rels')"><div class="box" style="text-align:center">
-  <h3>📄 Relatório de saúde</h3>
+  <h3>Relatório de saúde</h3>
   <canvas id="canvasRelS" class="hidden"></canvas>
   <img id="imgRelS" alt="Relatório de saúde" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--bd);display:block">
-  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rels')">Fechar</button><button class="b gold" onclick="compartilharRelatorioSaude('img')">🖼️ Imagem</button><button class="b gold" onclick="compartilharRelatorioSaude('pdf')">📄 PDF</button></div>
+  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rels')">Fechar</button><button class="b gold" onclick="compartilharRelatorioSaude('img')">Imagem</button><button class="b gold" onclick="compartilharRelatorioSaude('pdf')">PDF</button></div>
 </div></div>
 
 <!-- Modal resumo -->
@@ -630,29 +719,29 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 <!-- Modal nível -->
 <div id="modal-nivel" class="modal" onclick="if(event.target===this)fecharModal('modal-nivel')"><div class="box" style="text-align:center;max-width:300px">
   <div id="nivelup-box"></div>
-  <div class="acts" style="justify-content:center"><button class="b p" onclick="fecharModal('modal-nivel')">Bora! 💪</button></div>
+  <div class="acts" style="justify-content:center"><button class="b p" onclick="fecharModal('modal-nivel')">Bora! </button></div>
 </div></div>
 
 <!-- Modal lembretes -->
 <div id="modal-notif" class="modal"><div class="box">
-  <h3>🔔 Lembretes e notificações</h3>
+  <h3>Lembretes e notificações</h3>
   <p class="t-sm" id="nt-aviso" style="margin:-4px 0 8px;color:var(--am)"></p>
   <div class="nt" style="margin-top:0"><div class="row"><div><b>Ativar notificações</b><div class="t-sm">Liga ou desliga todas</div></div><button id="nt-ativo" class="tgl off" onclick="tglNotif('ativo')">Desligado</button></div></div>
   <div class="nt"><div class="row"><div><b>⏱ Fim do descanso</b><div class="t-sm">Avisa mesmo com a tela apagada</div></div><button id="nt-descanso" class="tgl off" onclick="tglNotif('descanso')">Desligado</button></div></div>
   <div class="nt">
-    <div class="row"><div><b>🏋️ Lembrete de treino</b><div class="t-sm">"Hoje é Treino A"</div></div><button id="nt-treino" class="tgl off" onclick="tglNotif('treino')">Desligado</button></div>
+    <div class="row"><div><b>Lembrete de treino</b><div class="t-sm">"Hoje é Treino A"</div></div><button id="nt-treino" class="tgl off" onclick="tglNotif('treino')">Desligado</button></div>
     <div style="display:flex;gap:6px;margin:10px 0 8px" id="nt-dias"></div>
     <label class="l">Horário</label><input type="time" id="nt-treino-hora">
   </div>
   <div class="nt">
-    <div class="row"><div><b>😅 Dias sem treinar</b><div class="t-sm">Protege a sua sequência</div></div><button id="nt-inativo" class="tgl off" onclick="tglNotif('inativo')">Desligado</button></div>
+    <div class="row"><div><b>Dias sem treinar</b><div class="t-sm">Protege a sua sequência</div></div><button id="nt-inativo" class="tgl off" onclick="tglNotif('inativo')">Desligado</button></div>
     <div class="g2" style="margin-top:10px">
       <div><label class="l">Avisar após</label><select id="nt-inativo-dias"><option value="2">2 dias</option><option value="3">3 dias</option><option value="4">4 dias</option><option value="5">5 dias</option></select></div>
       <div><label class="l">Horário</label><input type="time" id="nt-inativo-hora"></div>
     </div>
   </div>
   <div class="nt">
-    <div class="row"><div><b>⚖️ Pesar e medir</b><div class="t-sm">Para manter a aba Saúde em dia</div></div><button id="nt-peso" class="tgl off" onclick="tglNotif('peso')">Desligado</button></div>
+    <div class="row"><div><b>Pesar e medir</b><div class="t-sm">Para manter a aba Saúde em dia</div></div><button id="nt-peso" class="tgl off" onclick="tglNotif('peso')">Desligado</button></div>
     <div class="g2" style="margin-top:10px">
       <div><label class="l">Frequência</label><select id="nt-peso-freq"><option value="7">Toda semana</option><option value="14">A cada 15 dias</option></select></div>
       <div><label class="l">Dia</label><select id="nt-peso-dia"><option value="0">Domingo</option><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option></select></div>
@@ -660,7 +749,7 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     <label class="l" style="margin-top:8px">Horário</label><input type="time" id="nt-peso-hora">
   </div>
   <div class="nt">
-    <div class="row"><div><b>💧 Beber água</b><div class="t-sm">Pausa quando a meta do dia é batida</div></div><button id="nt-agua" class="tgl off" onclick="tglNotif('agua')">Desligado</button></div>
+    <div class="row"><div><b>Beber água</b><div class="t-sm">Pausa quando a meta do dia é batida</div></div><button id="nt-agua" class="tgl off" onclick="tglNotif('agua')">Desligado</button></div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
       <div><label class="l">Das</label><input type="time" id="nt-agua-ini"></div>
       <div><label class="l">Até</label><input type="time" id="nt-agua-fim"></div>
@@ -668,13 +757,13 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
     </div>
   </div>
   <div class="nt">
-    <div class="row"><div><b>🩺 Check-up diário</b><div class="t-sm">Sono, energia, humor e dor</div></div><button id="nt-checkin" class="tgl off" onclick="tglNotif('checkin')">Desligado</button></div>
+    <div class="row"><div><b>Check-up diário</b><div class="t-sm">Sono, energia, humor e dor</div></div><button id="nt-checkin" class="tgl off" onclick="tglNotif('checkin')">Desligado</button></div>
     <label class="l" style="margin-top:10px">Horário</label><input type="time" id="nt-checkin-hora">
   </div>
-  <div class="nt"><div class="row"><div><b>🏆 Recordes e metas</b><div class="t-sm">Avisa quando você bater um recorde ou meta</div></div><button id="nt-metas" class="tgl off" onclick="tglNotif('metas')">Desligado</button></div></div>
+  <div class="nt"><div class="row"><div><b>Recordes e metas</b><div class="t-sm">Avisa quando você bater um recorde ou meta</div></div><button id="nt-metas" class="tgl off" onclick="tglNotif('metas')">Desligado</button></div></div>
   <div class="g2" style="margin-top:12px">
     <button class="b" onclick="liberarAlarmes()">⏰ Liberar alarmes exatos</button>
-    <button class="b" onclick="testarNotif()">🔔 Enviar teste</button>
+    <button class="b" onclick="testarNotif()">Enviar teste</button>
   </div>
   <p class="t-sm" style="margin:8px 0 0">Se as notificações atrasarem, libere o app da economia de bateria nas configurações do celular.</p>
   <div class="acts"><button class="b" onclick="fecharModal('modal-notif')">Cancelar</button><button class="b p" onclick="salvarNotif()">Salvar</button></div>
@@ -682,23 +771,23 @@ html[data-tema=claro] .tb .x{background:#ffe4e6;border-color:#fda4af;color:#be12
 
 <!-- Modal metas -->
 <div id="modal-metas" class="modal"><div class="box">
-  <h3>🎯 Minhas metas</h3>
+  <h3>Minhas metas</h3>
   <label>Peso alvo (kg)</label><input type="number" inputmode="decimal" step="0.1" id="meta-peso" class="mono" placeholder="Ex: 75">
   <label>% de gordura alvo</label><input type="number" inputmode="decimal" step="0.1" id="meta-bf" class="mono" placeholder="Ex: 15">
   <label>Metas de carga</label>
   <div id="metas-cargas"></div>
   <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:6px"><select id="meta-ex"></select><input type="number" inputmode="decimal" step="0.5" id="meta-carga" class="mono" placeholder="kg"></div>
-  <button class="b" style="width:100%;margin-top:8px" onclick="addMetaCarga()">➕ Adicionar meta de carga</button>
+  <button class="b" style="width:100%;margin-top:8px" onclick="addMetaCarga()">Adicionar meta de carga</button>
   <div class="acts"><button class="b" onclick="fecharModal('modal-metas')">Cancelar</button><button class="b p" onclick="salvarMetas()">Salvar</button></div>
 </div></div>
 
 <!-- Modal relatório -->
 <div id="modal-rel" class="modal" onclick="if(event.target===this)fecharModal('modal-rel')"><div class="box" style="text-align:center">
-  <h3>📄 Relatório do mês</h3>
+  <h3>Relatório do mês</h3>
   <div class="row" style="margin-bottom:8px"><button class="b" onclick="mudarMesRel(-1)">‹</button><b id="rel-titulo"></b><button class="b" onclick="mudarMesRel(1)">›</button></div>
   <canvas id="canvasRel" class="hidden"></canvas>
   <img id="imgRel" alt="Relatório do mês" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--bd);display:block">
-  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rel')">Fechar</button><button class="b gold" onclick="compartilharRelatorio('img')">🖼️ Imagem</button><button class="b gold" onclick="compartilharRelatorio('pdf')">📄 PDF</button></div>
+  <div class="acts" style="justify-content:center"><button class="b" onclick="fecharModal('modal-rel')">Fechar</button><button class="b gold" onclick="compartilharRelatorio('img')">Imagem</button><button class="b gold" onclick="compartilharRelatorio('pdf')">PDF</button></div>
 </div></div>
 
 <script>
@@ -721,14 +810,14 @@ try{ matchMedia('(prefers-color-scheme: light)').addEventListener('change', apli
 aplicarTema();
 // ============================ AJUDA ============================
 const AJUDA = {
-  timer:{t:'⏱ Descanso entre séries',x:'É o tempo de pausa entre uma série e a próxima. Descansar o suficiente deixa você repetir a carga com qualidade.\n\nReferência comum: 60 s para exercícios leves ou isolados, 90 s para o padrão e 120 s ou mais para exercícios pesados.\n\nO cronômetro dispara sozinho quando você salva uma série e avisa com som e vibração no fim.'},
+  timer:{t:'⏱ Descanso entre séries',x:'É o tempo de pausa entre uma série e a próxima. Descansar o suficiente deixa você repetir a carga com qualidade.\n\nOs botões são 30, 60 e 90 segundos. O último que você tocar vira o seu padrão (destacado em azul) e é o que dispara sozinho quando você salva uma série. O padrão inicial é 30 s.\n\nO cronômetro avisa com som e vibração no fim.'},
   divisao_ab:{t:'📆 Divisão A / B',x:'Você alterna duas fichas: a A (por padrão, parte superior) e a B (parte inferior e core).\n\nO app sugere para hoje a ficha oposta à última que você finalizou. Toque em "Finalizar Treino" ao terminar para ele registrar.\n\nUse as setas ↑ e ↓ em cada exercício para reorganizar a ordem da sua ficha.'},
   series:{t:'🔤 Tipos de série (W / T / F)',x:'W (Warm-up / Aquecimento): séries leves para preparar o corpo. Não entram no gráfico.\n\nT (Trabalho): as séries principais, com a carga planejada.\n\nF (Falha): séries levadas até não conseguir mais repetições com boa execução.\n\nSe digitou uma série errada hoje, basta tocar em cima da etiqueta dela para apagar!'},
   grafico_evolucao:{t:'📈 Gráfico de evolução',x:'Mostra, por dia, a melhor série válida (Trabalho ou Falha) do exercício escolhido.\n\nSe a linha sobe ao longo das semanas, você está ficando mais forte. Oscilações pequenas são normais.'},
   '1rm':{t:'⚡ O que é 1RM?',x:'1RM é a carga máxima que você levantaria em 1 repetição.\n\nO app estima esse valor pela fórmula de Epley: carga × (1 + repetições ÷ 30).\n\nExemplo: 60 kg × 10 reps ≈ 80 kg de 1RM estimado.\n\nServe para comparar a sua força entre treinos mesmo quando você muda carga e repetições.'},
   imc_rca:{t:'📊 IMC, % Gordura (BF) e Cintura/Altura',x:'% BF (Método da Marinha dos EUA): Usa altura, cintura e pescoço para estimar seu percentual de gordura corporal e massa magra de forma muito mais fiel que o IMC.\n\nIMC = peso (kg) ÷ altura (m)².\n18,5 a 24,9: normal | 25 a 29,9: sobrepeso.\nO IMC não separa músculo de gordura.\n\nRelação cintura/altura = cintura ÷ altura. Abaixo de 0,5 é considerado ideal para a saúde cardiovascular.'},
   como_medir:{t:'📏 Como medir',x:'Meça sempre no mesmo horário, de preferência em jejum e de manhã, com fita métrica flexível.\n\nCintura: na altura do umbigo, relaxado.\nPescoço: logo abaixo do pomo de Adão, sem apertar.\nBraço: no meio do bíceps.\nPeito: na linha dos mamilos.\nCoxa: no meio da coxa.'},
-  progressao:{t:'🎯 Progressão de carga',x:'Cada exercício tem uma faixa de repetições (ex.: 8–12). Quando você atingir o número máximo da faixa no treino anterior, o app mostra um banner verde sugerindo +2 kg com um botão para preencher o peso automaticamente.'},
+  progressao:{t:'🎯 Progressão de carga',x:'Cada exercício tem uma faixa de repetições (ex.: 8–12). Quando você atingir o número máximo da faixa em TODAS as séries do treino anterior, o app mostra um banner verde sugerindo +2 kg (exercícios com número fixo de repetições, como 10 ou 20, não geram sugestão) com um botão para preencher o peso automaticamente.'},
   cardio:{t:'🏃 Cardio',x:'Exercícios de cardio não usam kg nem repetições. Informe o tempo (min), a distância (km) ou a velocidade (km/h) e, se houver, a inclinação (%). Se preencher o tempo e a distância, o app calcula a velocidade; se preencher o tempo e a velocidade, ele calcula a distância.\n\nNa aba Evolução, escolha o cardio para ver a distância e a velocidade ao longo dos dias.\n\nPara criar um: + Exercício e, em Tipo, escolha Cardio.'},
   falha:{t:'🔥 Exercício até a falha',x:'Alguns exercícios (como o rest-pause) não têm um número fixo de repetições: você vai até a falha. Neles, o tipo da série já vem como F, e o app não mostra meta de repetições nem sugere subir a carga.\n\nNo rest-pause, anote o total de repetições somando as mini-séries. Você também pode trocar o tipo de qualquer exercício no ✎.'},
   lembretes:{t:'🔔 Lembretes e notificações',x:'Funcionam sem internet: o próprio celular agenda e dispara os avisos.\n\n• Fim do descanso: avisa na hora certa, mesmo com a tela apagada.\n• Lembrete de treino: você escolhe os dias e o horário ("Hoje é Treino A").\n• Dias sem treinar: avisa se passar o número de dias que você definir.\n• Pesar e medir: toda semana ou a cada 15 dias.\n• Recordes e metas: avisa quando bater.\n\nPara ativar, toque em Configurar, ligue as notificações e permita quando o Android perguntar. Se atrasarem, libere o app da economia de bateria e toque em Liberar alarmes exatos.'},
@@ -885,7 +974,7 @@ const fichaV59 = {
     E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10" de isometria e termine com mais 10 repetições.'),
     CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',0,0,'Cardio final • inclinação 12%','Anote o tempo, a distância e a velocidade.',12)]}
 };
-const fichaPadrao = {
+const fichaV63 = {
   A:{exercicios:[
     ALONG('a_along_peito','Alongamento de peito e ombro bilateral no espaldar',1,10,'','Mãos no espaldar, na altura do ombro, e gire o tronco para o lado oposto até sentir abrir o peito. Respire fundo e sem dor. Segure 10 segundos.'),
     ALONG('a_along_delt','Alongamento de deltoide e tríceps',1,20,'','Leve um braço por cima do peito, com a outra mão puxando de leve, ou o cotovelo atrás da cabeça. Segure 20 segundos e troque de lado, sem deixar os ombros subirem.'),
@@ -914,17 +1003,28 @@ const fichaPadrao = {
     E('b_abd_sup','Abdominal superior (10/10"/10)',3,10,10,'10 reps + 10" isometria + 10 reps','Faça 10 repetições, segure 10 segundos na posição contraída e termine com mais 10 repetições. Queixo afastado do peito e a lombar no chão.'),
     CARDIO('b_esteira','Caminhada na esteira com inclinação 12%',10,12,'Cardio final • inclinação 12%','Inclinação de 12% e um ritmo que você consiga manter sem se segurar na esteira. Postura ereta, passadas firmes. Meta de 10 a 12 minutos. Anote o tempo, a distância e a velocidade.',12)]}
 };
+const fichaPadrao = (() => {
+  const f = JSON.parse(JSON.stringify(fichaV63)), todos = [...f.A.exercicios, ...f.B.exercicios], por = id => todos.find(e => e.id === id);
+  f.B.exercicios = f.B.exercicios.filter(e => e.id !== 'b_abdutora');
+  ['a_abd_inf', 'b_afundo', 'b_donkey', 'b_abd_sup'].forEach(id => { por(id).corpo = true; });
+  const sp = por('a_supino'); sp.repsMin = 15; sp.repsMax = 15;
+  const ab = por('b_abd_sup'); ab.repsMin = 20; ab.repsMax = 20; ab.ajuste = '10 reps + 10" de isometria + 10 reps • anote 20'; ab.explicacao += ' No campo de repetições, anote o total (10 + 10 = 20) e deixe o kg em branco.';
+  ['b_adutora_rp', 'b_extensora_rp', 'b_abdutora_rp'].forEach(id => { por(id).explicacao += ' Anote a soma das repetições do ciclo: digite a primeira parte, toque em + parcial, digite a segunda e salve.'; });
+  return f;
+})();
 const nomesPadrao = {A:'Superiores', B:'Inferiores & Core'};
 
 function lerLS(k, p){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? p; }catch(e){ return p; } }
 function salvarLS(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ toast('Não foi possível salvar os dados', 'bad'); } }
 
+// Uma ficha guardada é "padrão antigo" (e vira a nova) se tem os mesmos exercícios de uma versão padrão, mesmo em outra ordem. Fichas editadas de verdade são preservadas.
+function normFicha(f){ const o = l => JSON.stringify([...(l.exercicios || [])].sort((x, y) => x.id < y.id ? -1 : 1)); return o(f.A) + '|' + o(f.B); }
+function ehFichaPadraoAntiga(f){ if(!f || !f.A || !f.B) return false; const n = normFicha(f); return [fichaAntiga, fichaV51a, fichaV51b, fichaV52, fichaV59, fichaV63].some(x => normFicha(x) === n); }
 let ficha     = JSON.parse(JSON.stringify(fichaPadrao));
 (function(){
   const salva = lerLS('gym_ficha_v4', null);
   if(!salva || !salva.A || !salva.B) return;
-  const js = JSON.stringify(salva);
-  if([fichaAntiga, fichaV51a, fichaV51b, fichaV52, fichaV59].some(f => JSON.stringify(f) === js)) salvarLS('gym_ficha_v4', ficha);
+  if(ehFichaPadraoAntiga(salva)) salvarLS('gym_ficha_v4', ficha);
   else ficha = salva;
 })();
 let historico = lerLS('gym_hist_v3', []);
@@ -956,7 +1056,7 @@ function normalizarCfg(){
 normalizarCfg();
 
 let treinoAtual = 'A', abaAtual = 'treino', metricaGrafico = 'carga';
-let timerInterval = null, ultimoTimer = 90;
+let timerInterval = null, ultimoTimer = (cfg && cfg.descPadrao) || 30;
 let tipoSel = {}, abertos = {};
 
 // ============================ UTILS ============================
@@ -997,7 +1097,7 @@ function nomeEx(id){
 }
 
 // ============================ ABAS ============================
-const TITULOS = {treino:'Meu Treino (A / B)', evolucao:'Evolução', saude:'Saúde & Corpo', ajuda:'Guia & Ajuda', freq:'Frequência', config:'Configurações'};
+const TITULOS = {treino:'Treino', evolucao:'Evolução', saude:'Saúde', ajuda:'Ajuda', freq:'Frequência', config:'Config'};
 function mudarAba(a){
   abaAtual = a;
   ['treino','evolucao','saude','freq','config','ajuda'].forEach(n => {
@@ -1047,7 +1147,7 @@ function somRecorde(){
   try{ navigator.vibrate && navigator.vibrate([150,80,150,80,400]); }catch(e){}
 }
 function iniciarTimer(seg){
-  clearInterval(timerInterval); ultimoTimer = seg; agendarDescanso(seg);
+  clearInterval(timerInterval); ultimoTimer = seg; marcarTimerPadrao(); agendarDescanso(seg);
   const fim = Date.now() + seg*1000;
   $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(seg);
   timerInterval = setInterval(() => {
@@ -1056,6 +1156,8 @@ function iniciarTimer(seg){
     if(r <= 0){ clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.add('fim'); bipe(); toast('⏱ Descanso finalizado!'); }
   }, 250);
 }
+function marcarTimerPadrao(){ document.querySelectorAll('.tb button[data-s]').forEach(b => b.classList.toggle('padrao', +b.dataset.s === ultimoTimer)); }
+function timerBtn(seg){ cfg.descPadrao = seg; salvarLS('gym_cfg_v4', cfg); iniciarTimer(seg); }
 function pararTimer(){ cancelarDescanso(); clearInterval(timerInterval); timerInterval = null; $('timer-display').classList.remove('fim'); $('timer-display').textContent = fmtT(ultimoTimer); }
 
 // ============================ TREINO ============================
@@ -1090,7 +1192,7 @@ function pedirExclusaoChip(ts){
   const item = historico.find(h => h.ts === ts);
   if(!item) return;
   $('confirm-titulo').textContent = 'Apagar esta série?';
-  $('confirm-texto').textContent = item.tipo === 'C' ? `${item.nome}: ${descCardio(item)}` : `${item.nome}: ${fmt(item.peso)} kg × ${item.reps} reps (${item.tipo})`;
+  $('confirm-texto').textContent = item.tipo === 'C' ? `${item.nome}: ${descCardio(item)}` : `${item.nome}: ${item.peso > 0 ? fmt(item.peso) + ' kg × ' + item.reps : item.reps} reps (${item.tipo})`;
   $('btn-confirm-yes').onclick = () => {
     historico = historico.filter(h => h.ts !== ts);
     salvarLS('gym_hist_v3', historico);
@@ -1137,7 +1239,7 @@ function renderAlongamento(ex, idx){
   return `<div class="card"${ok ? ' style="border-color:rgba(16,185,129,.5)"' : ''}>
     <div class="row" style="align-items:flex-start">
       <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
-        <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">🧘 Alongamento</b> • ${n}× ${seg ? seg + ' s' : ''}</div></div>
+        <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">Alongamento</b> • ${n}× ${seg ? seg + ' s' : ''}</div></div>
       <div style="display:flex;gap:4px;flex-shrink:0">
         <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
         <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
@@ -1145,7 +1247,7 @@ function renderAlongamento(ex, idx){
         <button class="mini" style="color:var(--ro)" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
       </div>
     </div>
-    ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
+    ${ex.ajuste ? `<div class="ajuste">${esc(ex.ajuste)}</div>` : ''}
     <div style="display:flex;align-items:center;gap:8px;margin-top:12px">${quad}<span class="t-sm" style="margin-left:6px">${ok ? '✅ Feito!' : 'Toque para marcar como feito'}</span></div>
   </div>`;
 }
@@ -1178,7 +1280,7 @@ function renderCardio(ex, idx){
   return `<div class="card">
     <div class="row" style="align-items:flex-start">
       <div style="min-width:0;flex:1"><div class="ex-nome">${esc(ex.nome)}</div>
-        <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">🏃 Cardio</b> • ${meta}</div></div>
+        <div class="t-sm" style="margin-top:2px"><b style="color:var(--gr)">Cardio</b> • ${meta}</div></div>
       <div style="display:flex;gap:4px;flex-shrink:0">
         <button class="mini" onclick="moverExercicio(${idx},-1)" title="Subir">↑</button>
         <button class="mini" onclick="moverExercicio(${idx},1)" title="Descer">↓</button>
@@ -1187,7 +1289,7 @@ function renderCardio(ex, idx){
         <button class="mini" style="color:var(--ro)" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
       </div>
     </div>
-    ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
+    ${ex.ajuste ? `<div class="ajuste">${esc(ex.ajuste)}</div>` : ''}
     ${abertos[ex.id] && ex.explicacao ? `<div class="guia">${esc(ex.explicacao)}</div>` : ''}
     ${ultima}
     ${chips ? `<div class="chips">${chips}</div>` : ''}
@@ -1240,12 +1342,14 @@ function ordemExibida(letra){
 }
 function ocupada(id){
   const d = diaEstado(), ids = ordemExibida(treinoAtual).map(o => o.ex.id).filter(x => x !== id);
-  ids.push(id); d.ordem[treinoAtual] = ids; salvarDia(); renderizarExercicios(); toast('🔁 Foi para o fim da fila de hoje', 'neutro');
+  const card = new Set(ficha[treinoAtual].exercicios.filter(e => e.modo === 'cardio').map(e => e.id));
+  let pos = card.has(id) ? -1 : ids.findIndex(x => card.has(x)); if(pos < 0) pos = ids.length;
+  ids.splice(pos, 0, id); d.ordem[treinoAtual] = ids; salvarDia(); renderizarExercicios(); toast('🔁 Foi para o fim da fila de hoje', 'neutro');
 }
 function decorarCard(ex, html){
   const ord = ordemExibida(treinoAtual).map(o => o.ex), pend = ord.filter(e => !feito(e));
   if(diaEstado().sess && pend.length && pend[0].id === ex.id) html = html.replace('class="card"', 'class="card atual"');
-  if(pend.length >= 2 && pend.some(e => e.id === ex.id)) html = html.replace(/<\/div>\s*$/, `<div class="ocup"><button onclick="ocupada('${ex.id}')">🔁 Máquina ocupada</button></div></div>`);
+  if(pend.length >= 2 && pend.some(e => e.id === ex.id)) html = html.replace(/<\/div>\s*$/, `<div class="ocup"><button onclick="ocupada('${ex.id}')">Máquina ocupada</button></div></div>`);
   return html;
 }
 function renderizarSessao(){
@@ -1258,13 +1362,13 @@ function renderizarSessao(){
   }
   const l = d.sess.letra, ord = ordemExibida(l).map(o => o.ex), tot = ord.length, fe = ord.filter(feito).length, i = ord.findIndex(e => !feito(e));
   const pct = tot ? Math.round(fe / tot * 100) : 0;
-  const atual = i < 0 ? '🎉 Todos os exercícios concluídos!' : `Exercício ${fe + 1} de ${tot}: <b>${esc(ord[i].nome)}</b>`;
+  const atual = i < 0 ? 'Todos os exercícios concluídos' : `Exercício ${fe + 1} de ${tot}: <b>${esc(ord[i].nome)}</b>`;
   el.innerHTML = `<div class="row"><div><div class="t-sm">TREINO ${l} EM ANDAMENTO</div><div class="sess-t mono" id="sess-tempo" style="color:var(--gr)">${fmtDur(Date.now() - d.sess.ini)}</div></div>
     <div style="text-align:right"><div class="mono" style="font-weight:800;font-size:18px">${fe}/${tot}</div><div class="t-sm">exercícios</div></div></div>
     <div class="prog"><i style="width:${pct}%"></i></div>
     <div class="t-sm" style="margin-top:8px;font-size:12px;color:var(--t2)">${atual}</div>
     ${l !== treinoAtual ? `<div class="t-sm" style="margin-top:4px;color:var(--am)">Você está vendo o Treino ${treinoAtual}. <button class="link" onclick="selecionarTreino('${l}')">Voltar ao ${l}</button></div>` : ''}
-    <div class="acoes" style="margin-top:10px;border-top:0;padding-top:0"><button class="b g" onclick="marcarTreinoConcluidoHoje()">✅ Finalizar e salvar tempo</button><button class="link r" onclick="cancelarSessao()">Cancelar</button></div>`;
+    <div class="acoes" style="margin-top:10px;border-top:0;padding-top:0"><button class="b g" onclick="marcarTreinoConcluidoHoje()">Finalizar e salvar tempo</button><button class="link r" onclick="cancelarSessao()">Cancelar</button></div>`;
 }
 async function pedirWake(){ try{ if(navigator.wakeLock && diaEstado().sess && !wakeLock){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } }catch(e){} }
 function soltarWake(){ try{ if(wakeLock) wakeLock.release(); }catch(e){} wakeLock = null; }
@@ -1339,7 +1443,7 @@ function mostrarNivelUp(nv){
   const novo = TITULOS_NIVEL.some(x => x[0] === nv);
   $('nivelup-box').innerHTML = `<div style="font-size:12px;color:var(--mut);letter-spacing:.1em">NOVO NÍVEL!</div><div style="display:flex;justify-content:center;margin:6px 0">${avatarSVG(nv, sequencia(), 150)}</div>
     <div class="mono" style="font-size:40px;font-weight:800;color:var(--am)">Nv ${nv}</div><div style="font-weight:800;font-size:16px">${esc(tituloNivel(nv))}</div>
-    ${novo ? '<div class="t-sm" style="margin-top:6px;color:var(--gr)">✨ Novo título desbloqueado!</div>' : ''}`;
+    ${novo ? '<div class="t-sm" style="margin-top:6px;color:var(--gr)">Novo título desbloqueado</div>' : ''}`;
   abrirModal('modal-nivel');
 }
 function checarNivel(){
@@ -1423,14 +1527,20 @@ function renderizarMapa(){
   const sem = ordem.filter(x => !x.p).map(x => GRUPOS[x.g]);
   $('mapa-lista').style.marginTop = '4px';
   $('mapa-lista').innerHTML = ordem.filter(x => x.p).map(x => `<div class="hrow"><span>${GRUPOS[x.g]}</span><span class="mono">${fmt(x.p, 1)} séries</span></div>`).join('')
-    + (sem.length ? `<div class="t-sm" style="margin-top:14px;line-height:1.5">Sem treino neste período: <b style="color:var(--am)">${sem.join(', ')}</b></div>` : '<div class="t-sm" style="margin-top:8px;color:var(--gr)">✅ Todos os grupos foram trabalhados.</div>')
+    + (sem.length ? `<div class="t-sm" style="margin-top:14px;line-height:1.5">Sem treino neste período: <b style="color:var(--am)">${sem.join(', ')}</b></div>` : '<div class="t-sm" style="margin-top:8px;color:var(--gr)">Todos os grupos foram trabalhados.</div>')
     + (nao.length ? `<div class="t-sm" style="margin-top:6px">Não reconheci o músculo de: ${nao.map(esc).join(', ')}. Escolha em ✎ do exercício.</div>` : '');
 }
 function recalcularPRs(){
   const por = {};
   historico.forEach(h => { if(valida(h)) (por[h.exId] = por[h.exId] || []).push(h); else if(h.pr) h.pr = false; });
-  Object.values(por).forEach(arr => {
+  Object.entries(por).forEach(([exId, arr]) => {
     arr.sort((a, b) => a.ts - b.ts);
+    const exc = todosEx().find(e => e.id === exId);
+    if(exc && exc.corpo){
+      let dia = '', jaDia = false, ant = [], hojeL = [];
+      arr.forEach(h => { const k = chave(h.ts); if(k !== dia){ ant = ant.concat(hojeL); hojeL = []; dia = k; jaDia = false; } h.pr = !jaDia && prCorpo(ant, h.peso, h.reps); if(h.pr) jaDia = true; hojeL.push(h); });
+      return;
+    }
     let mp = -1, m1 = -1, dmp = -1, dm1 = -1, dia = '', jaDia = false;
     arr.forEach(h => {
       const k = chave(h.ts);
@@ -1468,7 +1578,7 @@ function abrirDia(k){
       const a = por[id], v = a.filter(valida), c = a.find(x => x.tipo === 'C'), al = a.filter(x => x.tipo === 'A').length;
       let det = '';
       if(c) det = descCardio(c);
-      else if(v.length){ const m = v.reduce((x, y) => y.peso * y.reps > x.peso * x.reps ? y : x); det = v.length + '× • melhor ' + fmt(m.peso) + ' kg × ' + m.reps + (a.some(x => x.pr) ? ' 🏆' : ''); }
+      else if(v.length){ const m = v.reduce((x, y) => y.peso * y.reps > x.peso * x.reps ? y : x); det = v.length + '× • melhor ' + kgx(m.peso, m.reps) + (a.some(x => x.pr) ? ' 🏆' : ''); }
       else if(al) det = 'alongamento ✓';
       else det = a.length + ' aquec.';
       return `<div class="hrow" style="display:block"><b style="font-size:12px">${esc(nomeEx(id))}</b><div class="t-sm">${esc(det)}</div></div>`;
@@ -1479,15 +1589,15 @@ function abrirDia(k){
   let h2 = '';
   saude.filter(x => chave(x.ts) === k).forEach(x => {
     const rot = {cintura:'cintura', pescoco:'pescoço', braco:'braço', peito:'peito', quadril:'quadril', coxa:'coxa', panturrilha:'panturrilha'};
-    h2 += linha('⚖️ Peso', fmt(x.peso) + ' kg'); Object.keys(rot).filter(q => medTxt(x, q)).forEach(q => { h2 += linha('📏 ' + rot[q], medTxt(x, q) + ' cm'); });
+    h2 += linha('Peso', fmt(x.peso) + ' kg'); Object.keys(rot).filter(q => medTxt(x, q)).forEach(q => { h2 += linha(rot[q], medTxt(x, q) + ' cm'); });
   });
-  cfg.vitais.filter(x => chave(x.ts) === k).forEach(x => { h2 += linha('❤️ Pressão e FC', (x.sis != null ? x.sis + '/' + x.dia : '') + (x.sis != null && x.fc != null ? ' • ' : '') + (x.fc != null ? x.fc + ' bpm' : '')); });
+  cfg.vitais.filter(x => chave(x.ts) === k).forEach(x => { h2 += linha('Pressão e FC', (x.sis != null ? x.sis + '/' + x.dia : '') + (x.sis != null && x.fc != null ? ' • ' : '') + (x.fc != null ? x.fc + ' bpm' : '')); });
   const ck = cfg.checkins.find(c => c.k === k);
-  if(ck){ h2 += linha('🩺 Sono', ck.sono != null ? fmt(ck.sono, 1) + ' h' : '--') + linha('Energia / humor', (ck.energia ? EMO[ck.energia - 1] : '--') + ' / ' + (ck.humor ? EMO[ck.humor - 1] : '--')) + linha('Dor', DORES[ck.dor || 0] + (ck.regiao ? ' • ' + ck.regiao : '')); }
-  const ag = cfg.agua.dias[k]; if(ag) h2 += linha('💧 Água', ag + ' ml' + (ag >= cfg.agua.meta ? ' ✅' : ''));
+  if(ck){ h2 += linha('Sono', ck.sono != null ? fmt(ck.sono, 1) + ' h' : '--') + linha('Energia / humor', (ck.energia ? EMO[ck.energia - 1] : '--') + ' / ' + (ck.humor ? EMO[ck.humor - 1] : '--')) + linha('Dor', DORES[ck.dor || 0] + (ck.regiao ? ' • ' + ck.regiao : '')); }
+  const ag = cfg.agua.dias[k]; if(ag) h2 += linha('Água', ag + ' ml' + (ag >= cfg.agua.meta ? ' ✅' : ''));
   const fs = fotosCache.filter(f => chave(f.ts) === k);
   if(fs.length) h2 += `<div style="display:flex;gap:6px;margin-top:6px">${fs.map(f => `<img src="${f.img}" alt="${esc(f.ang)}" style="width:64px;height:86px;object-fit:cover;border-radius:8px;border:1px solid var(--bd)">`).join('')}</div>`;
-  $('dia-corpo').innerHTML = sec('🏋️ Treino', t) + sec('❤️ Saúde', h2 || '<div class="t-sm">Sem registros de saúde.</div>');
+  $('dia-corpo').innerHTML = sec('Treino', t) + sec('Saúde', h2 || '<div class="t-sm">Sem registros de saúde.</div>');
   const futuro = k > chave(Date.now());
   $('dia-acoes').innerHTML = `${futuro ? '' : `<button class="b" onclick="toggleDiaCal('${k}');abrirDia('${k}')">${st.has(k) ? 'Desmarcar presença' : 'Marcar presença'}</button>`}<button class="b p" onclick="fecharModal('modal-dia')">Fechar</button>`;
   abrirModal('modal-dia');
@@ -1502,7 +1612,7 @@ function detalheMusculo(g){
   });
   const L = Object.keys(por).sort((a, b) => por[b].n * por[b].w - por[a].n * por[a].w), tot = L.reduce((a, id) => a + por[id].n * por[id].w, 0);
   $('dia-titulo').textContent = GRUPOS[g] + ' • últimos ' + dias + ' dias';
-  $('dia-corpo').innerHTML = L.length ? `<div class="hrow"><span>Séries contadas</span><span class="mono">${fmt(tot, 1)}</span></div>` + L.map(id => { const o = por[id]; return `<div class="hrow" style="display:block"><b style="font-size:12px">${esc(nomeEx(id))}</b><div class="t-sm">${o.n} séries • ${o.w < 1 ? 'músculo de apoio (peso ' + fmt(o.w, 1) + ') • ' : ''}melhor ${fmt(o.melhor.peso)} kg × ${o.melhor.reps} • última ${dataCurta(o.ult)}</div></div>`; }).join('') : '<div class="vazio">Nenhuma série deste músculo no período.</div>';
+  $('dia-corpo').innerHTML = L.length ? `<div class="hrow"><span>Séries contadas</span><span class="mono">${fmt(tot, 1)}</span></div>` + L.map(id => { const o = por[id]; return `<div class="hrow" style="display:block"><b style="font-size:12px">${esc(nomeEx(id))}</b><div class="t-sm">${o.n} séries • ${o.w < 1 ? 'músculo de apoio (peso ' + fmt(o.w, 1) + ') • ' : ''}melhor ${kgx(o.melhor.peso, o.melhor.reps)} • última ${dataCurta(o.ult)}</div></div>`; }).join('') : '<div class="vazio">Nenhuma série deste músculo no período.</div>';
   $('dia-acoes').innerHTML = '<button class="b p" onclick="fecharModal(\'modal-dia\')">Fechar</button>';
   abrirModal('modal-dia');
 }
@@ -1521,15 +1631,16 @@ function renderizarExercicios(){
     if(ant.length){
       const dia = ant[ant.length-1].ts;
       const m = ant.filter(h => mesmoDia(h.ts, dia)).reduce((a,b) => b.peso*b.reps > a.peso*a.reps ? b : a);
-      ultima = `<div class="ultima">Último treino (${dataCurta(dia)}): <b>${fmt(m.peso)} kg × ${m.reps}</b> (1RM: ${fmt(epley(m.peso,m.reps))} kg)</div>`;
-      if(!ex.falha && m.reps >= ex.repsMax && m.peso > 0){
+      ultima = `<div class="ultima">Último treino (${dataCurta(dia)}): <b>${kgx(m.peso, m.reps)}</b>${m.peso > 0 ? ' (1RM: ' + fmt(epley(m.peso,m.reps)) + ' kg)' : ''}</div>`;
+      const dAnt = ant.filter(h => mesmoDia(h.ts, dia));
+      if(!ex.falha && ex.repsMax > ex.repsMin && m.peso > 0 && dAnt.length >= ex.numSeries && dAnt.every(h => h.reps >= ex.repsMax)){
         const sug = m.peso + 2;
-        bannerProg = `<div class="overload"><span>🔥 Meta batida (${m.reps} reps)! Subir carga?</span><button onclick="aplicarSugestaoPeso('${ex.id}', ${sug})">Usar ${fmt(sug)} kg</button></div>`;
+        bannerProg = `<div class="overload"><span>Todas as séries no máximo (${ex.repsMax} reps)! Subir carga?</span><button onclick="aplicarSugestaoPeso('${ex.id}', ${sug})">Usar ${fmt(sug)} kg</button></div>`;
       }
     }
     const v = hoje.filter(valida).length;
     const pct = Math.min(100, Math.round(v / Math.max(1, ex.numSeries) * 100));
-    const chips = hoje.map(h => `<span class="chip t${h.tipo}" onclick="pedirExclusaoChip(${h.ts})" title="Toque para apagar">${h.pr ? '🏆 ' : ''}${h.tipo} · ${fmt(h.peso)}kg × ${h.reps} ✕</span>`).join('');
+    const chips = hoje.map(h => `<span class="chip t${h.tipo}" onclick="pedirExclusaoChip(${h.ts})" title="Toque para apagar">${h.pr ? '🏆 ' : ''}${h.tipo} · ${h.peso > 0 ? fmt(h.peso) + 'kg × ' + h.reps : h.reps + ' reps'}${h.parc ? ' (' + h.parc.join('+') + ')' : ''} ✕</span>`).join('');
     const ref = hoje.length ? hoje[hoje.length-1] : (ant.length ? ant[ant.length-1] : null);
     return `<div class="card">
       <div class="row" style="align-items:flex-start">
@@ -1544,17 +1655,18 @@ function renderizarExercicios(){
           <button class="mini" style="color:var(--ro)" onclick="pedirRemocao('${ex.id}')" title="Excluir">🗑</button>
         </div>
       </div>
-      ${ex.ajuste ? `<div class="ajuste">⚙️ ${esc(ex.ajuste)}</div>` : ''}
+      ${ex.ajuste ? `<div class="ajuste">${esc(ex.ajuste)}</div>` : ''}
       ${bannerProg}
       ${abertos[ex.id] && ex.explicacao ? `<div class="guia">${esc(ex.explicacao)}</div>` : ''}
       ${ultima}
       <div class="prog"><i style="width:${pct}%"></i></div>
       <div class="t-sm" style="margin-top:4px">${v}/${ex.numSeries} séries válidas hoje</div>
       ${chips ? `<div class="chips">${chips}</div>` : ''}
+      ${(ex.falha || ex.corpo) ? `<div class="t-sm" style="margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span>${(parcAcum[ex.id] || []).length ? 'Parciais: <b>' + parcAcum[ex.id].join(' + ') + '</b> (digite a próxima parte)' : (ex.corpo ? 'Sem carga: deixe o kg em branco' : 'Rest-pause: some as partes')}</span><button class="mini" onclick="addParcial('${ex.id}')">+ parcial</button>${(parcAcum[ex.id] || []).length ? `<button class="mini" onclick="limparParciais('${ex.id}')">limpar</button>` : ''}</div>` : ''}
       <div class="reg">
         <button class="tipo t${tipo}" onclick="alternarTipo('${ex.id}')">${tipo}</button>
-        <input type="number" inputmode="decimal" step="0.5" min="0" placeholder="kg" class="mono" id="peso-${ex.id}" value="${ref ? ref.peso : ''}">
-        <input type="number" inputmode="numeric" min="1" placeholder="reps" class="mono" id="reps-${ex.id}">
+        <input type="number" inputmode="decimal" step="0.5" min="0" placeholder="${ex.corpo ? '+kg' : 'kg'}" class="mono" id="peso-${ex.id}" value="${ref ? ((ex.corpo && !ref.peso) ? '' : ref.peso) : ''}">
+        <input type="text" inputmode="numeric" autocomplete="off" placeholder="reps" class="mono" id="reps-${ex.id}">
         <button class="ok" onclick="registrarSerie('${ex.id}')">✓ Salvar</button>
       </div></div>`;
   };
@@ -1570,8 +1682,29 @@ function preservar(id, fn){
 function alternarTipo(id){ preservar(id, () => { const o = ['W','T','F']; tipoSel[id] = o[(o.indexOf(tipoSel[id]||tipoPadrao(id))+1)%3]; }); }
 function alternarGuia(id){ preservar(id, () => { abertos[id] = !abertos[id]; }); }
 
+const parcAcum = {};
+const kgx = (peso, reps) => peso > 0 ? `${fmt(peso)} kg × ${reps}` : `${reps} reps`;
+function lerReps(id){
+  const partes = String($('reps-'+id).value).trim().split(/[+\s,;]+/).filter(Boolean).map(x => parseInt(x, 10));
+  if(!partes.length || partes.some(x => !(x >= 0))) return {n:NaN, parc:[]};
+  return {n:partes.reduce((a, b) => a + b, 0), parc:partes};
+}
+function addParcial(id){
+  const r = lerReps(id); if(!(r.n >= 1)){ toast('Digite as repetições desta parte', 'bad'); return; }
+  preservar(id, () => { parcAcum[id] = (parcAcum[id] || []).concat(r.parc); });
+  $('reps-'+id).value = ''; $('reps-'+id).focus();
+}
+function limparParciais(id){ preservar(id, () => { delete parcAcum[id]; }); }
+function prCorpo(prev, peso, reps){
+  if(!prev.length) return false;
+  const iguais = prev.filter(x => x.peso >= peso - 1e-9);
+  return iguais.length ? reps > Math.max(...iguais.map(x => x.reps)) : true;
+}
 function registrarSerie(id){
-  const peso = num('peso-'+id), reps = parseInt($('reps-'+id).value, 10);
+  const ex = todosEx().find(e => e.id === id), r = lerReps(id), acum = parcAcum[id] || [];
+  let peso = num('peso-'+id);
+  if(peso === null && ex && ex.corpo) peso = 0;
+  const reps = (isNaN(r.n) ? 0 : r.n) + acum.reduce((a, b) => a + b, 0), parc = [...acum, ...(isNaN(r.n) ? [] : r.parc)];
   if(peso === null || peso < 0){ toast('Informe a carga em kg', 'bad'); return; }
   if(!(reps >= 1)){ toast('Informe as repetições', 'bad'); return; }
   const tipo = tipoSel[id] || tipoPadrao(id);
@@ -1580,26 +1713,34 @@ function registrarSerie(id){
     const prev = historico.filter(h => h.exId === id && valida(h) && !mesmoDia(h.ts, Date.now()));
     const jaHoje = historico.some(h => h.exId === id && h.pr && mesmoDia(h.ts, Date.now()));
     if(prev.length && !jaHoje){
-      const mp = Math.max(...prev.map(h => h.peso)), m1 = Math.max(...prev.map(h => epley(h.peso, h.reps)));
-      pr = peso > mp + 1e-9 || epley(peso, reps) > m1 + 1e-9;
+      if(ex && ex.corpo) pr = prCorpo(prev, peso, reps);
+      else {
+        const mp = Math.max(...prev.map(h => h.peso)), m1 = Math.max(...prev.map(h => epley(h.peso, h.reps)));
+        pr = peso > mp + 1e-9 || epley(peso, reps) > m1 + 1e-9;
+      }
     }
     const kd = chave(Date.now());
     cfg.offDays = cfg.offDays.filter(x => x !== kd);
     salvarLS('gym_cfg_v4', cfg);
   }
-  historico.push({exId:id, nome:nomeEx(id), ts:Date.now(), peso, reps, tipo, pr});
+  historico.push({exId:id, nome:nomeEx(id), ts:Date.now(), peso, reps, tipo, pr, ...(parc.length > 1 ? {parc} : {})});
+  delete parcAcum[id];
   salvarLS('gym_hist_v3', historico);
-  const ex = todosEx().find(e => e.id === id);
+  const dtxt = kgx(peso, reps) + (parc.length > 1 ? ' (' + parc.join('+') + ')' : '');
   if(pr){
     somRecorde();
-    toast('🏆 NOVO RECORDE! ' + fmt(peso) + ' kg × ' + reps, 'pr');
-    notificarAgora('🏆 Novo recorde!', nomeEx(id) + ': ' + fmt(peso) + ' kg × ' + reps);
+    toast('🏆 NOVO RECORDE! ' + dtxt, 'pr');
+    notificarAgora('🏆 Novo recorde!', nomeEx(id) + ': ' + dtxt);
   } else {
-    let msg = `Série salva: ${fmt(peso)} kg × ${reps}`;
-    if(ex && !ex.falha && tipo !== 'W' && reps >= ex.repsMax){ msg += ' 🎯 Meta batida! Suba a carga no próximo.'; notificarAgora('🎯 Meta de repetições batida!', nomeEx(id) + ': ' + fmt(peso) + ' kg × ' + reps + '. Hora de subir a carga!'); }
+    let msg = 'Série salva: ' + dtxt;
+    const hs = historico.filter(h => h.exId === id && valida(h) && mesmoDia(h.ts, Date.now()));
+    if(ex && !ex.falha && tipo !== 'W' && peso > 0 && ex.repsMax > ex.repsMin && hs.length >= ex.numSeries && hs.every(h => h.reps >= ex.repsMax)){
+      msg += ' 🎯 Todas as séries no máximo! Suba a carga no próximo.';
+      notificarAgora('🎯 Todas as séries no máximo!', nomeEx(id) + ': hora de subir a carga!');
+    }
     toast(msg);
   }
-  iniciarTimer(tipo === 'W' ? 60 : ultimoTimer);
+  iniciarTimer(ultimoTimer);
   renderizarExercicios(); popularSelect(id);
   checarMetas(); checarNivel(); agendarReagendar();
 }
@@ -1636,7 +1777,7 @@ function abrirModalExercicio(id){
   $('ex-nome').value = ex?.nome || ''; $('ex-num-series').value = ex?.numSeries || '';
   $('ex-reps-min').value = ex?.repsMin || ''; $('ex-reps-max').value = ex?.repsMax || '';
   $('ex-ajuste').value = ex?.ajuste || ''; $('ex-explicacao').value = ex?.explicacao || ''; $('ex-grupo').value = ex?.grupo || '';
-  $('ex-modo').value = ex ? (ex.modo === 'cardio' ? 'cardio' : ex.modo === 'alongamento' ? 'along' : (ex.falha ? 'falha' : 'forca')) : 'forca'; ajustarModalModo();
+  $('ex-modo').value = ex ? (ex.modo === 'cardio' ? 'cardio' : ex.modo === 'alongamento' ? 'along' : (ex.falha ? 'falha' : (ex.corpo ? 'corpo' : 'forca'))) : 'forca'; ajustarModalModo();
   abrirModal('modal-ex');
 }
 function salvarExercicioFicha(){
@@ -1649,7 +1790,7 @@ function salvarExercicioFicha(){
   else if(modo === 'along'){ mx = mn = parseInt($('ex-reps-max').value,10) || 20; ns = ns || 1; }
   else { mn = parseInt($('ex-reps-min').value,10) || 8; mx = parseInt($('ex-reps-max').value,10) || 12; }
   if(mn > mx) [mn, mx] = [mx, mn];
-  const d = {nome, numSeries: modo === 'cardio' ? 1 : (ns || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), grupo:$('ex-grupo').value || undefined, modo: modo === 'cardio' ? 'cardio' : (modo === 'along' ? 'alongamento' : undefined), falha: modo === 'falha' ? true : undefined};
+  const d = {nome, numSeries: modo === 'cardio' ? 1 : (ns || 3), repsMin:mn, repsMax:mx, ajuste:$('ex-ajuste').value.trim(), explicacao:$('ex-explicacao').value.trim(), grupo:$('ex-grupo').value || undefined, modo: modo === 'cardio' ? 'cardio' : (modo === 'along' ? 'alongamento' : undefined), falha: modo === 'falha' ? true : undefined, corpo: modo === 'corpo' ? true : undefined};
   const eid = $('edit-id').value, lista = ficha[treinoAtual].exercicios;
   if(eid) Object.assign(lista.find(e => e.id === eid), d); else lista.push({id:'ex_'+Date.now().toString(36), ...d});
   salvarLS('gym_ficha_v4', ficha); fecharModal('modal-ex'); renderizarExercicios(); popularSelect();
@@ -1739,8 +1880,8 @@ function atualizarGrafico(){
   const id = $('select-grafico').value, cv = $('graficoProgressao');
   const cfgEx = todosEx().find(e => e.id === id);
   const cardio = (cfgEx && cfgEx.modo === 'cardio') || historico.some(h => h.exId === id && h.tipo === 'C');
-  $('btn-metric-carga').textContent = cardio ? '📏 Distância (km)' : '🏋️ Peso usado (kg)';
-  $('btn-metric-rm').textContent = cardio ? '⚡ Velocidade (km/h)' : '⚡ Força 1RM';
+  $('btn-metric-carga').textContent = cardio ? 'Distância (km)' : 'Peso usado (kg)';
+  $('btn-metric-rm').textContent = cardio ? 'Velocidade (km/h)' : 'Força 1RM';
   const por = new Map();
   const base = cardio ? historico.filter(h => h.exId === id && h.tipo === 'C') : historico.filter(h => h.exId === id && valida(h));
   base.forEach(h => {
@@ -1769,12 +1910,12 @@ function atualizarGrafico(){
   const regs = historico.filter(h => h.exId === id).slice(-30).reverse(), box = $('tabela-historico-exercicio');
   box.innerHTML = regs.length ? regs.map(h => h.tipo === 'C'
     ? `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag tC">C</span></span><span class="mono" style="text-align:right">${descCardio(h)}</span></div>`
-    : `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag t${h.tipo}">${h.tipo}</span>${h.pr ? ' 🏆' : ''}</span><span class="mono">${fmt(h.peso)} kg × ${h.reps}</span><span class="mono" style="color:var(--mut)">1RM ${valida(h) ? fmt(epley(h.peso,h.reps)) : '—'}</span></div>`).join('') : '<div class="vazio">Sem registros para este exercício.</div>';
+    : `<div class="hrow"><span>${dataCurta(h.ts)} <span class="tag t${h.tipo}">${h.tipo}</span>${h.pr ? ' 🏆' : ''}</span><span class="mono">${kgx(h.peso, h.reps)}</span><span class="mono" style="color:var(--mut)">1RM ${valida(h) ? fmt(epley(h.peso,h.reps)) : '—'}</span></div>`).join('') : '<div class="vazio">Sem registros para este exercício.</div>';
 }
 function limparUltimoRegistroExercicio(){
   const id = $('select-grafico').value;
   for(let i = historico.length-1; i >= 0; i--) if(historico[i].exId === id){
-    const r = historico.splice(i,1)[0]; salvarLS('gym_hist_v3', historico); renderizarExercicios(); atualizarGrafico(); toast(r.tipo === 'C' ? 'Apagado: ' + descCardio(r) : `Apagado: ${fmt(r.peso)} kg × ${r.reps}`, 'neutro'); return;
+    const r = historico.splice(i,1)[0]; salvarLS('gym_hist_v3', historico); renderizarExercicios(); atualizarGrafico(); toast(r.tipo === 'C' ? 'Apagado: ' + descCardio(r) : `Apagado: ${kgx(r.peso, r.reps)}`, 'neutro'); return;
   }
   toast('Nada para apagar', 'neutro');
 }
@@ -1912,14 +2053,14 @@ function desenharAgua(cv, ks, v, meta){
 function renderizarAgua(){
   const meta = aguaMeta(), hoje = aguaHoje(), pct = Math.min(100, Math.round(hoje / meta * 100));
   $('agua-txt').textContent = hoje + ' ml'; $('agua-barra').style.width = pct + '%';
-  $('agua-sub').textContent = hoje >= meta ? '✅ Meta batida! (' + meta + ' ml)' : 'Faltam ' + (meta - hoje) + ' ml para a meta de ' + meta + ' ml';
+  $('agua-sub').textContent = hoje >= meta ? 'Meta batida (' + meta + ' ml)' : 'Faltam ' + (meta - hoje) + ' ml para a meta de ' + meta + ' ml';
   if(document.activeElement !== $('agua-meta')) $('agua-meta').value = meta;
   $('agua-atalhos').innerHTML = cfg.agua.copos.map(x => `<button class="b" onclick="addAgua(${x})">+${x}</button>`).join('') + '<button class="b" onclick="desfazerAgua()" aria-label="Desfazer">↩</button>';
   const e = aguaEstat();
   desenharAgua($('graficoAgua'), e.ks, e.v, meta);
   const tl = (r, v, cor) => `<div style="background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:8px 10px"><div class="t-sm">${r}</div><div class="mono" style="font-weight:800;font-size:16px;${cor ? 'color:' + cor : ''}">${v}</div></div>`;
   const md = e.melhor ? new Date(e.melhor.k + 'T12:00:00') : null, med = medalhaAgua(e.melhorSeq);
-  $('agua-stats').innerHTML = tl('Média por dia (30 d)', e.media != null ? e.media + ' ml' : '--') + tl('Sequência com meta', (e.seq ? '🔥 ' : '') + e.seq + (e.seq === 1 ? ' dia' : ' dias'), e.seq >= 3 ? 'var(--gr)' : '')
+  $('agua-stats').innerHTML = tl('Média por dia (30 d)', e.media != null ? e.media + ' ml' : '--') + tl('Sequência com meta', '' + e.seq + (e.seq === 1 ? ' dia' : ' dias'), e.seq >= 3 ? 'var(--gr)' : '')
     + tl('Melhor dia', e.melhor ? e.melhor.v + ' ml <span class="t-sm">' + pad2(md.getDate()) + '/' + pad2(md.getMonth() + 1) + '</span>' : '--') + tl('Dias com meta no mês', e.noMes + ' de ' + e.diaMes + ' (' + Math.round(e.noMes / e.diaMes * 100) + '%)')
     + `<div style="grid-column:1/-1;background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:8px 10px" class="t-sm">${med ? med + ' ' : ''}Melhor sequência: <b>${e.melhorSeq}</b> ${e.melhorSeq === 1 ? 'dia' : 'dias'} • meta batida rende +5 XP por dia${e.melhorSeq < 30 ? ' • próxima medalha: ' + (e.melhorSeq < 3 ? '🥉 3 dias' : e.melhorSeq < 7 ? '🥈 7 dias' : e.melhorSeq < 14 ? '🥇 14 dias' : '🏆 30 dias') : ''}</div>`;
   const par = cfg.checkins.filter(c => c.energia && cfg.agua.dias[c.k] != null).map(c => ({en:c.energia, ok:cfg.agua.dias[c.k] >= meta})), com = par.filter(x => x.ok), sem = par.filter(x => !x.ok);
@@ -1946,7 +2087,7 @@ function salvarAtalhosAgua(){
 function renderizarCheckup(){
   const k = hojeK(), ex = cfg.checkins.find(c => c.k === k);
   if(ckTmp.k !== k){ ckTmp = {k, energia:ex ? ex.energia || 0 : 0, humor:ex ? ex.humor || 0 : 0, dor:ex ? ex.dor || 0 : 0, regiao:ex ? ex.regiao || '' : ''}; if(document.activeElement !== $('ck-sono')) $('ck-sono').value = ex && ex.sono != null ? ex.sono : ''; $('ck-regiao').value = ckTmp.regiao; }
-  $('ck-status').textContent = ex ? '✅ feito hoje' : 'pendente';
+  $('ck-status').textContent = ex ? 'Feito hoje' : 'pendente';
   const grupo = (id, campo, rot) => { $(id).innerHTML = rot.map((r, i) => { const v = campo === 'dor' ? i : i + 1; return `<button class="opt${campo === 'dor' ? ' txt' : ''}${ckTmp[campo] === v && (campo === 'dor' ? (ex || ckTmp.tocouDor) : true) ? ' on' : ''}" onclick="ckSet('${campo}',${v})" aria-label="${campo} ${v}">${r}</button>`; }).join(''); };
   grupo('ck-energia', 'energia', EMO); grupo('ck-humor', 'humor', EMO); grupo('ck-dor', 'dor', DORES);
   $('ck-regiao').classList.toggle('hidden', !(ckTmp.dor > 0));
@@ -2183,7 +2324,7 @@ function importarDados(ev){
     try{
       const d = JSON.parse(r.result);
       if(!d.ficha || !d.ficha.A || !d.ficha.B || !Array.isArray(d.historico)) throw new Error('formato');
-      ficha = {A:d.ficha.A, B:d.ficha.B}; historico = d.historico; saude = Array.isArray(d.saude) ? d.saude : []; cfg = d.cfg || cfg; normalizarCfg();
+      ficha = {A:d.ficha.A, B:d.ficha.B}; if(ehFichaPadraoAntiga(ficha)) ficha = JSON.parse(JSON.stringify(fichaPadrao)); historico = d.historico; saude = Array.isArray(d.saude) ? d.saude : []; cfg = d.cfg || cfg; normalizarCfg();
       salvarLS('gym_ficha_v4', ficha); salvarLS('gym_hist_v3', historico); salvarLS('gym_saude_v4', saude); salvarLS('gym_cfg_v4', cfg);
       if(Array.isArray(d.fotos)) (async () => { for(const f of d.fotos) if(f && f.id && f.img) try{ await DBF.salvar(f); }catch(e){} await carregarFotos(); })();
       migrarPRs(); atualizarAbas(); renderizarExercicios(); popularSelect(); atualizarSubtitulo(); atualizarBackupAuto(); toast('Backup importado ✅' + (Array.isArray(d.fotos) && d.fotos.length ? ' (com ' + d.fotos.length + ' foto(s))' : ''));
@@ -2278,7 +2419,7 @@ function renderizarFreq(){
     const ehDom = new Date(a, m, d).getDay() === 0;
     h += `<div class="d${st.has(k) ? ' on' : ''}${k === hk ? ' hj' : ''}${ehDom && !cfg.treinaDomingo ? ' dom' : ''}" onclick="abrirDia('${k}')">${d}</div>`;
   }
-  $('cal-grid').innerHTML = h;
+  $('cal-grid').innerHTML = h + (cfg.treinaDomingo ? '' : '<div style="grid-column:1/-1;font-size:10px;color:var(--mut);margin-top:4px"><span style="color:var(--am)">▨</span> domingo de folga (não quebra a sequência)</div>');
   if(document.activeElement !== $('freq-nome')) $('freq-nome').value = cfg.nome;
 
   const lista = [{nome: cfg.nome || 'Você', dm:r.dm, t:r.t, s:r.s, eu:true}];
@@ -2851,7 +2992,7 @@ function desenharRelatorio(cv, ano, mes){
     const cs = sm.filter(x => x.cintura); if(cs.length) linhaS('Cintura', fmt(cs[0].cintura) + ' → ' + fmt(cs[cs.length-1].cintura) + ' cm');
     if(d.bf != null) linhaS('% de gordura', fmt(d.bf) + '%');
   } else { T('Sem medidas registradas neste mês.', 638, y, '600 24px ' + SANS, '#64748b'); y += 46; }
-  if(d.agua.n) linhaS('💧 Água', d.agua.media + ' ml • ' + d.agua.meta + ' d meta');
+  if(d.agua.n) linhaS('Água', d.agua.media + ' ml • ' + d.agua.meta + ' d meta');
   y += 10;
   const ms = (ano === new Date().getFullYear() && mes === new Date().getMonth()) ? listaMetas().slice(0, 3) : [];
   ms.forEach(x => {
@@ -2903,7 +3044,7 @@ async function compartilharRelatorio(tipo){
 
 // ============================ INÍCIO ============================
 (function init(){
-  $('timer-display').textContent = fmtT(ultimoTimer);
+  $('timer-display').textContent = fmtT(ultimoTimer); marcarTimerPadrao();
   treinoAtual = sugerido();
   atualizarAbas(); renderizarExercicios(); popularSelect(); montarAjuda(); atualizarSubtitulo();
   migrarPRs(); pedirWake(); checarNivel(); carregarFotos(); iniciarNotificacoes(); atualizarBackupAuto(); setTimeout(() => backupAutomatico(false), 4000);
